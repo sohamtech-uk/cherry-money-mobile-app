@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../data/repositories/workspace.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import '../features/auth/login_screen.dart';
+import '../features/auth/account_screen.dart';
 import '../features/dashboard/dashboard_screen.dart';
 import '../features/transactions/transactions_screen.dart';
 import '../features/transactions/transaction_detail.dart';
@@ -13,6 +14,7 @@ import '../features/documents/capture_screen.dart';
 import '../features/subscriptions/subscriptions_screen.dart';
 import '../features/settings/settings_screen.dart';
 import 'theme/app_theme.dart';
+import '../core/widgets/cherry_logo.dart';
 
 class CherryApp extends ConsumerStatefulWidget {
   const CherryApp({super.key});
@@ -32,12 +34,22 @@ class _CherryAppState extends ConsumerState<CherryApp>
       initialLocation: '/',
       refreshListenable: state,
       redirect: (context, route) {
-        final public = ['/', '/login'].contains(route.matchedLocation);
+        final public = [
+          '/',
+          '/login',
+          '/signup',
+          '/forgot',
+        ].contains(route.matchedLocation);
         return !public && !state.hasAccess ? '/' : null;
       },
       routes: [
         GoRoute(path: '/', builder: (_, _) => const OnboardingScreen()),
         GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
+        GoRoute(path: '/signup', builder: (_, _) => const AccountScreen()),
+        GoRoute(
+          path: '/forgot',
+          builder: (_, _) => const AccountScreen(reset: true),
+        ),
         ShellRoute(
           builder: (_, route, child) =>
               MainShell(location: route.uri.path, child: child),
@@ -102,10 +114,7 @@ class MainShell extends ConsumerWidget {
     const paths = ['/home', '/transactions', '/reconcile', '/copilot'];
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '● Cherry Money',
-          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
-        ),
+        title: const CherryLogo(height: 44),
         actions: [
           IconButton(
             tooltip: 'Settings',

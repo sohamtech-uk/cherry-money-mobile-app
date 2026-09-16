@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/repositories/workspace.dart';
 import '../../core/widgets/common.dart';
+import '../../core/widgets/cherry_logo.dart';
+import '../../core/network/api_client.dart';
+import 'google_auth_service.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -13,6 +16,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final email = TextEditingController(), password = TextEditingController();
   final form = GlobalKey<FormState>();
+  bool googleBusy = false;
+  String googleError = '';
   @override
   void dispose() {
     email.dispose();
@@ -27,6 +32,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       appBar: AppBar(title: const Text('Cherry Money')),
       body: PageBody(
         children: [
+          const CherryLogo(),
+          const SizedBox(height: 24),
           Text(
             'Welcome back.',
             style: Theme.of(context).textTheme.headlineLarge,
@@ -63,10 +70,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ],
             ),
           ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: state.busy || googleBusy
+                  ? null
+                  : () => context.go('/forgot'),
+              child: const Text('Forgot password? Reset here'),
+            ),
+          ),
+          if (googleError.isNotEmpty) Notice(googleError),
           if (state.error.isNotEmpty) Notice(state.error),
           const SizedBox(height: 24),
           FilledButton(
-            onPressed: state.busy
+            onPressed: (state.busy || googleBusy)
                 ? null
                 : () async {
                     if (!form.currentState!.validate()) {
@@ -80,8 +97,50 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   },
             child: Text(state.busy ? 'Signing in…' : 'Sign in'),
           ),
+          const SizedBox(height: 16),
+          const Center(child: Text('Or continue with')),
+          const SizedBox(height: 16),
+          OutlinedButton(
+            onPressed: state.busy || googleBusy
+                ? null
+                : () async {
+                    setState(() {
+                      googleBusy = true;
+                      googleError = '';
+                    });
+                    try {
+                      await GoogleAuthService().signIn(state.api);
+                      await state.acceptVerifiedSession();
+                      if (context.mounted) {
+                        context.go('/home');
+                      }
+                    } on ApiException catch (e) {
+                      if (mounted) {
+                        setState(() => googleError = e.message);
+                      }
+                    } catch (_) {
+                      if (mounted) {
+                        setState(
+                          () => googleError =
+                              'Google sign-in could not be completed. Please use email.',
+                        );
+                      }
+                    } finally {
+                      if (mounted) {
+                        setState(() => googleBusy = false);
+                      }
+                    }
+                  },
+            child: Text(googleBusy ? 'Signing in…' : 'Continue with Google'),
+          ),
           TextButton(
-            onPressed: state.busy
+            onPressed: state.busy || googleBusy
+                ? null
+                : () => context.go('/signup'),
+            child: const Text('Create new account'),
+          ),
+          TextButton(
+            onPressed: (state.busy || googleBusy)
                 ? null
                 : () async {
                     await state.startDemo();
