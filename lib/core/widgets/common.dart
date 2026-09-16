@@ -44,46 +44,53 @@ class TransactionCard extends StatelessWidget {
   final VoidCallback onTap;
   const TransactionCard(this.transaction, {super.key, required this.onTap});
   @override
-  Widget build(BuildContext context) => Card(
-    child: InkWell(
-      borderRadius: BorderRadius.circular(22),
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: const Color(0xFFF6ECEE),
-                  child: Icon(
-                    transaction.amountPence > 0
-                        ? Icons.south_west
-                        : Icons.north_east,
-                    color: const Color(0xFFAD1929),
+  Widget build(BuildContext context) => Semantics(
+    button: true,
+    onTap: onTap,
+    excludeSemantics: true,
+    label:
+        '${transaction.merchant}, ${money(transaction.amountPence)}, ${transaction.status.label}, ${transaction.reference}. Open transaction',
+    child: Card(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: const Color(0xFFF6ECEE),
+                    child: Icon(
+                      transaction.amountPence > 0
+                          ? Icons.south_west
+                          : Icons.north_east,
+                      color: const Color(0xFFAD1929),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    transaction.merchant,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      transaction.merchant,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  money(transaction.amountPence),
-                  style: const TextStyle(fontWeight: FontWeight.w700),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '${transaction.reference} · ${DateFormat('d MMM').format(transaction.date)}',
-            ),
-            StatusBadge(transaction.status),
-          ],
+                  const SizedBox(width: 8),
+                  Text(
+                    money(transaction.amountPence),
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${transaction.reference} · ${DateFormat('d MMM').format(transaction.date)}',
+              ),
+              StatusBadge(transaction.status),
+            ],
+          ),
         ),
       ),
     ),

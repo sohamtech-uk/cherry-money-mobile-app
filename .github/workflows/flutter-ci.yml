@@ -1,8 +1,10 @@
 name: Flutter validation
 on:
   pull_request:
+    paths-ignore: ["docs/**", "README.md"]
   push:
     branches: [main]
+    paths-ignore: ["docs/**", "README.md"]
 concurrency:
   group: flutter-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
