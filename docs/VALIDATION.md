@@ -25,3 +25,7 @@ Initial widget failures were off-screen test taps and were fixed by scrolling th
 - Google native OAuth and live signup/email delivery remain untested; configuration and backend deployment are required. No live account was created by these tests.
 
 Android validation for the authentication/logo update passed in [run 35148379987](https://github.com/sohamtech-uk/cherry-money-mobile-app/actions/runs/35148379987): formatting, analysis, 22 tests and debug APK build. [Download the debug APK artifact](https://github.com/sohamtech-uk/cherry-money-mobile-app/actions/runs/35148379987/artifacts/10467759138). The build tested code commit `15c25c5`; subsequent commits only update documentation/screenshots and merge the default-branch documentation. Backend Google fix PR #186 also passed its full CI tests and container build.
+
+## Motion and finance interface update
+
+Flutter analysis and 27 tests passed, including reduced motion, mid-animation preference changes, finite page entrances, immediate removal of stale statuses and a 320 px layout with 1.8× text. Web build passed. Chrome browser checks passed onboarding → demo dashboard → review → approval at 390 px with normal motion and 320 px with reduced motion; no page errors. Approval removed the action and displayed confirmation. The screenshots reflect the updated interface. Native gesture/performance testing still requires a device.
