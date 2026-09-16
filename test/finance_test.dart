@@ -106,4 +106,16 @@ void main() {
       expect(state.transactions[3].audit.last.action, 'linked');
     },
   );
+  test(
+    'duplicate warning survives rejection and exception decisions',
+    () async {
+      final state = Workspace();
+      await state.startDemo();
+      state.reject('t5');
+      expect(await state.approve('t5'), false);
+      state.exception('t5');
+      expect(await state.approve('t5'), false);
+      expect(state.used, 0);
+    },
+  );
 }

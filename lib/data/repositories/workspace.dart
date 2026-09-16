@@ -222,6 +222,7 @@ class Workspace extends ChangeNotifier {
       amountPence: source.amountPence,
       date: source.date,
       status: ReconciliationStatus.missingDocument,
+      possibleDuplicate: source.possibleDuplicate,
       audit: [
         ...source.audit,
         AuditEvent(

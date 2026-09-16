@@ -14,6 +14,7 @@ class AppColors {
 
 ThemeData appTheme() => ThemeData(
   useMaterial3: true,
+  fontFamily: "CherrySans",
   colorScheme: ColorScheme.fromSeed(
     seedColor: AppColors.primary,
     surface: AppColors.surface,

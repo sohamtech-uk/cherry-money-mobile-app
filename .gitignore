@@ -53,3 +53,5 @@ app.*.map.json
 *.mobileprovision
 *service-account*.json
 dart-defines*.json
+
+/artifacts/

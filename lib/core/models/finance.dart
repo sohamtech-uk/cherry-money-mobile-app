@@ -48,6 +48,7 @@ class FinanceTransaction {
   final int amountPence;
   final DateTime date;
   final ReconciliationStatus status;
+  final bool possibleDuplicate;
   final FinanceDocument? document;
   final List<AuditEvent> audit;
   const FinanceTransaction({
@@ -60,7 +61,10 @@ class FinanceTransaction {
     required this.status,
     this.document,
     this.audit = const [],
-  });
+    bool? possibleDuplicate,
+  }) : possibleDuplicate =
+           possibleDuplicate ??
+           (status == ReconciliationStatus.duplicateCandidate);
   FinanceTransaction update(
     ReconciliationStatus status,
     AuditEvent event, {
@@ -73,6 +77,7 @@ class FinanceTransaction {
     amountPence: amountPence,
     date: date,
     status: status,
+    possibleDuplicate: possibleDuplicate,
     document: document ?? this.document,
     audit: [...audit, event],
   );
@@ -94,7 +99,7 @@ MatchResult evaluateMatch(
       'No supporting document',
     ]);
   }
-  if (transaction.status == ReconciliationStatus.duplicateCandidate) {
+  if (transaction.possibleDuplicate) {
     return const MatchResult(.5, ReconciliationStatus.duplicateCandidate, [
       'A similar payment needs a duplicate check',
     ]);
@@ -106,7 +111,8 @@ MatchResult evaluateMatch(
   }
   var score = .5;
   final reasons = ['Amount match'];
-  if (transaction.date.difference(document.date).inDays.abs() <= 1) {
+  if (transaction.date.difference(document.date).abs() <=
+      const Duration(days: 1)) {
     score += .15;
     reasons.add('Date within 1 day');
   }
