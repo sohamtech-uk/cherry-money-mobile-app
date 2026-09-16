@@ -63,7 +63,13 @@ flutter test integration_test/demo_flow_test.dart -d DEVICE_ID
 
 ## Screenshots
 
-Capture onboarding, dashboard with Demo data label, match evidence, mismatch exception, audit after approval, document review, and the configured store paywall. Screenshots should be taken from the verified build; do not substitute design mockups.
+Actual running Flutter web preview at a 390 × 844 phone viewport:
+
+| Dashboard | Review inbox | Approved match |
+| --- | --- | --- |
+| ![Demo dashboard](docs/screenshots/dashboard.png) | ![Reconciliation inbox](docs/screenshots/inbox.png) | ![Approved match](docs/screenshots/reconciled.png) |
+
+Browser smoke check: onboarding → demo dashboard → review inbox → Northstar transaction → approve → reconciled status and audit event. No page errors observed. Native store/paywall screenshots still require a configured device build.
 
 ## Migration
 

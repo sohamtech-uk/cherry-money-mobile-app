@@ -8,7 +8,7 @@ Toolchain: Flutter 3.41.9 stable / bundled Dart 3.11.5, macOS Intel. Java 17 ava
 - `dart format --set-exit-if-changed lib test integration_test`: PASS.
 - Android `flutter build apk --debug --no-pub`: attempted twice, blocked by TLS/DNS failures downloading Maven dependencies (AGP 8.5.1, Kotlin compiler, Netty and others). No APK produced locally yet.
 - iOS `flutter build ios --simulator --no-pub`: attempted; reports `Application not configured for iOS`. `flutter doctor -v` reports missing full Xcode and CocoaPods; command-line tools alone are installed. No simulator build verified.
-- `flutter build web --no-pub`: PASS (JavaScript/CanvasKit). RevenueCat dependency reports a Wasm dry-run incompatibility; Wasm is not the selected build target. Browser visual verification is in progress.
+- `flutter build web --no-pub`: PASS (JavaScript/CanvasKit). RevenueCat dependency reports a Wasm dry-run incompatibility; Wasm is not the selected build target. Phone-sized browser verification PASS: onboarding → Demo → reconciliation inbox → Northstar → approve → Reconciled and audit update. No browser page errors observed. Screenshots in docs/screenshots.
 - Native integration test: supplied but not run; no Android/iOS simulator/device available. Equivalent full-widget happy path passes.
 - Camera/gallery permissions and real document picker: code implemented, native hardware verification pending.
 - RevenueCat real store purchase/restore: not tested, no configured SDK keys or store products supplied.
