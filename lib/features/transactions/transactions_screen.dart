@@ -1,3 +1,4 @@
+import '../live/banking_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -18,13 +19,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(workspaceProvider);
     if (!state.demo) {
-      return const PageBody(
-        children: [
-          Notice(
-            'Live bank transactions are not connected. Try demo from Settings to explore this workflow.',
-          ),
-        ],
-      );
+      return const BankingScreen();
     }
     final results = state.transactions.where(
       (t) =>

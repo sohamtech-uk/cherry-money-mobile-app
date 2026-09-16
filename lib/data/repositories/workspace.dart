@@ -25,6 +25,43 @@ class Workspace extends ChangeNotifier {
   String error = '';
   Map<String, dynamic>? liveDashboard;
   List<FinanceTransaction> transactions = [];
+  Map<String, dynamic>? liveFinance;
+  String financeError = '';
+  bool financeBusy = false;
+  int _session = 0;
+  int get sessionGeneration => _session;
+  final List<Map<String, String>> cherryHistory = [];
+
+  Future<void> loadFinance() async {
+    if (!signedIn || demo || financeBusy) return;
+    final session = _session;
+    financeBusy = true;
+    financeError = '';
+    notifyListeners();
+    try {
+      final result = await api.financeRequest(
+        'webmcp/bootstrap',
+        query: {'limit': 100},
+      );
+      if (session == _session) liveFinance = result;
+    } on ApiException catch (e) {
+      if (session == _session) financeError = e.message;
+    } finally {
+      if (session == _session) {
+        financeBusy = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  void _resetFinance() {
+    _session++;
+    liveFinance = null;
+    financeError = '';
+    financeBusy = false;
+    cherryHistory.clear();
+  }
+
   bool get hasAccess => demo || signedIn;
   int get remaining => (allowanceFor(plan) - used).clamp(0, allowanceFor(plan));
   int get reconciled => transactions
@@ -34,6 +71,7 @@ class Workspace extends ChangeNotifier {
       .where((t) => t.status != ReconciliationStatus.reconciled)
       .length;
   Future<void> startDemo() async {
+    _resetFinance();
     demo = true;
     signedIn = false;
     liveDashboard = null;
@@ -49,6 +87,7 @@ class Workspace extends ChangeNotifier {
     notifyListeners();
     try {
       await api.login(email, password);
+      _resetFinance();
       demo = false;
       signedIn = true;
       transactions = [];
@@ -63,6 +102,7 @@ class Workspace extends ChangeNotifier {
   }
 
   Future<void> acceptVerifiedSession() async {
+    _resetFinance();
     demo = false;
     signedIn = true;
     transactions = [];
@@ -85,6 +125,7 @@ class Workspace extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
+    _resetFinance();
     if (signedIn) {
       try {
         await api.logout();

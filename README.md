@@ -27,16 +27,23 @@ Production defaults to `https://cherrymoney.co.uk/api/` when `CHERRY_ENV=product
 
 ## Integration boundary
 
+The native finance expansion requires the backend `feat/mobile-finance-api` release. See [feature coverage and rollout](docs/LIVE_FINANCE.md). Web fallback modules are clearly labelled; they are not native feature parity.
+
+
 | Capability | Implementation |
 | --- | --- |
 | Account creation | Company/name/email/country code/phone/password, required Terms acceptance, email verification and resend |
 | Password recovery | Reset-link email through the existing Cherry API |
-| Cherry sign-in, overview, logout | Backend contracts implemented; authenticated live account testing pending |
-| Google sign-in | Native and browser SDK flows implemented; activation requires backend fix deployment and OAuth configuration |
+| Cherry sign-in, overview, logout | Production email/Google authentication and live overview |
+| Google sign-in | Browser sign-in enabled; Production token-verification hotfix deployed |
 | Token storage | OS secure storage through flutter_secure_storage |
-| Transactions, matching, audit, copilot | Synthetic, local demo; no bank connection or external AI calls |
-| Camera, gallery, file preview | Native pickers; file stays local; hardware verification required |
-| Extraction | Demo service abstraction; real receipt endpoint documented but intentionally not called |
+| Banking and reconciliation | Company-scoped bank accounts/activity, match suggestions, staged proposals and explicit approval via existing finance bridge |
+| Ask Cherry | Live questions with bounded conversation history; guided invoice, quote, expense, supplier-bill, VAT-preview and payment-draft actions |
+| Invoices, quotes, expenses | Live paginated lists, details and creation; invoice PDF links |
+| Clients, products, payments, recurring invoices | Live lists; advanced management opens the existing website |
+| More features | Bank connections, VAT/HMRC, reports, budgets, ledger, credit notes, Cherry Pay and administration open the website with its own login |
+| Camera and file selection | Live scans upload only on explicit selection; demo files remain local; hardware verification pending |
+| Receipt OCR | JPEG/PNG upload → server extraction → editable review → confirmed expense save with receipt attachment; requires mobile backend release |
 | RevenueCat | Real SDK offerings, purchase, restore and entitlement refresh; unavailable without keys |
 | Limits | Free 3 / Pro 100 / Business 500 capture or approval actions per calendar month on this device |
 | Pro capability | Detailed demo cashflow insight and expanded demo action allowance |
