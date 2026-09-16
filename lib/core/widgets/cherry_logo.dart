@@ -9,6 +9,9 @@ class CherryLogo extends StatelessWidget {
       'assets/images/cherrymoney-logo.png',
       height: height,
       fit: BoxFit.contain,
+      // Multiply maps the supplied artwork's white paper to the page surface.
+      color: Theme.of(context).scaffoldBackgroundColor,
+      colorBlendMode: BlendMode.multiply,
       semanticLabel: 'Cherry Money',
     ),
   );

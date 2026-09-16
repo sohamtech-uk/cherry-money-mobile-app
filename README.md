@@ -32,7 +32,7 @@ Production defaults to `https://cherrymoney.co.uk/api/` when `CHERRY_ENV=product
 | Account creation | Company/name/email/country code/phone/password, required Terms acceptance, email verification and resend |
 | Password recovery | Reset-link email through the existing Cherry API |
 | Cherry sign-in, overview, logout | Backend contracts implemented; authenticated live account testing pending |
-| Google sign-in | Native SDK and signed-token exchange implemented; requires backend fix deployment and OAuth configuration |
+| Google sign-in | Native and browser SDK flows implemented; activation requires backend fix deployment and OAuth configuration |
 | Token storage | OS secure storage through flutter_secure_storage |
 | Transactions, matching, audit, copilot | Synthetic, local demo; no bank connection or external AI calls |
 | Camera, gallery, file preview | Native pickers; file stays local; hardware verification required |
@@ -82,7 +82,7 @@ Use `feat/<description>` for feature development and `fix/<description>` for bug
 
 Deploy the [backend token-verification fix](https://github.com/sohamtech-uk/cherrymoney/pull/186) and migration before enabling mobile Google sign-in. Configure Google OAuth Android credentials for `uk.co.cherrymoney.mobile` and its signing certificate, and an iOS client for that bundle ID. Add the iOS client's reversed client-ID URL scheme to `ios/Runner/Info.plist` using your actual Google configuration. Follow the [Flutter Google sign-in setup](https://pub.dev/packages/google_sign_in).
 
-Build with `CHERRY_GOOGLE_AUTH_ENABLED=true`, `GOOGLE_SERVER_CLIENT_ID=<web-client-id>` and, for iOS, `GOOGLE_IOS_CLIENT_ID=<ios-client-id>`. The backend `GOOGLE_MOBILE_SERVER_CLIENT_ID` must match the mobile server client ID. Without configuration the button explains that Google sign-in is unavailable; email sign-in and signup remain available. Google authentication is native-only; the browser preview uses email or demo.
+Build with `CHERRY_GOOGLE_AUTH_ENABLED=true`, `GOOGLE_SERVER_CLIENT_ID=<web-client-id>` and, for iOS, `GOOGLE_IOS_CLIENT_ID=<ios-client-id>`. The backend `GOOGLE_MOBILE_SERVER_CLIENT_ID` must match the mobile server client ID. Unconfigured builds show a disabled Google button and explain the available email alternative before any click. The browser uses the Google Identity Services button and authentication events; native apps use the platform SDK. Both send only the signed ID token to Cherry for verification. See [browser and native activation steps](docs/GOOGLE_SIGN_IN.md).
 
 The Terms link opens the configured Cherry website's `/term` page. Acceptance is required locally and sent as `terms_accepted`; the existing signup endpoint does not persist a versioned consent record.
 

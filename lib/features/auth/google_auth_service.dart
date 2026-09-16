@@ -3,6 +3,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../../core/network/api_client.dart';
 
 class GoogleAuthService {
+  const GoogleAuthService();
+
   static Future<void>? _initialization;
   static const enabled = bool.fromEnvironment('CHERRY_GOOGLE_AUTH_ENABLED');
   static const serverClientId = String.fromEnvironment(
@@ -10,53 +12,68 @@ class GoogleAuthService {
   );
   static const iosClientId = String.fromEnvironment('GOOGLE_IOS_CLIENT_ID');
 
-  Future<void> signIn(ApiClient api) async {
-    if (!enabled || serverClientId.isEmpty) {
+  bool get usesWebButton => kIsWeb;
+  bool get configured =>
+      enabled &&
+      serverClientId.isNotEmpty &&
+      (kIsWeb ||
+          defaultTargetPlatform == TargetPlatform.android ||
+          (defaultTargetPlatform == TargetPlatform.iOS &&
+              iosClientId.isNotEmpty));
+
+  Future<void> initialize() async {
+    if (!configured) {
+      throw const ApiException('Google sign-in is not enabled in this build.');
+    }
+    // The browser client and native server client use the same Web OAuth ID,
+    // which must match the audience verified by the Cherry backend.
+    _initialization ??= GoogleSignIn.instance
+        .initialize(
+          clientId: kIsWeb
+              ? serverClientId
+              : defaultTargetPlatform == TargetPlatform.iOS
+              ? iosClientId
+              : null,
+          serverClientId: kIsWeb ? null : serverClientId,
+        )
+        .catchError((Object error) {
+          _initialization = null;
+          throw error;
+        });
+    await _initialization;
+  }
+
+  Stream<String> get tokens => GoogleSignIn.instance.authenticationEvents
+      .where((event) => event is GoogleSignInAuthenticationEventSignIn)
+      .map(
+        (event) =>
+            _token((event as GoogleSignInAuthenticationEventSignIn).user),
+      );
+
+  Future<String> authenticate() async {
+    await initialize();
+    if (usesWebButton) {
+      throw const ApiException('Use the Google sign-in button to continue.');
+    }
+    return _token(await GoogleSignIn.instance.authenticate());
+  }
+
+  String _token(GoogleSignInAccount account) {
+    final token = account.authentication.idToken;
+    if (token == null || token.isEmpty) {
       throw const ApiException(
-        'Google sign-in is not available yet. Please sign in with your email or create an account.',
+        'Google did not return a sign-in token. Please retry.',
       );
     }
-    if (kIsWeb ||
-        ![
-          TargetPlatform.iOS,
-          TargetPlatform.android,
-        ].contains(defaultTargetPlatform)) {
-      throw const ApiException(
-        'Google sign-in is available in the configured Android and iOS app. Please use email in this preview.',
-      );
+    return token;
+  }
+
+  static String errorMessage(Object error) {
+    if (error is ApiException) return error.message;
+    if (error is GoogleSignInException &&
+        error.code == GoogleSignInExceptionCode.canceled) {
+      return 'Google sign-in was cancelled. You can try again or use email.';
     }
-    if (defaultTargetPlatform == TargetPlatform.iOS && iosClientId.isEmpty) {
-      throw const ApiException(
-        'Google sign-in is not configured for this iOS build. Please use email.',
-      );
-    }
-    try {
-      _initialization ??= GoogleSignIn.instance
-          .initialize(
-            serverClientId: serverClientId,
-            clientId: defaultTargetPlatform == TargetPlatform.iOS
-                ? iosClientId
-                : null,
-          )
-          .catchError((Object error) {
-            _initialization = null;
-            throw error;
-          });
-      await _initialization;
-      final account = await GoogleSignIn.instance.authenticate();
-      final token = account.authentication.idToken;
-      if (token == null || token.isEmpty) {
-        throw const ApiException(
-          'Google did not return a sign-in token. Please retry.',
-        );
-      }
-      await api.googleLogin(token);
-    } on GoogleSignInException catch (e) {
-      throw ApiException(
-        e.code == GoogleSignInExceptionCode.canceled
-            ? 'Google sign-in was cancelled.'
-            : 'Google sign-in could not be completed. Please try again or use email.',
-      );
-    }
+    return 'Google sign-in could not be completed. Please try again or use email.';
   }
 }
