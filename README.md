@@ -71,8 +71,12 @@ Actual running Flutter web preview at a 390 × 844 phone viewport:
 
 Browser smoke check: onboarding → demo dashboard → review inbox → Northstar transaction → approve → reconciled status and audit event. No page errors observed. Native store/paywall screenshots still require a configured device build.
 
-## Migration
+## Development and migration
 
-Original supplied ZIP provenance: `41a45e79ed1b1627749a5500b6965d6ff48b3372`. Sanitized import preserved in [legacy/ionic-capacitor](https://github.com/sohamtech-uk/cherry-money-mobile-app/tree/legacy/ionic-capacitor). This is a **new repository**, following the original user request. The existing upstream mobile repository and `sohamtech-uk/cherrymoney` were not modified. Signing artifacts from the ZIP are excluded.
+This repository contains Flutter code only. Its root commit is **First commit**, authored by **sohamtechuk**. The original import and Ionic preservation branch were removed from active history after creating a Git bundle backup outside this repository.
 
-See [architecture](docs/ARCHITECTURE.md), [API migration](docs/API_MIGRATION.md), [legacy migration](docs/LEGACY_MIGRATION.md), [security](docs/SECURITY.md), and [Shipaton checklist](docs/SHIPATON.md).
+Use `feat/<description>` for feature development and `fix/<description>` for bug fixes. [Authentication and branding PR #2](https://github.com/sohamtech-uk/cherry-money-mobile-app/pull/2) restores signup with Terms acceptance, email verification, password reset, native Google sign-in support, and the supplied Cherry Money logo. See that branch for the updated authentication screenshots and setup instructions. The [Google token verification backend fix](https://github.com/sohamtech-uk/cherrymoney/pull/186) is prepared separately; it has not been deployed.
+
+The supplied ZIP records source revision `41a45e79ed1b1627749a5500b6965d6ff48b3372`. The original archive and upstream mobile repository remain unchanged. This Flutter rebuild is based on an existing Cherry product; repository history cleanup does not establish Shipaton eligibility or change when the existing product features were created.
+
+See [architecture](docs/ARCHITECTURE.md), [API migration](docs/API_MIGRATION.md), [migration provenance](docs/LEGACY_MIGRATION.md), [security](docs/SECURITY.md), and [Shipaton checklist](docs/SHIPATON.md).
