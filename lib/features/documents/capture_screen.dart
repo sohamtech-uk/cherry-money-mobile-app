@@ -44,7 +44,7 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen> {
         bytes = await photo.readAsBytes();
         name = photo.name;
       } else {
-        final selection = await FilePicker.platform.pickFiles(
+        final selection = await FilePicker.pickFiles(
           type: FileType.custom,
           allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
           withData: true,

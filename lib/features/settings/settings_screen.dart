@@ -34,9 +34,9 @@ class SettingsScreen extends ConsumerWidget {
               'Auth tokens use OS secure storage. Selected documents stay on your device. Demo audit events are session history, not an immutable record.',
             ),
           ),
-          const ListTile(
-            title: Text('API environment'),
-            subtitle: Text(AppConfig().environment),
+          ListTile(
+            title: const Text('API environment'),
+            subtitle: Text(const AppConfig().environment),
           ),
           if (!state.demo)
             OutlinedButton(
