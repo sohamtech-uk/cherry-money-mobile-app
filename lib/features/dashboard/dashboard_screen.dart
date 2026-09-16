@@ -157,7 +157,7 @@ class DashboardScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  '✦ CHERRY COPILOT',
+                  'CHERRY COPILOT',
                   style: TextStyle(
                     fontSize: 12,
                     letterSpacing: 1,
@@ -170,7 +170,7 @@ class DashboardScreen extends ConsumerWidget {
                 ),
                 TextButton(
                   onPressed: () => context.go('/reconcile'),
-                  child: const Text('Review your inbox →'),
+                  child: const Text('Review your inbox'),
                 ),
               ],
             ),

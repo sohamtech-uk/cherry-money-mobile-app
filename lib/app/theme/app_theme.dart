@@ -17,6 +17,7 @@ ThemeData appTheme() => ThemeData(
   fontFamily: "CherrySans",
   colorScheme: ColorScheme.fromSeed(
     seedColor: AppColors.primary,
+    primary: AppColors.primary,
     surface: AppColors.surface,
   ),
   scaffoldBackgroundColor: AppColors.background,
