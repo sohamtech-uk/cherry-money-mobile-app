@@ -99,3 +99,7 @@ See [architecture](docs/ARCHITECTURE.md), [API migration](docs/API_MIGRATION.md)
 | Sign in | Create account | Reset password |
 | --- | --- | --- |
 | ![Sign in](docs/screenshots/login.png) | ![Create account](docs/screenshots/signup.png) | ![Reset password](docs/screenshots/reset.png) |
+
+## Interface and motion
+
+The interface includes a clearer cash overview, review progress, gentle page entrances, animated onboarding, loading feedback and approval confirmations. Custom motion respects reduced-motion preferences; financial amounts remain stable. See [experience design](docs/EXPERIENCE.md).

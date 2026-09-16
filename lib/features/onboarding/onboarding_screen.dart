@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../data/repositories/workspace.dart';
 import '../../core/widgets/common.dart';
 import '../../core/widgets/cherry_logo.dart';
+import '../../core/widgets/motion.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -30,31 +31,60 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         children: [
           const SizedBox(height: 24),
           const CherryLogo(),
-          const SizedBox(height: 48),
+          const SizedBox(height: 28),
           Container(
-            height: 190,
+            height: 160,
             decoration: BoxDecoration(
               color: const Color(0xFFF1E5E7),
               borderRadius: BorderRadius.circular(32),
             ),
-            child: Icon(
-              [
-                Icons.account_balance_wallet_outlined,
-                Icons.document_scanner_outlined,
-                Icons.fact_check_outlined,
-              ][step],
-              size: 88,
-              color: const Color(0xFFAD1929),
+            child: StateReveal(
+              child: Icon(
+                key: ValueKey(step),
+                [
+                  Icons.account_balance_wallet_outlined,
+                  Icons.document_scanner_outlined,
+                  Icons.fact_check_outlined,
+                ][step],
+                size: 88,
+                color: const Color(0xFFAD1929),
+              ),
             ),
           ),
           const SizedBox(height: 32),
-          Text(titles[step], style: Theme.of(context).textTheme.headlineLarge),
+          StateReveal(
+            child: Text(
+              titles[step],
+              key: ValueKey('title-$step'),
+              style: Theme.of(context).textTheme.headlineLarge,
+            ),
+          ),
           const SizedBox(height: 16),
-          Text(subtitles[step]),
+          StateReveal(
+            child: Text(subtitles[step], key: ValueKey('subtitle-$step')),
+          ),
           const SizedBox(height: 24),
-          Text(
-            '${step + 1} / 3',
-            semanticsLabel: 'Onboarding page ${step + 1} of 3',
+          Semantics(
+            label: 'Onboarding page ${step + 1} of 3',
+            excludeSemantics: true,
+            child: Row(
+              children: List.generate(
+                3,
+                (index) => AnimatedContainer(
+                  duration: CherryMotion.duration(context),
+                  curve: Curves.easeOutCubic,
+                  margin: const EdgeInsets.only(right: 6),
+                  height: 6,
+                  width: index == step ? 32 : 8,
+                  decoration: BoxDecoration(
+                    color: index == step
+                        ? const Color(0xFFAD1929)
+                        : const Color(0xFFE0D6DA),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+            ),
           ),
           const SizedBox(height: 24),
           FilledButton(

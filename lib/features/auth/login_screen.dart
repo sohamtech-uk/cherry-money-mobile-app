@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/repositories/workspace.dart';
 import '../../core/widgets/common.dart';
+import '../../core/widgets/motion.dart';
 import '../../core/widgets/cherry_logo.dart';
 import '../../core/network/api_client.dart';
 import 'google_auth_service.dart';
@@ -95,7 +96,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       context.go('/home');
                     }
                   },
-            child: Text(state.busy ? 'Signing in…' : 'Sign in'),
+            child: ActionLabel(
+              busy: state.busy,
+              label: 'Sign in',
+              busyLabel: 'Signing in…',
+            ),
           ),
           const SizedBox(height: 16),
           const Center(child: Text('Or continue with')),
