@@ -2,9 +2,23 @@
 
 Flutter supports Android, iOS and the browser. Google returns an ID token; Cherry's backend verifies it and returns a Cherry session. A Google SDK success alone never grants access to the app.
 
+## Configured public client
+
+The default Web OAuth client is `996173642915-dvk7ac9old9oqj946uote1hr1plvkba0.apps.googleusercontent.com` in the `cherry-invoice` Google Cloud project. `GOOGLE_SERVER_CLIENT_ID` can override it for another environment. The downloaded credentials file and client secret are not included in the app or repository.
+
+The supplied export lists `https://cherrymoney.co.uk/google/callback` as a redirect URI and does not list JavaScript origins. Keep that callback for the existing website. Add `http://localhost` and `http://localhost:8765` as **Authorized JavaScript origins** for this client in [Google Cloud](https://console.cloud.google.com/auth/clients?project=cherry-invoice), following [Google’s setup instructions](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid). Use `localhost` for the browser preview rather than the current numeric loopback address.
+
+A live SDK origin check on 16 September 2026 loaded Google's client/style successfully, but `/gsi/button` returned HTTP 403 and `The given origin is not allowed for the given client ID.` for `http://localhost:8765`. This confirms the missing local-origin configuration; no Google account was signed in and no token was sent to Cherry.
+
 ## Backend prerequisite
 
-Deploy [backend PR #186](https://github.com/sohamtech-uk/cherrymoney/pull/186), including the `users.google_subject` migration. Set `GOOGLE_MOBILE_SERVER_CLIENT_ID` to the same **Web OAuth client ID** used by Flutter's `GOOGLE_SERVER_CLIENT_ID`, then refresh Laravel's configuration cache. This endpoint requires an existing, active Cherry account with a verified company. New users complete signup, Terms acceptance and email verification first.
+Deploy [backend PR #186](https://github.com/sohamtech-uk/cherrymoney/pull/186), including the `users.google_subject` migration. Set the backend environment value below, then refresh Laravel's configuration cache. It must match the app's token audience:
+
+```dotenv
+GOOGLE_MOBILE_SERVER_CLIENT_ID=996173642915-dvk7ac9old9oqj946uote1hr1plvkba0.apps.googleusercontent.com
+```
+
+This endpoint requires an existing, active Cherry account with a verified company. New users complete signup, Terms acceptance and email verification first.
 
 Do not enable this build against the old profile-only Google endpoint. This mobile PR does not deploy backend changes or alter Google Cloud settings.
 
@@ -16,8 +30,7 @@ Do not enable this build against the old profile-only Google endpoint. This mobi
 
    ```sh
    flutter build web --no-wasm-dry-run \
-     --dart-define=CHERRY_GOOGLE_AUTH_ENABLED=true \
-     --dart-define=GOOGLE_SERVER_CLIENT_ID=YOUR_WEB_CLIENT_ID.apps.googleusercontent.com
+     --dart-define=CHERRY_GOOGLE_AUTH_ENABLED=true
    python3 -m http.server 8765 --directory build/web
    ```
 
@@ -27,11 +40,11 @@ The client ID is passed directly to SDK initialization. No second client ID in `
 
 ## Native apps
 
-Android needs an OAuth Android client for `uk.co.cherrymoney.mobile` and its actual signing certificate. iOS needs its OAuth client and reversed-client-ID URL scheme in `ios/Runner/Info.plist`. Use the two build flags above, plus `GOOGLE_IOS_CLIENT_ID` for iOS. Follow the [platform setup instructions](https://pub.dev/packages/google_sign_in).
+Android needs an OAuth Android client for `uk.co.cherrymoney.mobile` and its actual signing certificate. iOS needs its OAuth client and reversed-client-ID URL scheme in `ios/Runner/Info.plist`. Use the enable flag above, plus `GOOGLE_IOS_CLIENT_ID` for iOS. Override `GOOGLE_SERVER_CLIENT_ID` only when targeting a different configured Google project. Follow the [platform setup instructions](https://pub.dev/packages/google_sign_in).
 
 ## Default preview
 
-Without these settings, the Google button is disabled and explains that email sign-in/signup are available. No authentication attempt or token exchange is started (the web plugin may still load Google’s SDK script during registration). This is a configuration state, not evidence that live Google OAuth has passed validation. Keep the enable flag false until the backend and OAuth origins/clients are ready.
+The public client ID is configured, but without `CHERRY_GOOGLE_AUTH_ENABLED=true` the Google button is disabled and explains that email sign-in/signup are available. No authentication attempt or token exchange is started (the web plugin may still load Google’s SDK script during registration). This is a configuration state, not evidence that live Google OAuth has passed validation. Keep the enable flag false until the backend and OAuth origins/clients are ready.
 
 ## Logo rendering
 

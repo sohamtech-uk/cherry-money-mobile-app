@@ -9,6 +9,9 @@ class GoogleAuthService {
   static const enabled = bool.fromEnvironment('CHERRY_GOOGLE_AUTH_ENABLED');
   static const serverClientId = String.fromEnvironment(
     'GOOGLE_SERVER_CLIENT_ID',
+    // Public Web OAuth client ID; no client secret belongs in the app.
+    defaultValue:
+        '996173642915-dvk7ac9old9oqj946uote1hr1plvkba0.apps.googleusercontent.com',
   );
   static const iosClientId = String.fromEnvironment('GOOGLE_IOS_CLIENT_ID');
 
