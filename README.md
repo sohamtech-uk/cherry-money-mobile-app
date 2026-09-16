@@ -103,3 +103,13 @@ See [architecture](docs/ARCHITECTURE.md), [API migration](docs/API_MIGRATION.md)
 ## Interface and motion
 
 The interface includes a clearer cash overview, review progress, gentle page entrances, animated onboarding, loading feedback and approval confirmations. Custom motion respects reduced-motion preferences; financial amounts remain stable. See [experience design](docs/EXPERIENCE.md).
+
+## Illustrated welcome
+
+Three original finance scenes introduce the workspace, receipt capture and review workflow. The artwork is bundled locally and transitions gently, with reduced-motion support.
+
+| Finances together | Capture paperwork | Review with confidence |
+| --- | --- | --- |
+| ![Finances together](docs/screenshots/onboarding-finances.png) | ![Capture paperwork](docs/screenshots/onboarding-capture.png) | ![Review with confidence](docs/screenshots/onboarding-review.png) |
+
+[Artwork prompts and asset provenance](docs/ONBOARDING_ARTWORK.md).

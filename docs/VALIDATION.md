@@ -29,3 +29,7 @@ Android validation for the authentication/logo update passed in [run 35148379987
 ## Motion and finance interface update
 
 Flutter analysis and 27 tests passed, including reduced motion, mid-animation preference changes, finite page entrances, immediate removal of stale statuses and a 320 px layout with 1.8× text. Web build passed. Chrome browser checks passed onboarding → demo dashboard → review → approval at 390 px with normal motion and 320 px with reduced motion; no page errors. Approval removed the action and displayed confirmation. The screenshots reflect the updated interface. Native gesture/performance testing still requires a device.
+
+## Illustrated onboarding update
+
+Analysis, 29 tests and the web build passed. Chrome verified all three local images, next/back navigation and Get started → sign-in at 390 px and 1280 px with standard motion, and 320 px with reduced motion. No page errors were observed. Three onboarding screenshots are included. The generated artwork totals approximately 5.1 MB, is bundled in the application, and is preloaded once for these three steps. Android CI is separate from these executed web and widget checks.
