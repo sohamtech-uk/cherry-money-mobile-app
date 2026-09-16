@@ -80,7 +80,7 @@ Use `feat/<description>` for feature development and `fix/<description>` for bug
 
 ## Google sign-in setup
 
-Deploy the backend token-verification fix and migration before enabling mobile Google sign-in. Configure Google OAuth Android credentials for `uk.co.cherrymoney.mobile` and its signing certificate, and an iOS client for that bundle ID. Add the iOS client's reversed client-ID URL scheme to `ios/Runner/Info.plist` using your actual Google configuration. Follow the [Flutter Google sign-in setup](https://pub.dev/packages/google_sign_in).
+Deploy the [backend token-verification fix](https://github.com/sohamtech-uk/cherrymoney/pull/186) and migration before enabling mobile Google sign-in. Configure Google OAuth Android credentials for `uk.co.cherrymoney.mobile` and its signing certificate, and an iOS client for that bundle ID. Add the iOS client's reversed client-ID URL scheme to `ios/Runner/Info.plist` using your actual Google configuration. Follow the [Flutter Google sign-in setup](https://pub.dev/packages/google_sign_in).
 
 Build with `CHERRY_GOOGLE_AUTH_ENABLED=true`, `GOOGLE_SERVER_CLIENT_ID=<web-client-id>` and, for iOS, `GOOGLE_IOS_CLIENT_ID=<ios-client-id>`. The backend `GOOGLE_MOBILE_SERVER_CLIENT_ID` must match the mobile server client ID. Without configuration the button explains that Google sign-in is unavailable; email sign-in and signup remain available. Google authentication is native-only; the browser preview uses email or demo.
 
