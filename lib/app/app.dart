@@ -90,11 +90,17 @@ class _CherryAppState extends ConsumerState<CherryApp>
         ),
         GoRoute(
           path: '/records/:kind',
-          builder: (_, route) => RecordsScreen(route.pathParameters['kind']!),
+          builder: (_, route) => RecordsScreen(
+            route.pathParameters['kind']!,
+            key: ValueKey(route.uri.path),
+          ),
         ),
         GoRoute(
           path: '/create/:kind',
-          builder: (_, route) => FinanceForm(route.pathParameters['kind']!),
+          builder: (_, route) => FinanceForm(
+            route.pathParameters['kind']!,
+            key: ValueKey(route.uri.path),
+          ),
         ),
         GoRoute(
           path: '/subscriptions',

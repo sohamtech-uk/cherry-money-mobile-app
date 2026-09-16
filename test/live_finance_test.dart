@@ -1,3 +1,6 @@
+import 'package:go_router/go_router.dart';
+import 'package:cherry_money_mobile/app/app.dart';
+import 'widget_test.dart' show FakeSubscriptions;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -160,6 +163,42 @@ void main() {
       expect(find.text('Review approval'), findsNothing);
     },
   );
+  testWidgets('changing guided workflow resets the previous form state', (
+    tester,
+  ) async {
+    final client = api();
+    client.dio.httpClientAdapter = ContractAdapter(
+      (r) => jsonResponse({'currency': 'GBP', 'clients': [], 'products': []}),
+    );
+    final state = Workspace(api: client, subscriptions: FakeSubscriptions())
+      ..signedIn = true;
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [workspaceProvider.overrideWith((ref) => state)],
+        child: const CherryApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final router =
+        tester.widget<MaterialApp>(find.byType(MaterialApp)).routerConfig!
+            as GoRouter;
+    router.go('/create/expense');
+    await tester.pumpAndSettle();
+    final notes = find.widgetWithText(TextFormField, 'Notes');
+    await tester.ensureVisible(notes);
+    await tester.enterText(notes, 'Previous expense note');
+    router.go('/create/invoice');
+    await tester.pumpAndSettle();
+    expect(find.widgetWithText(TextFormField, 'Client name'), findsOneWidget);
+    expect(
+      tester
+          .widget<TextFormField>(find.widgetWithText(TextFormField, 'Notes'))
+          .controller!
+          .text,
+      isEmpty,
+    );
+  });
+
   test('switching to demo clears live data and chat', () async {
     SharedPreferences.setMockInitialValues({});
     final state = Workspace(api: api())
