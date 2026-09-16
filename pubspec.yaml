@@ -28,6 +28,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/cherrymoney-logo.png
+    - assets/images/onboarding/
   fonts:
     - family: CherrySans
       fonts:
