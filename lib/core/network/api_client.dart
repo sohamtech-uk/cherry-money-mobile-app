@@ -70,6 +70,8 @@ class ApiClient {
       return Map<String, dynamic>.from(data['user'] as Map);
     } on ApiException {
       rethrow;
+    } on DioException catch (e) {
+      throw ApiException(_authFailure(e));
     } catch (_) {
       throw const ApiException(
         'Unable to sign in. Check your connection and try again.',
@@ -95,15 +97,47 @@ class ApiClient {
     } on ApiException {
       rethrow;
     } on DioException catch (e) {
-      final body = e.response?.data;
-      throw ApiException(
-        body is Map && body['error'] is String
-            ? body['error'] as String
-            : 'Unable to connect. Please try again.',
-      );
+      throw ApiException(_authFailure(e));
     } catch (_) {
       throw const ApiException('Unexpected response. Please try again.');
     }
+  }
+
+  String _authFailure(DioException failure) {
+    final response = failure.response;
+    if (response == null) {
+      return 'Cannot reach Cherry Money right now. Please check your connection and try again.';
+    }
+    final status = response.statusCode ?? 0;
+    final body = response.data;
+    if (status == 503 &&
+        body is Map &&
+        body['message'] == 'Google sign-in is not configured.') {
+      return 'Google sign-in is not ready on the server yet. Please use email or try again later.';
+    }
+    if (status >= 500) {
+      // Server exception details must not be displayed as account errors.
+      return 'The Cherry Money service is temporarily unavailable. Please try again later.';
+    }
+    if (status == 429) {
+      return 'Too many sign-in attempts. Please wait a moment before trying again.';
+    }
+    if (body is Map && status >= 400 && status < 500) {
+      if (body['error'] case final String message when message.isNotEmpty) {
+        return message;
+      }
+      if (body['errors'] case final Map errors) {
+        for (final value in errors.values) {
+          if (value is List && value.isNotEmpty && value.first is String) {
+            return value.first as String;
+          }
+        }
+      }
+      if (body['message'] case final String message when message.isNotEmpty) {
+        return message;
+      }
+    }
+    return 'Unable to complete sign-in. Please try again.';
   }
 
   Future<String> signup(Map<String, dynamic> fields) async {
