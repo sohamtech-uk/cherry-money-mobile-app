@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/repositories/workspace.dart';
 import '../../core/widgets/common.dart';
+import '../../core/widgets/cherry_logo.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -28,14 +29,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       child: PageBody(
         children: [
           const SizedBox(height: 24),
-          const Text(
-            '● Cherry Money',
-            style: TextStyle(
-              color: Color(0xFFAD1929),
-              fontWeight: FontWeight.w700,
-              fontSize: 24,
-            ),
-          ),
+          const CherryLogo(),
           const SizedBox(height: 48),
           Container(
             height: 190,
@@ -72,6 +66,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               }
             },
             child: Text(step < 2 ? 'Continue' : 'Get started'),
+          ),
+          TextButton(
+            onPressed: () => context.go('/login'),
+            child: const Text('Sign in'),
+          ),
+          OutlinedButton(
+            onPressed: () => context.go('/signup'),
+            child: const Text('Create new account'),
           ),
           TextButton(
             onPressed: () async {

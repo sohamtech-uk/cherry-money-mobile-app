@@ -1,6 +1,6 @@
 # Cherry Money Mobile
 
-A Flutter finance workspace for small businesses: capture → understand → match → review exceptions → approve. Built from the supplied CherryBankMobileApp source for a RevenueCat Shipaton prototype.
+A Flutter finance workspace for small businesses: capture → understand → match → review exceptions → approve. A Flutter rebuild of the existing Cherry mobile product, with RevenueCat integration for a Shipaton prototype. This repository contains Flutter code only.
 
 **Status: implementation in review, not store released.** RevenueCat products, keys and sandbox purchases still require external setup. Prior mobile release eligibility has not been confirmed. Renaming/rebuilding an existing released app does not establish Shipaton eligibility.
 
@@ -29,7 +29,10 @@ Production defaults to `https://cherrymoney.co.uk/api/` when `CHERRY_ENV=product
 
 | Capability | Implementation |
 | --- | --- |
-| Cherry sign-in, overview, logout | Verified backend routes implemented; no authenticated live account test performed |
+| Account creation | Company/name/email/country code/phone/password, required Terms acceptance, email verification and resend |
+| Password recovery | Reset-link email through the existing Cherry API |
+| Cherry sign-in, overview, logout | Backend contracts implemented; authenticated live account testing pending |
+| Google sign-in | Native SDK and signed-token exchange implemented; requires backend fix deployment and OAuth configuration |
 | Token storage | OS secure storage through flutter_secure_storage |
 | Transactions, matching, audit, copilot | Synthetic, local demo; no bank connection or external AI calls |
 | Camera, gallery, file preview | Native pickers; file stays local; hardware verification required |
@@ -71,8 +74,28 @@ Actual running Flutter web preview at a 390 × 844 phone viewport:
 
 Browser smoke check: onboarding → demo dashboard → review inbox → Northstar transaction → approve → reconciled status and audit event. No page errors observed. Native store/paywall screenshots still require a configured device build.
 
-## Migration
+## Development workflow
 
-Original supplied ZIP provenance: `41a45e79ed1b1627749a5500b6965d6ff48b3372`. Sanitized import preserved in [legacy/ionic-capacitor](https://github.com/sohamtech-uk/cherry-money-mobile-app/tree/legacy/ionic-capacitor). This is a **new repository**, following the original user request. The existing upstream mobile repository and `sohamtech-uk/cherrymoney` were not modified. Signing artifacts from the ZIP are excluded.
+Use `feat/<description>` for feature development and `fix/<description>` for bug fixes. Keep `main` as the baseline; open a pull request for changes. Git author identity for this repository is `sohamtechuk`.
 
-See [architecture](docs/ARCHITECTURE.md), [API migration](docs/API_MIGRATION.md), [legacy migration](docs/LEGACY_MIGRATION.md), [security](docs/SECURITY.md), and [Shipaton checklist](docs/SHIPATON.md).
+## Google sign-in setup
+
+Deploy the backend token-verification fix and migration before enabling mobile Google sign-in. Configure Google OAuth Android credentials for `uk.co.cherrymoney.mobile` and its signing certificate, and an iOS client for that bundle ID. Add the iOS client's reversed client-ID URL scheme to `ios/Runner/Info.plist` using your actual Google configuration. Follow the [Flutter Google sign-in setup](https://pub.dev/packages/google_sign_in).
+
+Build with `CHERRY_GOOGLE_AUTH_ENABLED=true`, `GOOGLE_SERVER_CLIENT_ID=<web-client-id>` and, for iOS, `GOOGLE_IOS_CLIENT_ID=<ios-client-id>`. The backend `GOOGLE_MOBILE_SERVER_CLIENT_ID` must match the mobile server client ID. Without configuration the button explains that Google sign-in is unavailable; email sign-in and signup remain available. Google authentication is native-only; the browser preview uses email or demo.
+
+The Terms link opens the configured Cherry website's `/term` page. Acceptance is required locally and sent as `terms_accepted`; the existing signup endpoint does not persist a versioned consent record.
+
+## Provenance
+
+This is a new Flutter repository for an existing Cherry product. The supplied ZIP identifies source revision `41a45e79ed1b1627749a5500b6965d6ff48b3372`. Its Angular/Ionic implementation is not included in the published branch history. The original archive and upstream mobile repository remain unchanged, and a local Git bundle preserves the history before cleanup.
+
+The Flutter-only root commit is named **First commit**, authored by **sohamtechuk**, with its actual creation date. This is a repository-history cleanup, not evidence that the product or its existing authentication features were first created during Shipaton. Event eligibility still needs confirmation.
+
+See [architecture](docs/ARCHITECTURE.md), [API migration](docs/API_MIGRATION.md), [migration provenance](docs/LEGACY_MIGRATION.md), [security](docs/SECURITY.md), and [Shipaton checklist](docs/SHIPATON.md).
+
+## Authentication screens
+
+| Sign in | Create account | Reset password |
+| --- | --- | --- |
+| ![Sign in](docs/screenshots/login.png) | ![Create account](docs/screenshots/signup.png) | ![Reset password](docs/screenshots/reset.png) |

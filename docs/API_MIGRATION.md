@@ -21,3 +21,7 @@ Sources: supplied ZIP `src/app/service/server.service.ts`, environments, login/h
 Dio sends `Accept: application/json` and `Authorization: Bearer <secure token>` for protected requests. Passwords and responses are not logged. Error messages are mapped to human-readable states rather than displaying raw network errors.
 
 Backend source files remain untouched. Adding live bank transactions, reconciliation writes, server quotas, RevenueCat webhooks or account linking requires a separately authorized backend change.
+
+## Restored authentication
+
+Flutter implements POST `signup`, `verifyOtp`, `resendCode`, and `forgot` using the existing payloads. Signup requires Terms consent, then a six-digit email verification code. Reset completes in the emailed web link. Google POST `loginGoogle` now sends only `id_token`; enable it only after the separately prepared backend verification fix is deployed. Legacy profile-only payloads are intentionally not sent.

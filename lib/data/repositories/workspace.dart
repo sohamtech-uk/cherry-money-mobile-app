@@ -62,6 +62,14 @@ class Workspace extends ChangeNotifier {
     }
   }
 
+  Future<void> acceptVerifiedSession() async {
+    demo = false;
+    signedIn = true;
+    transactions = [];
+    liveDashboard = null;
+    await loadLive();
+  }
+
   Future<void> loadLive() async {
     error = '';
     busy = true;

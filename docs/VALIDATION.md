@@ -16,3 +16,10 @@ Toolchain: Flutter 3.41.9 stable / bundled Dart 3.11.5, macOS Intel. Java 17 ava
 - GitHub CI: formatting, analysis, tests, Android debug build and APK upload all PASS in run `35136983944`. Final repository updates after the tested revision change only documentation and explicitly skip redundant CI. Native device runtime and real store transactions remain unverified.
 
 Initial widget failures were off-screen test taps and were fixed by scrolling the test viewport before tapping. No failing assertions were removed.
+
+## Authentication and branding update (16 September 2026)
+
+- Flutter analyze: passed; 22 Flutter tests passed, including consent gating, signup, OTP session validation, API error handling and signed-token-only Google exchange.
+- Web build passed. Chrome at 390 × 844 verified sign-in → signup → required Terms checkbox → field validation → password reset, with no page errors. Screenshots: `login.png`, `signup.png`, `reset.png`.
+- Supplied Cherry Money logo appears on welcome/authentication screens and the application header.
+- Google native OAuth and live signup/email delivery remain untested; configuration and backend deployment are required. No live account was created by these tests.
