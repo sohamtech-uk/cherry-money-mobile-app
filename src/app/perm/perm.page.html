@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ 'Assign Permissions' | translate }}</ion-title>
+    <ion-buttons slot="end"><ion-button (click)="close()">{{ 'Cancel' | translate }}</ion-button></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <form #form="ngForm" (ngSubmit)="addNew(form.value)">
+  
+    <p style="padding: 0px 10px;">{{ 'Assign permission to' | translate }} {{ data.name }}</p>
+
+    <ion-item lines="full">
+      <ion-toggle (ionChange)="setPerm('user')" mode="md" [checked]="checkVal('user')">{{ 'Manage Users' | translate }}</ion-toggle>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-toggle (ionChange)="setPerm('temp')" mode="md" [checked]="checkVal('temp')">{{ 'Invoice Templates' | translate }}</ion-toggle>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-toggle (ionChange)="setPerm('client')" mode="md" [checked]="checkVal('client')">{{ 'Manage Clients' | translate }}</ion-toggle>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-toggle (ionChange)="setPerm('product')" mode="md" [checked]="checkVal('product')">{{ 'Manage Products' | translate }}</ion-toggle>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-toggle (ionChange)="setPerm('tax')" mode="md" [checked]="checkVal('tax')">{{ 'Manage Tax' | translate }}</ion-toggle>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-toggle (ionChange)="setPerm('quote')" mode="md" [checked]="checkVal('quote')">{{ 'Manage Quotations' | translate }}</ion-toggle>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-toggle (ionChange)="setPerm('invoice')" mode="md" [checked]="checkVal('invoice')">{{ 'Manage Invoice' | translate }}</ion-toggle>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-toggle (ionChange)="setPerm('rec')" mode="md" [checked]="checkVal('rec')">{{ 'Recurring Invoice' | translate }}</ion-toggle>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-toggle (ionChange)="setPerm('payment')" mode="md" [checked]="checkVal('payment')">{{ 'Manage Payments' | translate }}</ion-toggle>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-toggle (ionChange)="setPerm('expense')" mode="md" [checked]="checkVal('expense')">{{ 'Manage Expense' | translate }}</ion-toggle>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-toggle (ionChange)="setPerm('dash')" mode="md" [checked]="checkVal('dash')">{{ 'Dashboard Overview' | translate }}</ion-toggle>
+    </ion-item>
+
+    <div class="ion-padding">
+      <ion-button expand="block" mode="ios" type="submit" *ngIf="!hasClick" [disabled]="!form.valid">{{ 'Submit' | translate }}</ion-button>
+      <ion-button expand="block" mode="ios" type="button" *ngIf="hasClick"><ion-spinner name="crescent"></ion-spinner></ion-button>
+    </div>
+  
+  </form>
+
+</ion-content>

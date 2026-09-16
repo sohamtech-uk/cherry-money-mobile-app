@@ -1,0 +1,42 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>Language</ion-title>
+    <ion-buttons slot="start"><ion-back-button></ion-back-button></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  
+<h1>Change app language</h1><br>
+
+<ion-list>
+
+<ion-item (click)="setLang('en')">
+<ion-avatar slot="start"><img src="assets/en.png" /></ion-avatar>
+<ion-label>English</ion-label>
+<ion-icon name="checkmark" slot="end" *ngIf="lang == 'en'"></ion-icon>
+</ion-item>
+
+<ion-item (click)="setLang('ar')">
+<ion-avatar slot="start"><img src="assets/ar.png" /></ion-avatar>
+<ion-label>Arabic</ion-label>
+<ion-icon name="checkmark" slot="end" *ngIf="lang == 'ar'"></ion-icon>
+</ion-item>
+
+<ion-item (click)="setLang('es')">
+<ion-avatar slot="start"><img src="assets/es.png" /></ion-avatar>
+<ion-label>Spanish</ion-label>
+<ion-icon name="checkmark" slot="end" *ngIf="lang == 'es'"></ion-icon>
+</ion-item>
+
+<ion-item (click)="setLang('fr')" lines="none">
+<ion-avatar slot="start"><img src="assets/fr.png" /></ion-avatar>
+<ion-label>French</ion-label>
+<ion-icon name="checkmark" slot="end" *ngIf="lang == 'fr'"></ion-icon>
+</ion-item>
+
+</ion-list>
+<br>
+<ion-button mode="ios" expand="block" (click)="switchLanguage(lang)">Change Language</ion-button>
+
+</ion-content>

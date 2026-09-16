@@ -1,0 +1,47 @@
+<ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>{{ 'Add New Client' | translate }}</ion-title>
+      <ion-buttons slot="end"><ion-button (click)="close()">{{ 'Cancel' | translate }}</ion-button></ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content class="ion-padding">
+    
+    <form #form="ngForm" (ngSubmit)="addNew(form.value)">
+  
+      <p>{{ 'Personal Information' | translate }}</p>
+  
+      <ion-input color="dark" label="{{ 'First Name *' | translate }}" name="first_name" [(ngModel)]="data.first_name" label-placement="floating" fill="outline" mode="md" required [disabled]="hasClick"></ion-input><br>
+      <ion-input color="dark" label="{{ 'Last Name *' | translate }}" name="last_name" [(ngModel)]="data.last_name" label-placement="floating" fill="outline" mode="md" required [disabled]="hasClick"></ion-input><br>
+      <ion-input color="dark" label="{{ 'Email *' | translate }}" name="email" [(ngModel)]="data.email" label-placement="floating" fill="outline" mode="md" required [disabled]="hasClick"></ion-input><br>
+  
+      <ion-row>
+        <ion-col size="6">
+          <ion-input color="dark" label="{{ 'Country Code *' | translate }}" name="country_code" type="tel" [(ngModel)]="data.country_code" label-placement="floating" fill="outline" mode="md" required placeholder="91" [disabled]="hasClick"></ion-input>
+        </ion-col>
+        <ion-col size="6">
+          <ion-input color="dark" label="{{ 'Phone *' | translate }}" name="phone" type="tel" [(ngModel)]="data.phone" label-placement="floating" fill="outline" mode="md" required [disabled]="hasClick"></ion-input>
+        </ion-col>
+      </ion-row>
+  
+      <p>{{ 'Address' | translate }}</p>
+  
+      <ion-input color="dark" label="{{ 'State' | translate }}" name="state" [(ngModel)]="data.state" label-placement="floating" fill="outline" mode="md" [disabled]="hasClick"></ion-input><br>
+      <ion-input color="dark" label="{{ 'City' | translate }}" name="city" [(ngModel)]="data.city" label-placement="floating" fill="outline" mode="md" [disabled]="hasClick"></ion-input><br>
+      <ion-input color="dark" label="{{ 'Zip Code' | translate }}" name="zip" [(ngModel)]="data.zip" label-placement="floating" fill="outline" mode="md" [disabled]="hasClick"></ion-input><br>
+      <ion-input color="dark" label="{{ 'Address' | translate }}" name="address" [(ngModel)]="data.address" label-placement="floating" fill="outline" mode="md" [disabled]="hasClick"></ion-input><br>
+  
+      <p>{{ 'Other Information' | translate }}</p>
+  
+      <ion-input color="dark" label="{{ 'Company Name' | translate }}" name="company_name" [(ngModel)]="data.company_name" label-placement="floating" fill="outline" mode="md" [disabled]="hasClick"></ion-input><br>
+      <ion-input color="dark" label="{{ 'Website' | translate }}" name="website" [(ngModel)]="data.website" label-placement="floating" fill="outline" mode="md" [disabled]="hasClick"></ion-input><br>
+      <ion-input color="dark" label="{{ 'GSTIN' | translate }}" name="gst_no" [(ngModel)]="data.gst_no" label-placement="floating" fill="outline" mode="md" [disabled]="hasClick"></ion-input><br>
+      <ion-input color="dark" label="{{ 'Notes' | translate }}" name="notes" [(ngModel)]="data.notes" label-placement="floating" fill="outline" mode="md" [disabled]="hasClick"></ion-input><br>
+  
+      <ion-button expand="block" mode="ios" type="submit" *ngIf="!hasClick" [disabled]="!form.valid">{{ 'Submit' | translate }}</ion-button>
+      <ion-button expand="block" mode="ios" type="button" *ngIf="hasClick"><ion-spinner name="crescent"></ion-spinner></ion-button>
+  
+    </form>
+  
+  </ion-content>
+  

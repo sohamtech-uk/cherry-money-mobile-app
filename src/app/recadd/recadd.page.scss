@@ -1,0 +1,27 @@
+ion-content
+{
+    --background:var(--ion-color-light);
+}
+
+ion-input
+{
+    background-color: var(--ion-color-tertiary);
+}
+
+p
+{
+    font-weight: bold;
+}
+
+ion-item
+{
+    border: 1px solid #b3b3b3;
+    border-radius: 5px;
+    --background:var(--ion-color-tertiary) !important;
+    
+}
+
+ion-popover
+{
+    --min-width:300px
+}

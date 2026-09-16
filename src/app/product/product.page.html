@@ -1,0 +1,38 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>{{ "Manage Products" | translate }}</ion-title>
+    <ion-buttons slot="start"><ion-back-button></ion-back-button></ion-buttons>
+    <ion-buttons slot="end"><ion-button fill="clear" mode="ios" (click)="addNew()"><ion-icon name="add-circle-outline"></ion-icon></ion-button></ion-buttons>
+  </ion-toolbar>
+  <div *ngIf="allData && allData.length > 0">
+<ion-searchbar mode="ios" [(ngModel)]="term" (ionInput)="onSearchChange(1)"></ion-searchbar>
+<p  class="swipe">{{ "Tap or Swipe left for more options" | translate }}</p>
+</div>
+</ion-header>
+
+<ion-content *ngIf="allData">
+  
+<p  align="center" *ngIf="allData.length == 0">{{ "Sorry! No data found." | translate }}</p>
+
+
+<ion-item-sliding *ngFor="let product of data">
+<ion-item lines="full" detail>
+<ion-label class="ion-text-wrap" (click)="view(product)">{{ product.name }}<small>{{ product.price | currency: currency }}</small></ion-label>
+</ion-item>
+
+<ion-item-options>
+  <ion-item-option color="success" (click)="addNew(product)">&nbsp;&nbsp;<ion-icon name="create-outline"></ion-icon>&nbsp;&nbsp;</ion-item-option>
+  <ion-item-option color="danger" (click)="remove(product.id)">&nbsp;&nbsp;<ion-icon name="trash-outline"></ion-icon>&nbsp;&nbsp;</ion-item-option>
+</ion-item-options>
+
+</ion-item-sliding>
+
+<!-- Add infinite scroll -->
+<ion-infinite-scroll (ionInfinite)="loadMoreData($event)">
+  <ion-infinite-scroll-content
+    loadingSpinner="bubbles"
+    loadingText="Loading more data...">
+  </ion-infinite-scroll-content>
+</ion-infinite-scroll>
+
+</ion-content>

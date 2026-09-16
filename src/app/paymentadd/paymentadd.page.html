@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ 'Add New Payment' | translate }}</ion-title>
+    <ion-buttons slot="end"><ion-button (click)="close()">{{ 'Cancel' | translate }}</ion-button></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" *ngIf="invoices">
+
+  <form #form="ngForm" (ngSubmit)="addNew(form.value)">
+    
+    <ion-item lines="none">
+      <ion-select label="{{ 'Select Invoice *' | translate }}" name="select_invoice" [(ngModel)]="select_invoice" required interface="action-sheet" mode="md" (ionChange)="selectInvoice()">
+        <ion-select-option [value]="invoice" *ngFor="let invoice of invoices">
+          {{ invoice.prefix + invoice.invo_no }} - {{ invoice.first_name }} {{ invoice.last_name }} - {{ invoice.total_amount | currency : currency }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item><br>
+  
+    <ion-item lines="none" id="f">
+      <ion-label>{{ 'Payment Date *' | translate }} <span style="float:right;color:gray">{{ date_added | date:'d-MMM-yyyy' }}</span></ion-label>
+
+      <ion-popover trigger="f" size="auto">
+        <ng-template>
+          <ion-datetime presentation="date" [(ngModel)]="date_added" locale="en" name="date_added" showDefaultButtons="true" required color="dark"></ion-datetime>
+        </ng-template>
+      </ion-popover>
+    </ion-item><br>
+
+    <ion-input color="dark" label="{{ 'Amount' | translate }}" name="amount" [(ngModel)]="amount" label-placement="floating" fill="outline" mode="md" [disabled]="hasClick" required type="number"
+      oninput="validity.valid || (value = value.replace(/[e\+\-]/gi,''))" min="1" max="{{ amount }}" step=".01"></ion-input><br>
+
+    <ion-item lines="none">
+      <ion-select label="{{ 'Payment Method *' | translate }}" name="payment_method" ngModel required>
+        <ion-select-option [value]="'Cash'">{{ 'Cash' | translate }}</ion-select-option>
+        <ion-select-option [value]="'Online Transfer'">{{ 'Online Transfer' | translate }}</ion-select-option>
+        <ion-select-option [value]="'By Cheque'">{{ 'By Cheque' | translate }}</ion-select-option>
+        <ion-select-option [value]="'Other'">{{ 'Other' | translate }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <br>
+
+    <ion-input color="dark" label="{{ 'Any Notes' | translate }}" name="notes" ngModel label-placement="floating" fill="outline" mode="md" [disabled]="hasClick"></ion-input><br>
+
+    <ion-button expand="block" mode="ios" type="submit" *ngIf="!hasClick" [disabled]="!form.valid || !date_added">{{ 'Submit' | translate }}</ion-button>
+    <ion-button expand="block" mode="ios" type="button" *ngIf="hasClick"><ion-spinner name="crescent"></ion-spinner></ion-button>
+
+  </form>
+  
+</ion-content>

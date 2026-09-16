@@ -1,0 +1,50 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>{{ 'Manage Quotations' | translate }}</ion-title>
+    <ion-buttons slot="start"><ion-back-button></ion-back-button></ion-buttons>
+    <ion-buttons slot="end"><ion-button fill="clear" mode="ios" (click)="addNew()"><ion-icon name="add-circle-outline"></ion-icon></ion-button></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="allData">
+  
+  <p align="center" *ngIf="allData.length == 0">{{ 'Sorry! No data found.' | translate }}</p>
+
+  <div *ngIf="allData && allData.length > 0">
+    <ion-searchbar mode="ios" [(ngModel)]="term" (ionInput)="onSearchChange(1)"></ion-searchbar>
+    <p class="swipe">{{ 'Tap for more options' | translate }}</p>
+  </div>
+  
+  <ion-item lines="none" (ionChange)="setStatus()" class="filter">
+    <ion-select label="{{ 'Status Filter' | translate }}" name="status_id" [(ngModel)]="status_id" placeholder="{{ 'All Quote' | translate }}">
+      <ion-select-option [value]="'all'" *ngIf="status_id != 'all'">{{ 'All Quote' | translate }}</ion-select-option>
+      <ion-select-option [value]="0">{{ 'Draft' | translate }}</ion-select-option>
+      <ion-select-option [value]="1">{{ 'Sent to Client' | translate }}</ion-select-option>
+      <ion-select-option [value]="2">{{ 'Converted into Invoice' | translate }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <div class="ion-padding">
+    <ion-item lines="none" *ngFor="let quote of data" class="quote">
+      <ion-label class="ion-text-wrap" (click)="viewOption(quote)">
+        <div class="quote-header">
+        <b>{{ quote.first_name }} {{ quote.last_name }}</b>
+        <span class="price">{{ quote.total_amount | currency: currency }}</span>
+        </div>
+        <small>{{ quote.prefix + quote.qno }} - {{ quote.email }}</small>
+        <small *ngIf="quote.status == 0" class="draft">{{ 'Draft' | translate }}</small>
+        <small *ngIf="quote.status == 1" class="sent">{{ 'Sent to Client on ' + quote.last_email }}</small>
+        <small *ngIf="quote.status == 2" class="invoice">{{ 'Converted into Invoice' | translate }}</small>
+      </ion-label>
+    </ion-item>
+  </div>
+
+  <!-- Add infinite scroll -->
+  <ion-infinite-scroll (ionInfinite)="loadMoreData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="{{ 'Loading more data...' | translate }}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>

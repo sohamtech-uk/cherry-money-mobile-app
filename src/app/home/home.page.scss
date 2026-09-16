@@ -1,0 +1,81 @@
+ion-content
+{
+    --background:var(--ion-color-light);
+}
+
+.quickLink ion-icon
+{
+	font-size: 22px;
+}
+
+.quickLink
+{
+	text-align: center;
+	font-size:16px;
+    background-color: var(--ion-color-tertiary);
+    padding: 10px 10px;
+    border-radius: 10px;
+}
+
+.quickLink ion-col
+{
+    min-height: 64px;
+}
+
+.quickLink small
+{
+    display: block;
+    line-height: 1.2;
+}
+
+.rborder
+{
+    border-right: 1px solid #f3f3f3;
+}
+
+ion-segment
+{
+    background-color: var(--ion-color-tertiary);
+    border-radius: 10px;
+}
+
+.number
+{
+    float: right;
+    color:gray
+}
+
+ion-list
+{
+    border-radius: 10px;
+}
+
+.desc
+{
+    display: block;
+    margin-top: 10px;
+    color:gray;
+}
+
+.quote
+{
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.quote-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+
+  
+  /* For RTL support */
+  html[dir="rtl"] .quote-header {
+    direction: rtl;
+  }
+  
+  html[dir="rtl"] .desc {
+    text-align: right;
+  }

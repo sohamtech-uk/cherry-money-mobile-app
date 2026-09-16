@@ -1,0 +1,84 @@
+
+p
+{
+    color:gray;
+    margin-top: 10%;
+}
+
+small
+{
+    color:gray;
+    display: block;
+    margin-top: 5px;
+}
+
+.swipe
+{
+    font-size: 14px;
+    padding: 0px 10px;
+    margin-top: 5px;
+    
+}
+
+ion-item-option ion-icon
+{
+    font-size: 20px;
+}
+
+ion-button ion-icon
+{
+    font-size: 30px;
+}
+
+.price
+{
+    float:right;
+    color:green;
+}
+
+.draft
+{
+    color:var(--ion-color-primary);
+}
+
+.sent
+{
+    color:var(--ion-color-danger);
+}
+
+.invoice
+{
+    color:var(--ion-color-success);
+}
+
+.quote
+{
+    margin-bottom: 15px;
+    border-radius: 10px;
+}
+
+.filter
+{
+    --background:var(--ion-color-light);
+}
+
+ion-content
+{
+    --background:var(--ion-color-light);
+}
+
+.quote-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  
+  /* For RTL support */
+  html[dir="rtl"] .quote-header {
+    direction: rtl;
+  }
+  
+  html[dir="rtl"] .desc {
+    text-align: right; /* Align the description in RTL */
+  }

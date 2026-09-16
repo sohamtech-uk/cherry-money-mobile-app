@@ -1,0 +1,7 @@
+{
+  "name": "cherry-money-mobile-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

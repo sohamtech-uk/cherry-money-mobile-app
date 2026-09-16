@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ 'View Expense Detail' | translate }}</ion-title>
+    <ion-buttons slot="end"><ion-button (click)="close()">{{ 'Cancel' | translate }}</ion-button></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="data">
+
+  <ion-item lines="full">
+    <ion-label class="ion-text-wrap">{{ 'Title' | translate }} <span>{{ data.title }}</span></ion-label>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label class="ion-text-wrap">{{ 'Amount' | translate }} <span>{{ currency+data.amount }}</span></ion-label>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label class="ion-text-wrap">{{ 'Date Added' | translate }} <span>{{ data.date_added | date:'d-MMM-yyyy' }}</span></ion-label>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label class="ion-text-wrap">{{ 'Payment Method' | translate }} <span>{{ data.payment_method }}</span></ion-label>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-label class="ion-text-wrap">{{ 'Notes' | translate }} <div class="desc">{{ data.notes }}</div></ion-label>
+  </ion-item>
+
+</ion-content>

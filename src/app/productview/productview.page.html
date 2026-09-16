@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ 'View Product Detail' | translate }}</ion-title>
+    <ion-buttons slot="end"><ion-button (click)="close()">{{ 'Cancel' | translate }}</ion-button></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="data" class="ion-padding">
+  
+  <ion-list>
+    <ion-item>
+      <ion-label class="ion-text-wrap">{{ 'Product Name' | translate }} <span>{{ data.name }}</span></ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label class="ion-text-wrap">{{ 'Product Price' | translate }} <span>{{ currency + data.price }}</span></ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label class="ion-text-wrap">{{ 'Code' | translate }} <span>{{ data.code }}</span></ion-label>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-label class="ion-text-wrap">{{ 'Description' | translate }} <div class="desc">{{ data.description }}</div></ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

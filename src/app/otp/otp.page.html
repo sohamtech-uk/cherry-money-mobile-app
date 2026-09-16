@@ -1,0 +1,20 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+  <ion-buttons><ion-back-button></ion-back-button></ion-buttons>
+  </ion-toolbar>
+  </ion-header>
+  <ion-content [fullscreen]="true" class="ion-padding">
+<form #form="ngForm" (ngSubmit)="verify(form.value)">
+<h1>Verify Your Email</h1>
+<p class="desc">A verification code has been sent on you email address.</p>
+<br>
+
+<ion-input color="dark" label="Enter OTP" name="otp" type="tel" ngModel label-placement="floating" fill="outline" mode="md" required [disabled]="hasClick"></ion-input><br>
+
+<ion-button mode="ios" expand="block" color="primary" type="submit" *ngIf="!hasClick">Verify</ion-button>
+<ion-button expand="block" mode="ios" type="button" *ngIf="hasClick"><ion-spinner name="crescent"></ion-spinner></ion-button>
+
+<br>
+<p align="center" class="again">Didn't receive the OTP? <a (click)="resend()">Resend</a></p>
+</form>
+</ion-content>

@@ -1,0 +1,25 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="tertiary">
+  <ion-buttons slot="start"><ion-back-button color="dark"></ion-back-button></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+<ion-row class="ion-justify-content-center">
+<ion-col size="12" size-lg="6">
+
+<h2 align="center">Forgot Your Password?</h2>
+<p align="center">Nothing to worry, You can reset from here.</p><br>  
+<form #form="ngForm" (ngSubmit)="forgot(form.value)">
+
+
+<ion-input color="dark" type="email" label="Enter Your Email" name="email" ngModel label-placement="floating" fill="outline" mode="md" [disabled]="hasClick" required></ion-input>
+
+<br>
+<ion-button mode="ios" expand="block" color="primary" type="submit" *ngIf="!hasClick">Reset Password</ion-button>
+<ion-button mode="ios" expand="block" color="primary" type="button" *ngIf="hasClick"><ion-spinner name="crescent"></ion-spinner></ion-button>
+
+</form>
+</ion-col>
+</ion-row>
+</ion-content>

@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ 'Add New User' | translate }}</ion-title>
+    <ion-buttons slot="end"><ion-button (click)="close()">{{ 'Cancel' | translate }}</ion-button></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <form #form="ngForm" (ngSubmit)="addNew(form.value)">
+
+    <ion-input color="dark" label="{{ 'Name *' | translate }}" name="name" [(ngModel)]="data.name" label-placement="floating" fill="outline" mode="md" required [disabled]="hasClick"></ion-input><br>
+
+    <ion-input color="dark" label="{{ 'Email *' | translate }}" type="email" name="email" [(ngModel)]="data.email" label-placement="floating" fill="outline" mode="md" required [disabled]="hasClick"></ion-input><br>
+
+    <ion-row>
+      <ion-col size="6">
+        <ion-input color="dark" label="{{ 'Country Code *' | translate }}" name="country_code" type="tel" [(ngModel)]="data.country_code" label-placement="floating" fill="outline" mode="md" required placeholder="91" [disabled]="hasClick"></ion-input>
+      </ion-col>
+      <ion-col size="6">
+        <ion-input color="dark" label="{{ 'Phone *' | translate }}" name="phone" type="tel" [(ngModel)]="data.phone" label-placement="floating" fill="outline" mode="md" required [disabled]="hasClick"></ion-input>
+      </ion-col>
+    </ion-row><br>
+
+    <ion-input color="dark" label="{{ pass_text }}" type="password" name="password" ngModel label-placement="floating" fill="outline" mode="md" [required]="!data.id" [disabled]="hasClick"></ion-input><br>
+
+    <ion-button expand="block" mode="ios" type="submit" *ngIf="!hasClick" [disabled]="!form.valid || !date_added">{{ 'Submit' | translate }}</ion-button>
+    <ion-button expand="block" mode="ios" type="button" *ngIf="hasClick"><ion-spinner name="crescent"></ion-spinner></ion-button>
+
+  </form>
+
+</ion-content>

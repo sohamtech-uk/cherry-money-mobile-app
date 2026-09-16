@@ -1,0 +1,136 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title *ngIf="data">{{ data.company.company_name }}</ion-title>
+    <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
+    <ion-buttons slot="end"><ion-button fill="clear" (click)="nightMode()"><ion-icon [name]="night ? 'moon' : 'moon-outline'"></ion-icon></ion-button></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" *ngIf="data">
+  
+<h1>{{ 'Welcome' | translate }} {{ data.user.name }}</h1><br>
+
+<ion-row class="quickLink">
+<ion-col size="3" routerLink="/quote" routDirection="forward" class="rborder" *ngIf="checkPerm('quote')"><ion-icon name="create-outline" [color]="night ? 'dark' : 'primary'"></ion-icon><br><small>{{ 'Quotation' | translate }}</small></ion-col>
+<ion-col size="3" routerLink="/invoice" routDirection="forward" class="rborder" *ngIf="checkPerm('invoice')"><ion-icon name="receipt-outline" [color]="night ? 'dark' : 'primary'"></ion-icon><br><small>{{ 'Invoice' | translate }}</small></ion-col>
+<ion-col size="3" routerLink="/payment" routDirection="forward" class="rborder" *ngIf="checkPerm('payment')"><ion-icon name="card-outline" [color]="night ? 'dark' : 'primary'"></ion-icon><br><small>{{ 'Payments' | translate }}</small></ion-col>
+<ion-col size="3" routerLink="/cherry-pay" routDirection="forward" *ngIf="checkPerm('payment')"><ion-icon name="qr-code-outline" [color]="night ? 'dark' : 'primary'"></ion-icon><br><small>{{ 'Cherry Pay' | translate }}</small></ion-col>
+</ion-row>
+<br>
+<ion-segment [scrollable]="true" [value]="1" mode="md" [(ngModel)]="overview_type" [color]="night ? 'dark' : 'primary'">
+<ion-segment-button [value]="1" *ngIf="checkPerm('quote')">{{ 'Quotation' | translate }}</ion-segment-button>
+<ion-segment-button [value]="2" *ngIf="checkPerm('invoice')">{{ 'Invoice' | translate }}</ion-segment-button>
+</ion-segment>
+<br>
+<div [ngSwitch]="overview_type">
+
+<div *ngSwitchCase="1">
+  
+<ion-list>
+<ion-item>
+<ion-label>
+<div class="quote-header">  
+{{ 'Total Quotations' | translate }}	<span class="number">{{ data.overview.quote }}</span>
+</div>
+<small class="desc">{{ data.company.currency+data.overview.quote_amount }}</small></ion-label>
+</ion-item>
+
+<ion-item>
+<ion-label>
+<div class="quote-header">  
+{{ 'Convert Into Invoice' | translate }}		<span class="number">{{ data.overview.convert_quote }}</span>
+</div>
+
+<small class="desc">{{ data.company.currency+data.overview.convert_quote_amount }}</small></ion-label>
+</ion-item>
+
+<ion-item lines="none">
+<ion-label>
+<div class="quote-header">  
+{{ 'Pending Quotations' | translate }}	<span class="number">{{ data.overview.pending_quote }}</span>
+</div>
+<small class="desc">{{ data.company.currency+data.overview.pending_quote_amount }}</small></ion-label>
+</ion-item>
+
+</ion-list>
+
+</div>
+<div *ngSwitchCase="2">
+
+<ion-list>
+<ion-item>
+<ion-label> {{ 'Total Invoice' | translate }}	<span class="number">{{ data.overview.invoice }}</span><small class="desc">{{ data.company.currency+data.overview.invoice_amount }}</small></ion-label>
+</ion-item>
+
+<ion-item>
+<ion-label>	{{ 'Paid Invoice' | translate }}	<span class="number">{{ data.overview.paid_invoice }}</span><small class="desc">{{ data.company.currency+data.overview.paid_invoice_amount }}</small></ion-label>
+</ion-item>
+
+<ion-item lines="none">
+<ion-label>	{{ 'UnPaid Invoice' | translate }} <span class="number">{{ data.overview.unpaid_invoice }}</span><small class="desc">{{ data.company.currency+data.overview.unpaid_invoice_amount }}</small></ion-label>
+</ion-item>
+
+</ion-list>
+
+</div>
+</div>
+<br>
+<h3 style="line-height: 0.5;"> {{ 'Latest Entry' | translate }}</h3>
+
+<p style="color: gray;font-size: 12px;"> {{ 'Showing last 10 entry' | translate }}</p>
+
+<ion-segment [scrollable]="true" [value]="1" mode="md" [(ngModel)]="type" [color]="night ? 'dark' : 'primary'">
+<ion-segment-button [value]="1" *ngIf="checkPerm('quote')"> {{ 'Quotation' | translate }}</ion-segment-button>
+<ion-segment-button [value]="2" *ngIf="checkPerm('invoice')"> {{ 'Invoice' | translate }}</ion-segment-button>
+<ion-segment-button [value]="3" *ngIf="checkPerm('payment')"> {{ 'Payments' | translate }}</ion-segment-button>
+</ion-segment>
+<br>
+<div [ngSwitch]="type">
+
+<div *ngSwitchCase="1">
+
+<ion-item *ngFor="let quote of data.quotes" class="quote" lines="none" (click)="quoteView(quote)">
+  <ion-label>
+    <div class="quote-header">
+      <b>{{ quote.first_name }} {{ quote.last_name }}</b> 
+      <span class="number" style="color: green;">{{ quote.total_amount | currency : data.company.currency }}</span>
+    </div>
+    <small class="desc">{{ quote.prefix+quote.qno }} - {{ quote.date_added | date:'dd-MMM-yyyy' }}</small>
+  </ion-label>
+</ion-item>
+
+
+</div>
+<div *ngSwitchCase="2">
+
+<ion-item *ngFor="let invoice of data.invoices" class="quote" lines="none" (click)="invoiceView(invoice)">
+<ion-label>
+<div class="quote-header">
+<b>{{ invoice.first_name }} {{ invoice.last_name }}</b>
+<span class="number" style="color: green;">{{ invoice.total_amount | currency : data.company.currency }}</span> 
+</div>
+
+<small class="desc">{{ invoice.prefix+invoice.invo_no }} - {{ invoice.date_added | date:'dd-MMM-yyyy' }}</small>
+</ion-label>
+</ion-item>
+
+</div>
+<div *ngSwitchCase="3">
+
+<ion-item *ngFor="let payment of data.payments" class="quote" lines="none">
+<ion-label>
+<div class="quote-header">
+<b>{{ payment.first_name }} {{ payment.last_name }}</b> <span class="number" style="color: green;">{{ payment.amount | currency : data.company.currency }}</span>
+</div> 
+
+<small class="desc">{{ payment.prefix+payment.invo_no }} - {{ payment.date_added | date:'dd-MMM-yyyy' }} - {{ payment.payment_method }}</small>
+
+</ion-label>
+</ion-item>
+
+</div>
+
+
+</div>
+
+</ion-content>

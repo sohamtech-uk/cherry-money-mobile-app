@@ -1,0 +1,25 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>{{ "Manage Users" | translate }}</ion-title>
+    <ion-buttons slot="start"><ion-back-button></ion-back-button></ion-buttons>
+    <ion-buttons slot="end"><ion-button fill="clear" mode="ios" (click)="addNew()"><ion-icon name="add-circle-outline"></ion-icon></ion-button></ion-buttons>
+  </ion-toolbar>
+  <div *ngIf="allData && allData.length > 0">
+<ion-searchbar mode="ios" [(ngModel)]="term" (ionInput)="onSearchChange(1)"></ion-searchbar>
+<p  class="swipe"> {{ "Tap for more options" | translate }}</p>
+</div>
+</ion-header>
+
+<ion-content *ngIf="allData">
+  
+<p  align="center" *ngIf="allData.length == 0"> {{ "Sorry! No data found." | translate }}</p>
+
+<ion-item lines="full" *ngFor="let user of data" (click)="viewOption(user)">
+<ion-label class="ion-text-wrap">{{ user.name }}
+
+<small><ion-icon name="mail-outline"></ion-icon> {{ user.email }} <ion-icon name="call-outline"></ion-icon> {{ user.phone }}</small>
+
+</ion-label>
+</ion-item>
+
+</ion-content>

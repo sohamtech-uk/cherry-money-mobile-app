@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ 'View Client Detail' | translate }}</ion-title>
+    <ion-buttons slot="end"><ion-button (click)="close()">{{ 'Cancel' | translate }}</ion-button></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="data" class="ion-padding">
+  
+  <p>{{ 'Personal Information' | translate }}</p>
+
+  <ion-list>
+    <ion-item>
+      <ion-label class="ion-text-wrap">{{ 'Name' | translate }} <span>{{ data.data.first_name }} {{ data.data.last_name }}</span></ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label class="ion-text-wrap">{{ 'Email' | translate }} <span><a href="mailto:{{ data.data.email }}">{{ data.data.email }}</a></span></ion-label>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-label class="ion-text-wrap">{{ 'Phone' | translate }} <span><a href="tel:+{{ data.data.country_code }}{{ data.data.phone }}">+{{ data.data.country_code }}{{ data.data.phone }}</a></span></ion-label>
+    </ion-item>
+  </ion-list>
+
+  <p>{{ 'Balance Sheet' | translate }}</p>
+
+  <ion-list>
+    <ion-item>
+      <ion-label class="ion-text-wrap">{{ 'Total Invoice Amount' | translate }} <span>{{ data.balance.total | currency : user_data.currency }}</span></ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label class="ion-text-wrap">{{ 'Total Amount Paid' | translate }} <span>{{ data.balance.paid | currency : user_data.currency }}</span></ion-label>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-label class="ion-text-wrap">{{ 'Balance Amount' | translate }} <span>{{ data.balance.balance | currency : user_data.currency }}</span></ion-label>
+    </ion-item>
+  </ion-list>
+
+  <p>{{ 'Address' | translate }}</p>
+
+  <ion-list>
+    <ion-item>
+      <ion-label class="ion-text-wrap">{{ 'State' | translate }} <span>{{ data.data.state }}</span></ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label class="ion-text-wrap">{{ 'City' | translate }} <span>{{ data.data.city }}</span></ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label class="ion-text-wrap">{{ 'Address' | translate }} <span>{{ data.data.address }}</span></ion-label>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-label class="ion-text-wrap">{{ 'Zip Code' | translate }} <span>{{ data.data.zip }}</span></ion-label>
+    </ion-item>
+  </ion-list>
+
+  <p>{{ 'Other Information' | translate }}</p>
+
+  <ion-list>
+    <ion-item>
+      <ion-label class="ion-text-wrap">{{ 'Company Name' | translate }} <span>{{ data.data.company_name }}</span></ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label class="ion-text-wrap">{{ 'Website' | translate }} <span>{{ data.data.website }}</span></ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label class="ion-text-wrap">{{ 'GSTIN' | translate }} <span>{{ data.data.gst_no }}</span></ion-label>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-label class="ion-text-wrap">{{ 'Notes' | translate }} <span>{{ data.data.notes }}</span></ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

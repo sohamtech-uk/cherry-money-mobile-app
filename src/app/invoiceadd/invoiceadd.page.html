@@ -1,0 +1,194 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ 'Add New Invoice' | translate }}</ion-title>
+    <ion-buttons slot="end"><ion-button (click)="close()">{{ 'Cancel' | translate }}</ion-button></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  
+  <form #form="ngForm" (ngSubmit)="addNew(form.value)">
+  
+    <div class="white">
+  
+      <div class="ion-padding">
+  
+        <p>{{ 'Invoice Information' | translate }} <a style="float:right" (click)="addClient()" *ngIf="add_new_client">Select Client</a>
+        
+        <a style="float:right" (click)="addClient()" *ngIf="!add_new_client">Add New Client</a>
+        
+        </p>
+        
+        <div *ngIf="add_new_client">
+
+        <ion-input color="dark" label="Client Name *" name="client_name" ngModel label-placement="floating" fill="outline" mode="md" required [disabled]="hasClick"></ion-input><br>
+        <ion-input color="dark" label="Client Email *" name="client_email" ngModel label-placement="floating" fill="outline" mode="md" required [disabled]="hasClick"></ion-input><br>
+
+        </div>
+
+        <ion-item lines="none" *ngIf="!add_new_client">
+          <ion-select label="{{ 'Select Client *' | translate }}" name="client_id" [(ngModel)]="data.client_id" required interface="action-sheet" mode="md">
+            <ion-select-option [value]="client.id" *ngFor="let client of add.clients">{{ client.first_name }} {{ client.last_name }}</ion-select-option>
+          </ion-select>
+        </ion-item><br>
+  
+        <ion-input color="dark" label="{{ prefix }}" name="invo_no" [(ngModel)]="qno" label-placement="floating" fill="outline" mode="md" required [disabled]="hasClick" readonly class="qno"></ion-input><br>
+  
+        <ion-item lines="none" id="f">
+          <ion-label>{{ 'Invoice Date *' | translate }} <span style="float:right;color:gray">{{ date_added | date:'d-MMM-yyyy' }}</span></ion-label>
+  
+          <ion-popover trigger="f" size="auto">
+            <ng-template>
+              <ion-datetime presentation="date" locale="en" name="date_added" [(ngModel)]="date_added" showDefaultButtons="true" required color="dark"></ion-datetime>
+            </ng-template>
+          </ion-popover>
+        </ion-item><br>
+  
+        <ion-item lines="none">
+          <ion-select label="{{ 'Invoice Template *' | translate }}" name="temp_type" [(ngModel)]="data.temp_type" required mode="md">
+            <ion-select-option [value]="'temp_1'">{{ add.company.temp_1_name }}</ion-select-option>
+            <ion-select-option [value]="'temp_2'">{{ add.company.temp_2_name }}</ion-select-option>
+            <ion-select-option [value]="'temp_3'">{{ add.company.temp_3_name }}</ion-select-option>
+            <ion-select-option [value]="'temp_4'">{{ add.company.temp_4_name }}</ion-select-option>
+            <ion-select-option [value]="'temp_5'">{{ add.company.temp_5_name }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+  
+      </div>
+  
+    </div>
+    <br>
+    <div *ngFor="let a of array; let i = index">
+      <div class="white" style="margin-bottom: 15px;">
+        <div class="ion-padding">
+          <ion-item lines="none">
+            <ion-select
+              label="{{ 'Select Product *' | translate }}"
+              name="product_id_{{ i }}"
+              [(ngModel)]="selectedProducts[i]"
+              required
+              interface="action-sheet"
+              mode="md"
+              (ionChange)="setPrice(i)">
+              <ion-select-option
+                [value]="pro.id"
+                *ngFor="let pro of add.products">
+                {{ pro.name }} - {{ add.currency + pro.price }}
+              </ion-select-option>
+              <ion-select-option [value]="'add_'+i">+ Add New Product</ion-select-option>
+            </ion-select>
+          </ion-item><br />
+  
+          <ion-row>
+
+            <ion-col size="12"><ion-input color="dark" label="Product Name" name="new_product_{{ i }}" ngModel type="text" label-placement="floating"
+                fill="outline"
+                mode="md"
+                required
+                [disabled]="hasClick"
+                *ngIf="selectedProducts[i] == 'add_'+i" style="margin-bottom: 15px;">
+              </ion-input>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-input
+                color="dark"
+                label="{{ 'Qty *' | translate }}"
+                name="qty_{{ i }}"
+                type="tel"
+                [(ngModel)]="qty[i]"
+                label-placement="floating"
+                fill="outline"
+                mode="md"
+                required
+                [disabled]="hasClick"
+                (ionInput)="setTotal(i)">
+              </ion-input>
+            </ion-col>
+            <ion-col size="6">
+              <ion-input
+                color="dark"
+                label="{{ 'Price *' | translate }}"
+                name="price_{{ i }}"
+                [(ngModel)]="price[i]"
+                label-placement="floating"
+                fill="outline"
+                mode="md"
+                required
+                [disabled]="hasClick"
+                type="number"
+                oninput="validity.valid || (value = value.replace(/[e\+\-]/gi,''))"
+                min="0"
+                max="100000000"
+                step=".01"
+                (ionInput)="setTotal(i)">
+              </ion-input>
+            </ion-col>
+          </ion-row><br />
+  
+          <ion-input
+            color="dark"
+            label="{{ 'Total Amount *' | translate }}"
+            name="total_{{ i }}"
+            [(ngModel)]="total[i]"
+            label-placement="floating"
+            fill="outline"
+            mode="md"
+            required
+            [disabled]="hasClick"
+            readonly>
+          </ion-input>
+          <br>
+          <ion-icon name="trash-outline" color="danger" style="font-size: 18px;" *ngIf="i > 0" (click)="removePro(i)"></ion-icon>
+        </div>
+      </div>
+    </div>
+  
+    <span style="padding: 0px 10px;"><ion-button size="small" color="dark" mode="ios" (click)="addMore()">{{ 'Add More' | translate }}</ion-button><br><br></span>
+  
+    <ion-list *ngIf="calculateGrandTotal() > 0">
+  
+      <ion-item lines="full" class="total_item">
+        <ion-label>{{ 'Sub Total' | translate }} <span class="price">{{ calculateGrandTotal() | currency: add.currency }}</span></ion-label>
+      </ion-item>
+  
+      <ion-item lines="full" class="total_item">
+        <ion-select label="{{ 'Discount Type' | translate }}" name="discount_type" [(ngModel)]="data.discount_type" mode="md" placeholder="{{ 'None' | translate }}">
+          <ion-select-option [value]="1">{{ 'Fixed Discount' | translate }}</ion-select-option>
+          <ion-select-option [value]="2">{{ 'in %' | translate }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+  
+      <ion-row *ngIf="data.discount_type > 0" style="margin-top: 10px;">
+        <ion-col size="6">
+          <ion-input color="dark" label="{{ 'Discount Value *' | translate }}" name="discount" [(ngModel)]="data.discount" label-placement="floating" fill="outline" mode="md" required [disabled]="hasClick" type="number" oninput="validity.valid || (value = value.replace(/[e\+\-]/gi,''))" min="0" max="100000000" step=".01"></ion-input>
+        </ion-col>
+        <ion-col size="6" style="margin-top: 5%;text-align: right;">{{ discount | currency: add.currency }}&nbsp;&nbsp;</ion-col>
+      </ion-row>
+  
+      <ion-item lines="full" class="total_item" *ngFor="let tax of add.taxs">
+        <ion-label>
+          {{ tax.tax_name }} ({{ tax.tax_value }}%) 
+          <span class="price">{{ calculateTaxAmount(tax.tax_value) | currency: add.currency }}</span>
+        </ion-label>
+      </ion-item>
+  
+      <ion-item lines="none" class="total_item">
+        <ion-label>
+          {{ 'Total' | translate }} <span class="price" style="color:black">{{ calculateFinalTotalWithTax() | currency: add.currency }}</span>
+        </ion-label>
+      </ion-item>
+  
+    </ion-list>
+  
+    <div class="ion-padding" *ngIf="calculateFinalTotalWithTax() > 0">
+  
+      <ion-textarea color="dark" label="{{ 'Invoice Notes' | translate }}" name="invoice_note" [(ngModel)]="data.invoice_note" label-placement="floating" fill="outline" mode="md" [disabled]="hasClick" rows="15" cols="15"></ion-textarea><br>
+  
+      <ion-button expand="block" mode="ios" type="submit" *ngIf="!hasClick" [disabled]="!form.valid">{{ 'Create Invoice' | translate }}</ion-button>
+      <ion-button expand="block" mode="ios" type="button" *ngIf="hasClick"><ion-spinner name="crescent"></ion-spinner></ion-button>
+    </div>
+
+  </form>
+
+</ion-content>
