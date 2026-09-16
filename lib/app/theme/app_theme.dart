@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/widgets/motion.dart';
 
 class AppColors {
   static const primary = Color(0xFFAD1929),
@@ -14,6 +15,31 @@ class AppColors {
 
 ThemeData appTheme() => ThemeData(
   useMaterial3: true,
+  pageTransitionsTheme: const PageTransitionsTheme(
+    builders: {
+      TargetPlatform.android: CherryPageTransitions(),
+      TargetPlatform.iOS: CherryPageTransitions(),
+      TargetPlatform.macOS: CherryPageTransitions(),
+      TargetPlatform.linux: CherryPageTransitions(),
+      TargetPlatform.windows: CherryPageTransitions(),
+    },
+  ),
+  navigationBarTheme: NavigationBarThemeData(
+    backgroundColor: AppColors.surface,
+    indicatorColor: AppColors.primary.withValues(alpha: .09),
+    labelTextStyle: WidgetStateProperty.resolveWith(
+      (states) => TextStyle(
+        fontFamily: 'CherrySans',
+        fontSize: 12,
+        fontWeight: states.contains(WidgetState.selected)
+            ? FontWeight.w700
+            : FontWeight.w400,
+        color: states.contains(WidgetState.selected)
+            ? AppColors.primary
+            : AppColors.muted,
+      ),
+    ),
+  ),
   fontFamily: "CherrySans",
   colorScheme: ColorScheme.fromSeed(
     seedColor: AppColors.primary,
@@ -25,6 +51,7 @@ ThemeData appTheme() => ThemeData(
     backgroundColor: AppColors.background,
     foregroundColor: AppColors.text,
     centerTitle: false,
+    scrolledUnderElevation: 0,
   ),
   textTheme: const TextTheme(
     headlineLarge: TextStyle(
@@ -51,7 +78,16 @@ ThemeData appTheme() => ThemeData(
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
     fillColor: Colors.white,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: const BorderSide(color: Color(0xFFD7D1D4)),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+    ),
   ),
   filledButtonTheme: FilledButtonThemeData(
     style: FilledButton.styleFrom(

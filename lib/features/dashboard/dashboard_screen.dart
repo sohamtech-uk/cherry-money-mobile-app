@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/repositories/workspace.dart';
 import '../../core/widgets/common.dart';
+import 'finance_overview.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -84,72 +85,13 @@ class DashboardScreen extends ConsumerWidget {
           style: Theme.of(context).textTheme.headlineLarge,
         ),
         const SizedBox(height: 20),
-        Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: const Color(0xFF30262C),
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Demo cash balance',
-                style: TextStyle(color: Colors.white70),
-              ),
-              const Text(
-                '£8,420.50',
-                style: TextStyle(
-                  fontSize: 34,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 22),
-              Wrap(
-                spacing: 32,
-                runSpacing: 12,
-                children: [
-                  Text(
-                    'Money in\n${money(incoming)}',
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  Text(
-                    'Money out\n${money(outgoing)}',
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ],
-          ),
+        FinanceOverview(incoming: incoming, outgoing: outgoing),
+        const SizedBox(height: 12),
+        ReviewProgress(
+          reviewed: state.reconciled,
+          total: state.transactions.length,
         ),
         const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(18),
-                  child: Text(
-                    '${state.reconciled}\nReconciled',
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(18),
-                  child: Text(
-                    '${state.attention}\nNeed attention',
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
         Card(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -166,7 +108,9 @@ class DashboardScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '${state.attention} items need a look. Start with the amount mismatch and possible duplicate.',
+                  state.attention == 0
+                      ? 'You’re up to date. Every demo transaction has been reviewed.'
+                      : '${state.attention} items need a look. Review suggested matches and resolve missing or conflicting evidence.',
                 ),
                 TextButton(
                   onPressed: () => context.go('/reconcile'),
