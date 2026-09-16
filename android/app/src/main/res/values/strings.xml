@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">Cherry Money</string>
-    <string name="title_activity_main">Cherry Money</string>
-    <string name="package_name">com.cherryInvoiceNewApp.app</string>
-    <string name="custom_url_scheme">com.cherryInvoiceNewApp.app</string>
-     <string name="server_client_id">996173642915-8vj2jsbktcd02g7r6k1260lis5f747cg.apps.googleusercontent.com</string>
-</resources>
