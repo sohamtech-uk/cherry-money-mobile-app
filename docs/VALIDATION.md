@@ -48,3 +48,8 @@ The default preview passed login → signup → Terms gating → validation → 
 The supplied public Web OAuth client ID is configured as the app default, with `GOOGLE_SERVER_CLIENT_ID` retained as an override. Analysis and all 11 authentication tests passed after the change. The enable flag remains false pending backend deployment and origin registration.
 
 A real Google SDK check from `http://localhost:8765` returned HTTP 200 for the client/style resources and HTTP 403 for the button, with `The given origin is not allowed for the given client ID.` No Google account credentials were entered, no identity token was obtained and no backend login was attempted. The downloaded client secret was not copied into either repository or the app.
+
+
+## Production preview connection
+
+The user explicitly selected Production. The web build with `CHERRY_ENV=production` and Google enabled passed. A browser check used a simulated Google credential event with a deliberately invalid token and the real Production API: the app POSTed only `id_token` to `https://cherrymoney.co.uk/api/loginGoogle`, read the CORS response, and displayed the HTTP 500 as a server availability error while remaining on login. No customer account was used and no successful authentication is claimed. The running Production backend is still `v0.1.3`; no Production infrastructure or database changes were made. `config/preview-production.json` preserves the selected build settings without secrets.

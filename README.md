@@ -84,6 +84,8 @@ Deploy the [backend token-verification fix](https://github.com/sohamtech-uk/cher
 
 The supplied public Web OAuth client ID is configured by default. After backend deployment and OAuth origin setup, build with `CHERRY_GOOGLE_AUTH_ENABLED=true` and, for iOS, `GOOGLE_IOS_CLIENT_ID=<ios-client-id>`. `GOOGLE_SERVER_CLIENT_ID` remains available as an environment override. The backend `GOOGLE_MOBILE_SERVER_CLIENT_ID` must match the mobile server client ID. Unconfigured builds show a disabled Google button and explain the available email alternative before any click. The browser uses the Google Identity Services button and authentication events; native apps use the platform SDK. Both send only the signed ID token to Cherry for verification. See [browser and native activation steps](docs/GOOGLE_SIGN_IN.md).
 
+For the explicitly selected Production browser preview, build with `flutter build web --dart-define-from-file=config/preview-production.json`. This uses live Cherry accounts and enables the Google button. It does not deploy or configure the Production backend; see [current connection status](docs/AUTH_CONNECTIVITY.md).
+
 The Terms link opens the configured Cherry website's `/term` page. Acceptance is required locally and sent as `terms_accepted`; the existing signup endpoint does not persist a versioned consent record.
 
 ## Provenance
