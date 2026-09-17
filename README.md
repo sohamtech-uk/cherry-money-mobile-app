@@ -79,6 +79,12 @@ flutter test integration_test/demo_flow_test.dart -d DEVICE_ID
 
 [Validation results](docs/VALIDATION.md) distinguish executed checks from unverified native/external integrations. CI runs formatting, analysis, tests and Android build without keys.
 
+## Store download size
+
+The production Android App Bundle is optimized for Play delivery. The original 1536 × 1024 onboarding artwork remains in the repository as source material, while the app bundles 960 × 640 WebP variants (81 KB combined instead of 5.34 MB). A local Bundletool 1.18.1 estimate on 17 September 2026 measured an **approximately 10.9 MB compressed download for arm64 phones** (10.5 MB for armeabi-v7a and 11.1 MB for x86_64). The 47.8 MB `.aab` upload contains every supported architecture and is not the size downloaded by one device.
+
+App Store download size must be confirmed from the thinned, compressed size report after uploading a signed iOS archive to App Store Connect. Keep the same optimized assets in the iOS build and review that report before release against the 20 MB target.
+
 ## Screenshots
 
 Actual running Flutter web preview at a 390 × 844 phone viewport:
