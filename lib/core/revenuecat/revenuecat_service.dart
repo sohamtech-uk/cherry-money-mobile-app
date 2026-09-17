@@ -27,11 +27,21 @@ class RevenueCatService implements SubscriptionRepository {
         ].contains(defaultTargetPlatform)) {
       throw StateError('Purchases require the iOS or Android app.');
     }
-    final key = defaultTargetPlatform == TargetPlatform.iOS
+    final platformKey = defaultTargetPlatform == TargetPlatform.iOS
         ? config.iosKey
         : config.androidKey;
+    final key = platformKey.isNotEmpty
+        ? platformKey
+        : config.environment == 'development'
+        ? config.testStoreKey
+        : '';
     if (key.isEmpty || key == 'replace_me') {
       throw StateError('RevenueCat is not configured.');
+    }
+    if (config.environment == 'production' && key.startsWith('test_')) {
+      throw StateError(
+        'The RevenueCat Test Store cannot be used in production.',
+      );
     }
     await Purchases.configure(PurchasesConfiguration(key));
     ready = true;

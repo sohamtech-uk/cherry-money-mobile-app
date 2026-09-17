@@ -17,9 +17,11 @@ This update replaces the live-mode placeholders with API-backed screens. Demo mo
 
 More exposes purchase invoices, credit notes, VAT/HMRC, accounting reports, cash-flow forecasts, budgets, chart of accounts, opening balances, accounting controls, ledger reconciliation, Cherry Pay, users and settings. These launch the configured Cherry host in a browser and may require a separate website sign-in. They retain the website's plan/permission rules. Invoice/quote editing, email preview/send, client/product maintenance, manual payments and recurring settings remain web workflows.
 
-## Backend dependency
+## Production backend
 
-Branch `feat/mobile-finance-api`, based on the deployed Google hotfix, adds authenticated `mobile/options`, `mobile/receipt/scan`, `mobile/invoice`, `mobile/quote`, `mobile/expense` and `mobile/vat/preview`. The existing `webmcp` endpoints serve chat, banking, reconciliation and payment drafts. The browser origin `http://localhost:8765` must be allowed on that bridge. Native bearer clients do not send an Origin header. No new database migration is required.
+The merged backend implementation adds authenticated `mobile/options`, `mobile/receipt/scan`, `mobile/invoice`, `mobile/quote`, `mobile/expense` and `mobile/vat/preview`. The existing `webmcp` endpoints serve chat, banking, reconciliation and payment drafts. The browser origin `http://localhost:8765` is allowed on that bridge. Native bearer clients do not send an Origin header. No new database migration was required.
+
+Production revision `ca-cm-prod-uks--0000013` serves immutable image digest `sha256:d9786cfcf474ebbce03554746e3aaba1bc0c88db2ce85be4d061bc9876a07a6e`. After rollout, `/health` and `/health/ready` returned 200, while unauthenticated JSON requests to the options and receipt endpoints returned 401. These checks created no finance records.
 
 The API delegates writes to the existing Ask Cherry services and enforces module permissions and enabled-company checks. OCR credentials remain server-side. The frontend sends authenticated finance requests only to relative configured API paths.
 
@@ -27,7 +29,7 @@ The API delegates writes to the existing Ask Cherry services and enforces module
 
 Flutter tests exercise live request contracts, real reply rendering, conversation follow-ups, explicit reconciliation confirmation and separation from demo data. Browser integration uses synthetic fixtures and intercepts all API calls; it does not create Production finance records. Backend tests cover auth/origin/permission failures, invalid images, provider errors, extraction schema, attachment storage and rollback.
 
-Real account verification is still needed after the backend release: Ask Cherry response with the company's records, a real receipt scan, bank-provider data, and user-confirmed record creation. Native camera hardware and Google consent require device/account testing.
+Real account verification is still needed: Ask Cherry response with the company's records, a real receipt scan, bank-provider data, and user-confirmed record creation. Native camera hardware, RevenueCat purchase sheets and Google consent require device/account testing.
 
 ## Browser verification
 

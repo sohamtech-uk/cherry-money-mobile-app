@@ -2,7 +2,7 @@
 
 Material 3 / Flutter with feature-first screens. Riverpod supplies the observable Workspace; GoRouter owns routing and guards account/demo screens. Currency uses integer pence in the demo; matching never relies on floating-point currency comparisons.
 
-- `core/config`: compile-time environments and centralized pro/business entitlement IDs.
+- `core/config`: compile-time environments and centralized RevenueCat entitlement IDs.
 - `core/network`: Dio, timeout handling, auth header attachment and friendly API errors.
 - `core/storage`: OS secure token storage; SharedPreferences contains only monthly demo usage.
 - `core/revenuecat`: SubscriptionRepository abstraction and Purchases SDK implementation.
@@ -11,7 +11,7 @@ Material 3 / Flutter with feature-first screens. Riverpod supplies the observabl
 - `data/services`: DocumentExtractionService with explicit demo implementation.
 - `features`: onboarding, account auth, dashboard, capture, transactions, reconciliation, copilot, plans and settings.
 
-Purchase status refreshes at startup, app resume, paywall refresh and before gated actions. Failure to refresh a premium action falls back to Free rather than granting access. UI never directly changes entitlements to simulate a purchase. SDK identity is anonymous/store-based; backend account linkage is deferred.
+Purchase status refreshes at startup, app resume, paywall refresh and before gated actions. Failure to refresh a premium action falls back to Free rather than granting access. UI never directly changes entitlements to simulate a purchase. The active Test Store catalog grants `cherrymoney_pro`; the previous `pro` identifier is accepted for compatibility. SDK identity is anonymous/store-based; backend account linkage is deferred.
 
 Matching: absent document → missing; possible duplicate → duplicate; amount difference → mismatch. Otherwise amount, calendar proximity, supplier and reference produce an explainable score weighted down by extraction uncertainty. Even high confidence is a proposal. Explicit human approval is required to mark reconciled. Rejected/exception decisions append events. Relinking removes the old document association and recomputes the target state.
 
