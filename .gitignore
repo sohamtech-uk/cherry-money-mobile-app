@@ -55,3 +55,6 @@ app.*.map.json
 dart-defines*.json
 
 /artifacts/
+
+# Downloaded Google OAuth credentials (contain client secrets)
+client_secret*.json
