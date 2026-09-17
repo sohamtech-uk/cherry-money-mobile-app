@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import '../../core/widgets/motion.dart';
 
 const onboardingAssets = [
-  'assets/images/onboarding/finances.png',
-  'assets/images/onboarding/capture.png',
-  'assets/images/onboarding/review.png',
+  'assets/images/onboarding/finances.webp',
+  'assets/images/onboarding/capture.webp',
+  'assets/images/onboarding/review.webp',
 ];
 
 /// Decorative, locally bundled artwork. A finite entrance plays for each step.
