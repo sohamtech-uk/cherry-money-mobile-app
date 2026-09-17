@@ -10,7 +10,7 @@ This update replaces the live-mode placeholders with API-backed screens. Demo mo
 - Invoice detail: existing signed preview and download links. No bearer token appears in a URL.
 - Guided actions: invoice/quote creation, expense creation, supplier bill, VAT preview, payment draft. Saves require a confirmation screen. VAT preview does not submit to HMRC; payment drafts do not move money. No emails are sent by these screens.
 - Receipt OCR: JPEG/PNG up to 5 MB (keeps the base64 JSON request below Production’s 8 MB body limit). The server validates image content and sends it to its existing OpenAI provider. Extracted values remain editable; unknown net/VAT values require manual entry. Foreign currency amounts must be converted and entered in company currency. Saved expense receipts use existing durable storage. A failed attachment rolls back expense creation. PDF OCR is not implemented.
-- Banking: up to 100 latest company-scoped transactions, accounts and balances when supplied by the bank provider. Full history and connection setup open the website.
+- Banking: up to 100 latest company-scoped transactions, accounts and balances when supplied by the bank provider. Connection setup starts from the authenticated mobile API, opens the regulated provider approval page inside the app and returns through the `cherrymoney://app/transactions` app link. The screen refreshes the native account and transaction view after approval.
 - Reconciliation: fresh match suggestion → prepare proposal → explicit human approval. The existing backend rechecks permissions, current balances and match evidence. Approval records the ledger payment; it does not transfer funds.
 
 ## Existing web modules
@@ -19,7 +19,7 @@ More exposes purchase invoices, credit notes, VAT/HMRC, accounting reports, cash
 
 ## Production backend
 
-The merged backend implementation adds authenticated `mobile/options`, `mobile/receipt/scan`, `mobile/invoice`, `mobile/quote`, `mobile/expense` and `mobile/vat/preview`. The existing `webmcp` endpoints serve chat, banking, reconciliation and payment drafts. The browser origin `http://localhost:8765` is allowed on that bridge. Native bearer clients do not send an Origin header. No new database migration was required.
+The merged backend implementation adds authenticated `mobile/options`, `mobile/receipt/scan`, `mobile/invoice`, `mobile/quote`, `mobile/expense`, `mobile/vat/preview`, `mobile/banking/options` and `mobile/banking/connect`. The existing `webmcp` endpoints serve chat, banking, reconciliation and payment drafts. The browser origin `http://localhost:8765` is allowed on that bridge. Native bearer clients do not send an Origin header. No new database migration was required.
 
 Production revision `ca-cm-prod-uks--0000013` serves immutable image digest `sha256:d9786cfcf474ebbce03554746e3aaba1bc0c88db2ce85be4d061bc9876a07a6e`. After rollout, `/health` and `/health/ready` returned 200, while unauthenticated JSON requests to the options and receipt endpoints returned 401. These checks created no finance records.
 

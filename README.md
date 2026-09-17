@@ -45,11 +45,11 @@ The native finance expansion uses the Production mobile API deployed in revision
 | Cherry sign-in, overview, logout | Production email/Google authentication and live overview |
 | Google sign-in | Browser sign-in enabled; Production token-verification hotfix deployed |
 | Token storage | OS secure storage through flutter_secure_storage |
-| Banking and reconciliation | Company-scoped bank accounts/activity, match suggestions, staged proposals and explicit approval via existing finance bridge |
+| Banking and reconciliation | Native bank connection entry, in-app provider approval, company-scoped accounts/activity, match suggestions, staged proposals and explicit approval |
 | Ask Cherry | Live questions with bounded conversation history; guided invoice, quote, expense, supplier-bill, VAT-preview and payment-draft actions |
 | Invoices, quotes, expenses | Live paginated lists, details and creation; invoice PDF links |
 | Clients, products, payments, recurring invoices | Live lists; advanced management opens the existing website |
-| More features | Bank connections, VAT/HMRC, reports, budgets, ledger, credit notes, Cherry Pay and administration open the website with its own login |
+| More features | VAT/HMRC, reports, budgets, ledger, credit notes, Cherry Pay and administration open the website with its own login |
 | Camera and file selection | Live scans upload only on explicit selection; demo files remain local; hardware verification pending |
 | Receipt OCR | JPEG/PNG upload → server extraction → editable review → confirmed expense save with receipt attachment through the deployed mobile API |
 | RevenueCat | Existing `default` Test Store offering, real SDK purchase, restore and `cherrymoney_pro` entitlement refresh |

@@ -163,6 +163,87 @@ void main() {
       expect(find.text('Review approval'), findsNothing);
     },
   );
+  testWidgets(
+    'bank connection opens the provider in-app and does not link to Cherry web',
+    (tester) async {
+      final client = api();
+      int connectionRequests = 0;
+      Uri? openedAuthorization;
+      client.dio.httpClientAdapter = ContractAdapter((r) {
+        if (r.path == 'mobile/banking/connect') {
+          connectionRequests++;
+          expect(r.data['consent'], true);
+          return jsonResponse({
+            'authorization_url': 'https://bank-provider.test/approve',
+            'callback_scheme': 'cherrymoney://app/transactions',
+            'status': 'authorization_required',
+          }, 201);
+        }
+        expect(r.path, 'webmcp/bootstrap');
+        return jsonResponse({
+          'accounts': [],
+          'transactions': [],
+          'approvals': [],
+          'capabilities': {},
+        });
+      });
+      final state = Workspace(api: client)..signedIn = true;
+      await showScreen(
+        tester,
+        state,
+        BankingScreen(
+          authorizationLauncher: (uri) async {
+            openedAuthorization = uri;
+            return true;
+          },
+        ),
+      );
+
+      await tester.tap(find.text('Connect or manage banks'));
+      await tester.pumpAndSettle();
+      expect(find.text('Connect a bank securely?'), findsOneWidget);
+      await tester.tap(find.text('Continue securely'));
+      await tester.pumpAndSettle();
+
+      expect(connectionRequests, 1);
+      expect(
+        openedAuthorization,
+        Uri.parse('https://bank-provider.test/approve'),
+      );
+      expect(find.text('Full bank history'), findsNothing);
+    },
+  );
+  testWidgets('bank provider callback resolves to native banking', (
+    tester,
+  ) async {
+    final client = api();
+    client.dio.httpClientAdapter = ContractAdapter(
+      (r) => jsonResponse({
+        'accounts': [],
+        'transactions': [],
+        'approvals': [],
+        'capabilities': {},
+      }),
+    );
+    final state = Workspace(api: client, subscriptions: FakeSubscriptions())
+      ..signedIn = true;
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [workspaceProvider.overrideWith((ref) => state)],
+        child: const CherryApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final router =
+        tester.widget<MaterialApp>(find.byType(MaterialApp)).routerConfig!
+            as GoRouter;
+
+    router.go('cherrymoney://app/transactions?status=connected');
+    await tester.pumpAndSettle();
+
+    expect(find.text('Banking'), findsOneWidget);
+    expect(router.state.uri.path, '/transactions');
+  });
   testWidgets('changing guided workflow resets the previous form state', (
     tester,
   ) async {
