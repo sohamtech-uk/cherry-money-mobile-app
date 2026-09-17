@@ -28,3 +28,10 @@ The API delegates writes to the existing Ask Cherry services and enforces module
 Flutter tests exercise live request contracts, real reply rendering, conversation follow-ups, explicit reconciliation confirmation and separation from demo data. Browser integration uses synthetic fixtures and intercepts all API calls; it does not create Production finance records. Backend tests cover auth/origin/permission failures, invalid images, provider errors, extraction schema, attachment storage and rollback.
 
 Real account verification is still needed after the backend release: Ask Cherry response with the company's records, a real receipt scan, bank-provider data, and user-confirmed record creation. Native camera hardware and Google consent require device/account testing.
+
+## Browser verification
+
+The 390 × 844 Chromium check passed for login, actionable home, Ask Cherry reply, receipt extraction and attachment payload, confirmed expense saving, invoice cancellation/creation, invoice detail/PDF actions, connected accounts, staged and human-approved reconciliation, and the feature menu. All API responses were synthetic fixtures and all requests were intercepted; zero Production records were created. No browser page errors. A form-state reuse bug found during this check was fixed and covered by a router regression test.
+
+Backend implementation: https://github.com/sohamtech-uk/cherrymoney/pull/187
+Mobile implementation: https://github.com/sohamtech-uk/cherry-money-mobile-app/pull/7
