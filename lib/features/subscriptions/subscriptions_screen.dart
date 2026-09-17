@@ -119,7 +119,7 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
             'Current plan: ${state.plan.name.toUpperCase()} · ${state.remaining} demo actions left this month',
           ),
           const Notice(
-            'Capture and approval each use one action. Allowances are enforced on this device in the demo; live finance automation is not connected.',
+            'Demo capture and approval each use one action. This prototype allowance is enforced on this device; live account actions continue to use Cherry Money permissions and confirmations.',
           ),
           _plan(
             'Free',
