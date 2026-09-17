@@ -203,6 +203,100 @@ class ApiClient {
     }
   }
 
+  /// Company-scoped finance requests. Only relative API routes are accepted.
+  Future<Map<String, dynamic>> financeRequest(
+    String path, {
+    String method = 'GET',
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? query,
+    Map<String, String>? headers,
+  }) async {
+    if (path.startsWith('/') || path.contains('://') || path.contains('..')) {
+      throw const ApiException('Invalid finance request.');
+    }
+    try {
+      final response = await dio.request<dynamic>(
+        path,
+        data: data,
+        queryParameters: query,
+        options: Options(
+          method: method,
+          headers: headers,
+          receiveTimeout: const Duration(seconds: 90),
+        ),
+      );
+      if (response.data is! Map) {
+        throw const ApiException(
+          'Cherry returned an unexpected response. Please retry.',
+        );
+      }
+      final result = Map<String, dynamic>.from(response.data as Map);
+      if (result['msg'] == 'error' || result['success'] == false) {
+        throw ApiException(
+          result['error']?.toString() ??
+              result['message']?.toString() ??
+              'The request could not be completed.',
+        );
+      }
+      return result;
+    } on ApiException {
+      rethrow;
+    } on DioException catch (e) {
+      final status = e.response?.statusCode;
+      if (status == 401) {
+        throw const ApiException(
+          'Your session has expired. Please sign in again.',
+        );
+      }
+      if (status == 404) {
+        throw const ApiException(
+          'This feature is not available on the server yet. Please retry after the mobile update is deployed.',
+        );
+      }
+      if (status == 429) {
+        throw const ApiException(
+          'Too many requests. Please wait a moment and retry.',
+        );
+      }
+      final body = e.response?.data;
+      if (body is Map && body['reply'] is String) {
+        throw ApiException(body['reply'] as String);
+      }
+      throw ApiException(
+        _authFailure(
+          e,
+        ).replaceAll('sign-in', 'request').replaceAll('sign in', 'continue'),
+      );
+    } catch (_) {
+      throw const ApiException(
+        'The request could not be completed. Please retry.',
+      );
+    }
+  }
+
+  Future<Map<String, dynamic>> askCherry(
+    String message,
+    List<Map<String, String>> history,
+  ) => financeRequest(
+    'webmcp/ask',
+    method: 'POST',
+    data: {
+      'message': message,
+      'history': history
+          .skip(history.length > 10 ? history.length - 10 : 0)
+          .map(
+            (item) => {
+              'role': item['role'],
+              'content': (item['content'] ?? '').substring(
+                0,
+                (item['content'] ?? '').length.clamp(0, 2000),
+              ),
+            },
+          )
+          .toList(),
+    },
+  );
+
   Future<void> logout() async {
     try {
       await dio.get('logout');

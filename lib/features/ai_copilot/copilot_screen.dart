@@ -64,11 +64,11 @@ class _CopilotScreenState extends ConsumerState<CopilotScreen> {
           style: Theme.of(context).textTheme.headlineLarge,
         ),
         const Notice(
-          'Demo copilot · Structured local responses, not a live AI service. Decision support, not financial advice.',
+          'Demo Ask Cherry · Structured local responses, not a live AI service. Decision support, not financial advice.',
         ),
         if (!state.demo)
           const Notice(
-            'Live copilot is not connected. Try demo from Settings.',
+            'Live Ask Cherry is not connected. Try demo from Settings.',
           ),
         if (state.demo) ...[
           ...prompts.asMap().entries.map(

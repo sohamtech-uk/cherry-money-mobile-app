@@ -1,3 +1,4 @@
+import '../live/banking_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,13 +12,7 @@ class ReconciliationScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(workspaceProvider);
     if (!state.demo) {
-      return const PageBody(
-        children: [
-          Notice(
-            'Live reconciliation is not connected. No changes will be made to your account. Try demo from Settings.',
-          ),
-        ],
-      );
+      return const BankingScreen(reconcile: true);
     }
     final groups = <String, List<ReconciliationStatus>>{
       'Ready to review': [

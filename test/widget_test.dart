@@ -76,7 +76,7 @@ void main() {
     tester,
   ) async {
     await launch(tester);
-    await tester.tap(find.text('Copilot'));
+    await tester.tap(find.text('Ask Cherry'));
     await tester.pumpAndSettle();
     final prompt = find.text(
       'What changed in my cash position this week? · Pro',

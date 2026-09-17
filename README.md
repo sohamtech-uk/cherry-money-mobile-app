@@ -2,7 +2,7 @@
 
 A Flutter finance workspace for small businesses: capture → understand → match → review exceptions → approve. A Flutter rebuild of the existing Cherry mobile product, with RevenueCat integration for a Shipaton prototype. This repository contains Flutter code only.
 
-**Status: implementation in review, not store released.** RevenueCat products, keys and sandbox purchases still require external setup. Prior mobile release eligibility has not been confirmed. Renaming/rebuilding an existing released app does not establish Shipaton eligibility.
+**Status: implementation in review, not store released.** The RevenueCat Test Store catalog and public development key are configured; Apple/Google store connections and signed sandbox purchases still require external setup. Prior mobile release eligibility has not been confirmed. Renaming/rebuilding an existing released app does not establish Shipaton eligibility.
 
 ## Run
 
@@ -25,28 +25,43 @@ flutter run \
 
 Production defaults to `https://cherrymoney.co.uk/api/` when `CHERRY_ENV=production`. Keys are passed during builds; no `.env` loader is used. Do not place secret server API keys in a mobile build.
 
+The existing RevenueCat Test Store project is ready for native development builds:
+
+```sh
+flutter run --dart-define-from-file=config/revenuecat-test.json
+```
+
+Its public Test Store SDK key is safe to include in a client build and cannot call RevenueCat's secret APIs. The app refuses a `test_` key in Production. Web builds keep purchases unavailable because RevenueCat purchases run in the native iOS or Android app.
+
 ## Integration boundary
+
+The native finance expansion uses the Production mobile API deployed in revision `ca-cm-prod-uks--0000013`. See [feature coverage and rollout](docs/LIVE_FINANCE.md). Web fallback modules are clearly labelled; they are not native feature parity.
+
 
 | Capability | Implementation |
 | --- | --- |
 | Account creation | Company/name/email/country code/phone/password, required Terms acceptance, email verification and resend |
 | Password recovery | Reset-link email through the existing Cherry API |
-| Cherry sign-in, overview, logout | Backend contracts implemented; authenticated live account testing pending |
-| Google sign-in | Native and browser SDK flows implemented; activation requires backend fix deployment and OAuth configuration |
+| Cherry sign-in, overview, logout | Production email/Google authentication and live overview |
+| Google sign-in | Browser sign-in enabled; Production token-verification hotfix deployed |
 | Token storage | OS secure storage through flutter_secure_storage |
-| Transactions, matching, audit, copilot | Synthetic, local demo; no bank connection or external AI calls |
-| Camera, gallery, file preview | Native pickers; file stays local; hardware verification required |
-| Extraction | Demo service abstraction; real receipt endpoint documented but intentionally not called |
-| RevenueCat | Real SDK offerings, purchase, restore and entitlement refresh; unavailable without keys |
-| Limits | Free 3 / Pro 100 / Business 500 capture or approval actions per calendar month on this device |
+| Banking and reconciliation | Company-scoped bank accounts/activity, match suggestions, staged proposals and explicit approval via existing finance bridge |
+| Ask Cherry | Live questions with bounded conversation history; guided invoice, quote, expense, supplier-bill, VAT-preview and payment-draft actions |
+| Invoices, quotes, expenses | Live paginated lists, details and creation; invoice PDF links |
+| Clients, products, payments, recurring invoices | Live lists; advanced management opens the existing website |
+| More features | Bank connections, VAT/HMRC, reports, budgets, ledger, credit notes, Cherry Pay and administration open the website with its own login |
+| Camera and file selection | Live scans upload only on explicit selection; demo files remain local; hardware verification pending |
+| Receipt OCR | JPEG/PNG upload → server extraction → editable review → confirmed expense save with receipt attachment through the deployed mobile API |
+| RevenueCat | Existing `default` Test Store offering, real SDK purchase, restore and `cherrymoney_pro` entitlement refresh |
+| Limits | Free 3 / Pro 100 capture or approval actions per calendar month on this device |
 | Pro capability | Detailed demo cashflow insight and expanded demo action allowance |
-| Business | Higher allowance; future teams/advanced agent workflows explicitly not included |
+| Business | Planned tier; no RevenueCat product is sold by this build |
 
 Subscriptions use RevenueCat's anonymous installation identity and store account. They do not modify an existing Cherry company web plan. Usage counters are prototype limits, not secure cross-device billing enforcement. Demo decisions reset on a new demo session; monthly usage persists.
 
 ## RevenueCat setup
 
-Create iOS and Android apps matching `uk.co.cherrymoney.mobile`. Configure store credentials and products externally. Create entitlements **pro** and **business**, attach matching store products, and add packages to the current offering. Supply platform public SDK keys via dart defines. Exercise purchase/cancel/pending/restore/expiry on signed native sandbox builds. The app never pretends a purchase succeeded.
+RevenueCat project `2a6f083f` contains Test Store app `app1eeb63a621`, the `cherrymoney_pro` entitlement, and monthly, yearly and lifetime packages in the current `default` offering. Use the checked-in public Test Store build profile for development. For release, create Apple and Google app configurations matching `uk.co.cherrymoney.mobile`, connect the store credentials/products, and supply each platform's public SDK key via dart defines. Exercise purchase/cancel/pending/restore/expiry on signed native sandbox builds. The app never pretends a purchase succeeded.
 
 Before sale, review the limited demo-only value, publish privacy/subscription terms, implement production usage enforcement and account identity handling, and configure the commercial offering appropriately. See [security limitations](docs/SECURITY.md).
 

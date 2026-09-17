@@ -1,3 +1,7 @@
+# Current finance expansion
+
+See [LIVE_FINANCE.md](LIVE_FINANCE.md) for the new API-backed implementation and backend dependency. The table below is the historical MVP baseline, not the current feature coverage.
+
 # Verified API migration
 
 Sources: supplied ZIP `src/app/service/server.service.ts`, environments, login/home/capture pages; read-only backend inspection at `sohamtech-uk/cherrymoney` commit `cdca10f88ebe4e4d8cd012ff71f38c41fcfb8ebd` (`routes/api.php`, ApiController, AccountController, InvoiceController, ExpenseController). Source verification is not an authenticated live integration test.

@@ -5,7 +5,8 @@ enum Plan { free, pro, business }
 Plan planForEntitlements(Iterable<String> active) =>
     active.contains(AppConfig.businessEntitlement)
     ? Plan.business
-    : active.contains(AppConfig.proEntitlement)
+    : active.contains(AppConfig.proEntitlement) ||
+          active.contains(AppConfig.legacyProEntitlement)
     ? Plan.pro
     : Plan.free;
 int allowanceFor(Plan plan) => switch (plan) {
