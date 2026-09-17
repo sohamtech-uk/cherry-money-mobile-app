@@ -20,6 +20,7 @@ void main() {
   test('Business takes precedence and unknown entitlements stay Free', () {
     expect(planForEntitlements(['pro', 'business']), Plan.business);
     expect(planForEntitlements(['pro']), Plan.pro);
+    expect(planForEntitlements(['cherrymoney_pro']), Plan.pro);
     expect(planForEntitlements(['admin']), Plan.free);
     expect(canProcess(Plan.free, 2), true);
     expect(canProcess(Plan.free, 3), false);

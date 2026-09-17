@@ -75,7 +75,7 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
       if (mounted) {
         setState(
           () => message = plan == Plan.free
-              ? 'No active Pro or Business entitlement was found. Refresh after any pending store approval.'
+              ? 'No active Cherry Money Pro entitlement was found. Refresh after any pending store approval.'
               : '${plan.name.toUpperCase()} is active.',
         );
       }
@@ -119,7 +119,7 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
             'Current plan: ${state.plan.name.toUpperCase()} · ${state.remaining} demo actions left this month',
           ),
           const Notice(
-            'Capture and approval each use one action. Allowances are enforced on this device in the demo; live finance automation is not connected.',
+            'Demo capture and approval each use one action. This prototype allowance is enforced on this device; live account actions continue to use Cherry Money permissions and confirmations.',
           ),
           _plan(
             'Free',
@@ -133,8 +133,8 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
           ),
           _plan(
             'Business',
-            '500 actions per calendar month',
-            'Higher usage for the same finance review tools. Team access and advanced agent workflows are planned, not included in this build.',
+            'Planned tier',
+            'Team access and advanced agent workflows do not yet have a RevenueCat product and are not sold by this build.',
           ),
           if (busy) const Center(child: CircularProgressIndicator()),
           if (message.isNotEmpty) Notice(message),

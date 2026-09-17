@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../data/repositories/workspace.dart';
 import '../../core/widgets/common.dart';
 import 'finance_overview.dart';
+import '../live/live_common.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -20,9 +21,37 @@ class DashboardScreen extends ConsumerWidget {
             'Your Cherry account',
             style: Theme.of(context).textTheme.headlineLarge,
           ),
-          const Notice(
-            'Live account overview. Bank balances and reconciliation are not connected in this mobile build.',
+          const SizedBox(height: 8),
+          const Text('Your business, all in one place.'),
+          const SizedBox(height: 20),
+          FilledButton.icon(
+            onPressed: () => context.push('/create/scan'),
+            icon: const Icon(Icons.document_scanner_outlined),
+            label: const Text('Scan an expense receipt'),
           ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              ActionChip(
+                avatar: const Icon(Icons.add, size: 18),
+                label: const Text('New invoice'),
+                onPressed: () => context.push('/create/invoice'),
+              ),
+              ActionChip(
+                avatar: const Icon(Icons.auto_awesome_outlined, size: 18),
+                label: const Text('Ask Cherry'),
+                onPressed: () => context.go('/ask-cherry'),
+              ),
+              ActionChip(
+                avatar: const Icon(Icons.grid_view_outlined, size: 18),
+                label: const Text('All features'),
+                onPressed: () => context.go('/features'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
           if (state.busy) const Center(child: CircularProgressIndicator()),
           if (state.error.isNotEmpty) Notice(state.error),
           if (data != null) ...[
@@ -33,24 +62,53 @@ class DashboardScreen extends ConsumerWidget {
             Card(
               child: ListTile(
                 title: const Text('Invoices'),
+                onTap: () => context.push('/records/invoice'),
                 trailing: Text('${overview?['invoice'] ?? 0}'),
               ),
             ),
             Card(
               child: ListTile(
                 title: const Text('Unpaid invoices'),
+                onTap: () => context.push('/records/invoice'),
                 trailing: Text('${overview?['unpaid_invoice'] ?? 0}'),
               ),
+            ),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.document_scanner_outlined),
+                title: const Text('Expenses'),
+                subtitle: const Text('Receipts, costs and VAT'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push('/records/expense'),
+              ),
+            ),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.request_quote_outlined),
+                title: const Text('Quotes and clients'),
+                subtitle: const Text('Keep your sales moving'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push('/records/quote'),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Recent invoices',
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             ...((data['invoices'] as List?) ?? []).map(
               (i) => Card(
                 child: ListTile(
                   title: Text('${i['prefix'] ?? ''}${i['invo_no'] ?? ''}'),
+                  onTap: () => context.push('/records/invoice'),
                   subtitle: Text(
                     '${i['first_name'] ?? ''} ${i['last_name'] ?? ''}',
                   ),
                   trailing: Text(
-                    '${company?['currency'] ?? ''}${i['total_amount'] ?? ''}',
+                    currencyMoney(
+                      i['total_amount'],
+                      text(company?['currency'], 'GBP'),
+                    ),
                   ),
                 ),
               ),
@@ -99,7 +157,7 @@ class DashboardScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'CHERRY COPILOT',
+                  'ASK CHERRY',
                   style: TextStyle(
                     fontSize: 12,
                     letterSpacing: 1,

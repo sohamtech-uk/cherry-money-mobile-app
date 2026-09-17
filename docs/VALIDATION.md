@@ -48,3 +48,14 @@ The default preview passed login → signup → Terms gating → validation → 
 The supplied public Web OAuth client ID is configured as the app default, with `GOOGLE_SERVER_CLIENT_ID` retained as an override. Analysis and all 11 authentication tests passed after the change. The enable flag remains false pending backend deployment and origin registration.
 
 A real Google SDK check from `http://localhost:8765` returned HTTP 200 for the client/style resources and HTTP 403 for the button, with `The given origin is not allowed for the given client ID.` No Google account credentials were entered, no identity token was obtained and no backend login was attempted. The downloaded client secret was not copied into either repository or the app.
+
+
+## Production preview connection
+
+The user explicitly selected Production. The web build with `CHERRY_ENV=production` and Google enabled passed. The signed-token verifier was subsequently deployed and verified separately. The mobile finance API was deployed as Production revision `ca-cm-prod-uks--0000013`; health and readiness returned 200, and unauthenticated options/receipt probes returned 401 JSON. No customer account was used and no finance record was created by these probes. `config/preview-production.json` preserves the selected browser build settings without secrets.
+
+## RevenueCat Test Store
+
+RevenueCat project `2a6f083f` exposes the current `default` offering through its public Test Store SDK key. A read-only SDK API probe returned HTTP 200 with `$rc_monthly`, `$rc_annual` and `$rc_lifetime`, backed by product identifiers `monthly`, `yearly` and `lifetime`. The entitlement is `cherrymoney_pro`, and sandbox access is set to anybody. Flutter analysis, all 48 tests and an Android debug APK build passed with this mapping.
+
+The APK was installed on an Android 16 emulator. The native SDK loaded the three packages, displayed the RevenueCat Test Store purchase sheet for the yearly product and completed a simulated valid purchase. The app then showed `Current plan: PRO` and 100 actions remaining. Invoking Restore purchases retained the active Pro entitlement. Test Store transactions generate no revenue and are development evidence only. Apple/Google sandbox purchases still require their store configurations and tester interaction. The current machine cannot build iOS because full Xcode and CocoaPods are not installed.

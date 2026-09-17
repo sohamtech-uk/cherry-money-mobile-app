@@ -3,6 +3,7 @@ class AppConfig {
   final String apiBaseUrl;
   final String iosKey;
   final String androidKey;
+  final String testStoreKey;
   const AppConfig({
     this.environment = const String.fromEnvironment(
       'CHERRY_ENV',
@@ -13,12 +14,14 @@ class AppConfig {
     this.androidKey = const String.fromEnvironment(
       'REVENUECAT_ANDROID_API_KEY',
     ),
+    this.testStoreKey = const String.fromEnvironment('REVENUECAT_TEST_API_KEY'),
   }) : apiBaseUrl = apiBaseUrl == ''
            ? (environment == 'production'
                  ? 'https://cherrymoney.co.uk/api/'
                  : 'https://dev.cherrymoney.co.uk/api/')
            : apiBaseUrl;
-  static const proEntitlement = 'pro';
+  static const proEntitlement = 'cherrymoney_pro';
+  static const legacyProEntitlement = 'pro';
   static const businessEntitlement = 'business';
   bool get valid =>
       ['development', 'production'].contains(environment) &&

@@ -10,7 +10,7 @@ The first public mobile release must occur within the contest submission period;
 
 ## RevenueCat
 
-Central entitlement IDs: `pro`, `business`. Free=3, Pro=100, Business=500 capture/approval actions per calendar month on device. Detailed demo cashflow insight is Pro/Business only. Current offerings supply actual product descriptions/prices. Purchase and restore results update SDK entitlement state; no simulated success. Missing keys leave Free/demo usable. Store products, keys, signed sandbox purchases and refund/revocation cases are external setup still required.
+The configured Test Store entitlement is `cherrymoney_pro`. The legacy `pro` identifier remains accepted for compatibility; `business` is reserved for a future tier. Free=3 and Pro=100 capture/approval actions per calendar month on device. Detailed demo cashflow insight is Pro only. The `default` RevenueCat offering supplies monthly, yearly and lifetime Test Store packages. Purchase and restore results update SDK entitlement state; no simulated success. Missing keys leave Free/demo usable. Apple/Google products, signed sandbox purchases and refund/revocation cases still require store setup.
 
 ## Existing versus new
 
@@ -21,7 +21,8 @@ During this work: Flutter root project, new application identifier, focused demo
 
 - [ ] Confirm first-public-release eligibility and store ownership.
 - [ ] Complete native tests and fix any failed CI/build checks.
-- [ ] Configure RevenueCat/store products and test a real sandbox purchase/restore.
+- [x] Configure the RevenueCat Test Store entitlement, products, offering and public development SDK key.
+- [ ] Connect Apple/Google products and test a signed native sandbox purchase/restore.
 - [ ] Review product's demo-only value; complete live premium workflows before commercial launch.
 - [ ] Publish privacy policy, subscription terms, support contact and store data declarations.
 - [ ] Configure signing, screenshots, icon assets and Apple IAP capability.
@@ -39,7 +40,7 @@ During this work: Flutter root project, new application identifier, focused demo
 3. Northstar invoice: inspect amount/date/reference evidence; approve match.
 4. Audit timeline: show the human decision and reconciled state.
 5. Exceptions: demonstrate amount mismatch/duplicate not silently approved.
-6. Copilot: ask what needs attention; identify structured demo response.
+6. Ask Cherry: ask what needs attention; identify the structured response.
 7. Premium insight: Free routes to upgrade; on configured native build demonstrate store purchase and restore.
 
 Take screenshots of these real screens. Do not claim real AI extraction, live bank connectivity, accounting integration or purchase verification from demo screenshots.

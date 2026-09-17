@@ -49,3 +49,16 @@ The public client ID is configured, but without `CHERRY_GOOGLE_AUTH_ENABLED=true
 ## Logo rendering
 
 The original supplied Cherry Money logo remains unchanged. `CherryLogo` multiplies its colors against the current scaffold background while rendering, so the white rectangle matches the warm page surface across welcome, login, signup, reset and the app header.
+
+## Production preview
+
+The local preview was explicitly switched to Production on 16 September 2026. Reproduce that build with:
+
+```sh
+flutter build web --no-wasm-dry-run --dart-define-from-file=config/preview-production.json
+python3 -m http.server 8765 --directory build/web
+```
+
+Open `http://localhost:8765/#/login`. This profile uses real Production accounts at `https://cherrymoney.co.uk/api/`; it contains no credentials or client secret. It does not deploy the backend.
+
+At the time of switching, the Production Google endpoint was reachable and returned CORS headers allowing the localhost browser, but an invalid-token probe returned HTTP 500. Azure was running `v0.1.3` with no `GOOGLE_MOBILE_SERVER_CLIENT_ID`; the merged verifier is in the published `v0.1.11` image. Full Google login requires a separately reviewed Production backend rollout and the matching audience setting. Do not treat the successful client connection as successful account authentication.

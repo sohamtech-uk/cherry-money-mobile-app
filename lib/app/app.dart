@@ -10,6 +10,10 @@ import '../features/transactions/transactions_screen.dart';
 import '../features/transactions/transaction_detail.dart';
 import '../features/reconciliation/reconciliation_screen.dart';
 import '../features/ai_copilot/copilot_screen.dart';
+import '../features/live/ask_cherry_screen.dart';
+import '../features/live/features_screen.dart';
+import '../features/live/records_screen.dart';
+import '../features/live/finance_form.dart';
 import '../features/documents/capture_screen.dart';
 import '../features/subscriptions/subscriptions_screen.dart';
 import '../features/settings/settings_screen.dart';
@@ -63,14 +67,41 @@ class _CherryAppState extends ConsumerState<CherryApp>
               path: '/reconcile',
               builder: (_, _) => const ReconciliationScreen(),
             ),
-            GoRoute(path: '/copilot', builder: (_, _) => const CopilotScreen()),
+            GoRoute(
+              path: '/ask-cherry',
+              builder: (_, _) =>
+                  state.demo ? const CopilotScreen() : const AskCherryScreen(),
+            ),
+            GoRoute(path: '/copilot', redirect: (_, _) => '/ask-cherry'),
+            GoRoute(
+              path: '/features',
+              builder: (_, _) => const FeaturesScreen(),
+            ),
           ],
         ),
         GoRoute(
           path: '/transaction/:id',
           builder: (_, route) => TransactionDetail(route.pathParameters['id']!),
         ),
-        GoRoute(path: '/capture', builder: (_, _) => const CaptureScreen()),
+        GoRoute(
+          path: '/capture',
+          builder: (_, _) =>
+              state.demo ? const CaptureScreen() : const FinanceForm('scan'),
+        ),
+        GoRoute(
+          path: '/records/:kind',
+          builder: (_, route) => RecordsScreen(
+            route.pathParameters['kind']!,
+            key: ValueKey(route.uri.path),
+          ),
+        ),
+        GoRoute(
+          path: '/create/:kind',
+          builder: (_, route) => FinanceForm(
+            route.pathParameters['kind']!,
+            key: ValueKey(route.uri.path),
+          ),
+        ),
         GoRoute(
           path: '/subscriptions',
           builder: (_, _) => const SubscriptionsScreen(),
@@ -111,7 +142,13 @@ class MainShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(workspaceProvider);
-    const paths = ['/home', '/transactions', '/reconcile', '/copilot'];
+    const paths = [
+      '/home',
+      '/transactions',
+      '/reconcile',
+      '/ask-cherry',
+      '/features',
+    ];
     return Scaffold(
       appBar: AppBar(
         title: const CherryLogo(height: 44),
@@ -140,7 +177,7 @@ class MainShell extends ConsumerWidget {
         ],
       ),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: paths.indexOf(location).clamp(0, 3),
+        selectedIndex: paths.indexOf(location).clamp(0, 4),
         onDestinationSelected: (i) => context.go(paths[i]),
         destinations: const [
           NavigationDestination(
@@ -157,7 +194,11 @@ class MainShell extends ConsumerWidget {
           ),
           NavigationDestination(
             icon: Icon(Icons.auto_awesome_outlined),
-            label: 'Copilot',
+            label: 'Ask Cherry',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.grid_view_outlined),
+            label: 'More',
           ),
         ],
       ),
