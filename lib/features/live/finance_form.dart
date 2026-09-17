@@ -162,8 +162,8 @@ class _FinanceFormState extends ConsumerState<FinanceForm> {
         bytes = await picked.readAsBytes();
         name = picked.name;
       }
-      if (bytes == null || bytes.length > 8 * 1024 * 1024) {
-        throw const ApiException('Choose a JPEG or PNG under 8 MB.');
+      if (bytes == null || bytes.length > 5 * 1024 * 1024) {
+        throw const ApiException('Choose a JPEG or PNG under 5 MB.');
       }
       if (!mounted) return;
       setState(() {
@@ -417,7 +417,7 @@ class _FinanceFormState extends ConsumerState<FinanceForm> {
                 children: [
                   if (kind == 'expense') ...[
                     const Text(
-                      'Capture a receipt, then check the details before saving. JPEG or PNG, up to 8 MB.',
+                      'Capture a receipt, then check the details before saving. JPEG or PNG, up to 5 MB.',
                     ),
                     Wrap(
                       spacing: 8,
