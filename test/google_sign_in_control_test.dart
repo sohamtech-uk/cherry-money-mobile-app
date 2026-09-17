@@ -107,6 +107,26 @@ void main() {
     );
   });
 
+  testWidgets('native configuration failure explains the app setup problem', (
+    tester,
+  ) async {
+    final service = FakeGoogleService()
+      ..authenticationError = const GoogleSignInException(
+        code: GoogleSignInExceptionCode.clientConfigurationError,
+      );
+    await mount(
+      tester,
+      service,
+      exchange: (_) async => fail('Must not exchange'),
+    );
+    await tester.tap(find.text('Continue with Google'));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('not configured for this app version'),
+      findsOneWidget,
+    );
+  });
+
   testWidgets(
     'web events exchange once while pending and surface backend rejection',
     (tester) async {
