@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/finance.dart';
+import 'motion.dart';
 
 String money(int pence) =>
     NumberFormat.currency(locale: 'en_GB', symbol: '£').format(pence / 100);
@@ -14,9 +15,11 @@ class PageBody extends StatelessWidget {
     child: Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 720),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: children,
+        child: PageEntrance(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: children,
+          ),
         ),
       ),
     ),
@@ -27,16 +30,41 @@ class StatusBadge extends StatelessWidget {
   final ReconciliationStatus status;
   const StatusBadge(this.status, {super.key});
   @override
-  Widget build(BuildContext context) => Chip(
-    visualDensity: VisualDensity.compact,
-    avatar: Icon(
-      status == ReconciliationStatus.reconciled
-          ? Icons.check_circle_outline
-          : Icons.info_outline,
-      size: 16,
-    ),
-    label: Text(status.label, style: const TextStyle(fontSize: 12)),
-  );
+  Widget build(BuildContext context) {
+    final done = status == ReconciliationStatus.reconciled;
+    final problem =
+        status == ReconciliationStatus.amountMismatch ||
+        status == ReconciliationStatus.duplicateCandidate;
+    final color = done
+        ? const Color(0xFF207151)
+        : problem
+        ? const Color(0xFFA12535)
+        : const Color(0xFF805700);
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: StateReveal(
+        child: Chip(
+          key: ValueKey(status),
+          visualDensity: VisualDensity.compact,
+          backgroundColor: color.withValues(alpha: .07),
+          side: BorderSide(color: color.withValues(alpha: .18)),
+          avatar: Icon(
+            done ? Icons.check_circle_rounded : Icons.info_outline,
+            color: color,
+            size: 16,
+          ),
+          label: Text(
+            status.label,
+            style: TextStyle(
+              fontSize: 12,
+              color: color,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class TransactionCard extends StatelessWidget {
@@ -59,30 +87,53 @@ class TransactionCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: const Color(0xFFF6ECEE),
-                    child: Icon(
-                      transaction.amountPence > 0
-                          ? Icons.south_west
-                          : Icons.north_east,
-                      color: const Color(0xFFAD1929),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      transaction.merchant,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final stacked =
+                      constraints.maxWidth < 300 ||
+                      MediaQuery.textScalerOf(context).scale(1) > 1.3;
+                  final merchant = Text(
+                    transaction.merchant,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  );
+                  final amount = Text(
                     money(transaction.amountPence),
                     style: const TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                ],
+                  );
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: const Color(0xFFF6ECEE),
+                        child: Icon(
+                          transaction.amountPence > 0
+                              ? Icons.south_west
+                              : Icons.north_east,
+                          color: const Color(0xFFAD1929),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: stacked
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  merchant,
+                                  const SizedBox(height: 4),
+                                  amount,
+                                ],
+                              )
+                            : Row(
+                                children: [
+                                  Expanded(child: merchant),
+                                  const SizedBox(width: 8),
+                                  amount,
+                                ],
+                              ),
+                      ),
+                    ],
+                  );
+                },
               ),
               const SizedBox(height: 8),
               Text(

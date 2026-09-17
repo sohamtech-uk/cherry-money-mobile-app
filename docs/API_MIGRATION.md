@@ -1,3 +1,7 @@
+# Current finance expansion
+
+See [LIVE_FINANCE.md](LIVE_FINANCE.md) for the new API-backed implementation and backend dependency. The table below is the historical MVP baseline, not the current feature coverage.
+
 # Verified API migration
 
 Sources: supplied ZIP `src/app/service/server.service.ts`, environments, login/home/capture pages; read-only backend inspection at `sohamtech-uk/cherrymoney` commit `cdca10f88ebe4e4d8cd012ff71f38c41fcfb8ebd` (`routes/api.php`, ApiController, AccountController, InvoiceController, ExpenseController). Source verification is not an authenticated live integration test.
@@ -10,7 +14,7 @@ Sources: supplied ZIP `src/app/service/server.service.ts`, environments, login/h
 | Signup | POST `/api/signup` | ApiClient.signup | Required local Terms consent, company details and email verification |
 | Email verification / resend | POST `/api/verifyOtp`, `/api/resendCode` | ApiClient.verifyOtp / resendCode | Code validation, secure session acceptance and resend feedback |
 | Password reset | POST `/api/forgot` | ApiClient.forgot | Reset link delivered by the backend; password changed on the web |
-| Google login | POST `/api/loginGoogle` with `id_token` | Native Google SDK / ApiClient.googleLogin | Requires backend PR #186 and OAuth configuration |
+| Google login | POST `/api/loginGoogle` with `id_token` | Native / browser Google SDK / ApiClient.googleLogin | Requires backend PR #186 and OAuth configuration |
 | Invoice list | GET `/api/invoice?page=…&status=…` | None | Verified; homepage exposes recent invoices only in this MVP |
 | Invoice create/edit | POST `/api/invoiceAdd`; PUT `/api/invoice/{invoice}` | None | Deferred; legacy edit-via-create is incompatible |
 | Invoice delete | DELETE `/api/invoice/{invoice}` | None | Legacy GET removeInvoice is obsolete |

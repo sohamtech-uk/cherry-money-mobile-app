@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../core/models/finance.dart';
 import '../../core/widgets/common.dart';
+import '../../core/widgets/motion.dart';
 import '../../data/repositories/workspace.dart';
 
 class TransactionDetail extends ConsumerStatefulWidget {
@@ -48,6 +49,8 @@ class _TransactionDetailState extends ConsumerState<TransactionDetail> {
             style: Theme.of(context).textTheme.headlineLarge,
           ),
           StatusBadge(transaction.status),
+          if (transaction.status == ReconciliationStatus.reconciled)
+            const PageEntrance(child: _ApprovalConfirmation()),
           Text('${transaction.reference} · ${transaction.category}'),
           const SizedBox(height: 20),
           Text(
@@ -82,11 +85,29 @@ class _TransactionDetailState extends ConsumerState<TransactionDetail> {
                           return;
                         }
                         setState(() => busy = false);
+                        if (success && context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Match approved. Your demo audit timeline is updated.',
+                              ),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                            snackBarAnimationStyle:
+                                CherryMotion.reduced(context)
+                                ? AnimationStyle.noAnimation
+                                : null,
+                          );
+                        }
                         if (!success && context.mounted) {
                           context.push('/subscriptions');
                         }
                       },
-                child: Text(busy ? 'Checking…' : 'Approve match'),
+                child: ActionLabel(
+                  busy: busy,
+                  label: 'Approve match',
+                  busyLabel: 'Checking…',
+                ),
               ),
             if (!canApprove)
               const Notice(
@@ -163,4 +184,44 @@ class _TransactionDetailState extends ConsumerState<TransactionDetail> {
       ),
     );
   }
+}
+
+class _ApprovalConfirmation extends StatelessWidget {
+  const _ApprovalConfirmation();
+  @override
+  Widget build(BuildContext context) => Semantics(
+    child: Container(
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEAF4EF),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: const Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.check_circle_rounded, color: Color(0xFF207151)),
+          SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Match approved',
+                  style: TextStyle(
+                    color: Color(0xFF175D42),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  'Your decision is saved in this demo session’s audit timeline.',
+                  style: TextStyle(color: Color(0xFF315C48), fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }

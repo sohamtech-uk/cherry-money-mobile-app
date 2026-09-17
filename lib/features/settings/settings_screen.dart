@@ -31,7 +31,7 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.shield_outlined),
             title: const Text('Privacy and data'),
             subtitle: const Text(
-              'Auth tokens use OS secure storage. Selected documents stay on your device. Demo audit events are session history, not an immutable record.',
+              'Auth tokens use OS secure storage. Live receipt scans are sent securely to Cherry Money for extraction. Demo files stay on this device.',
             ),
           ),
           ListTile(

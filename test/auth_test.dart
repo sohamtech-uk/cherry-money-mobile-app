@@ -99,7 +99,7 @@ void main() {
         });
       });
       await expectLater(
-        GoogleAuthService().signIn(api),
+        GoogleAuthService().authenticate(),
         throwsA(isA<ApiException>()),
       );
       expect(requests, 0);

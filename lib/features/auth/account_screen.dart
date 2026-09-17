@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/network/api_client.dart';
 import '../../core/widgets/common.dart';
+import '../../core/widgets/motion.dart';
 import '../../core/widgets/cherry_logo.dart';
 import '../../data/repositories/workspace.dart';
 
@@ -265,10 +266,10 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
             onPressed: busy || (!widget.reset && !verifying && !accepted)
                 ? null
                 : submit,
-            child: Text(
-              busy
-                  ? 'Please wait…'
-                  : widget.reset
+            child: ActionLabel(
+              busy: busy,
+              busyLabel: 'Please wait…',
+              label: widget.reset
                   ? 'Send reset link'
                   : verifying
                   ? 'Verify and sign in'

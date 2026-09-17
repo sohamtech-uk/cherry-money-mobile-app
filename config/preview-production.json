@@ -1,0 +1,5 @@
+{
+  "CHERRY_ENV": "production",
+  "CHERRY_API_BASE_URL": "https://cherrymoney.co.uk/api/",
+  "CHERRY_GOOGLE_AUTH_ENABLED": true
+}

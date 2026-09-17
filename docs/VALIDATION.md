@@ -25,3 +25,37 @@ Initial widget failures were off-screen test taps and were fixed by scrolling th
 - Google native OAuth and live signup/email delivery remain untested; configuration and backend deployment are required. No live account was created by these tests.
 
 Android validation for the authentication/logo update passed in [run 35148379987](https://github.com/sohamtech-uk/cherry-money-mobile-app/actions/runs/35148379987): formatting, analysis, 22 tests and debug APK build. [Download the debug APK artifact](https://github.com/sohamtech-uk/cherry-money-mobile-app/actions/runs/35148379987/artifacts/10467759138). The build tested code commit `15c25c5`; subsequent commits only update documentation/screenshots and merge the default-branch documentation. Backend Google fix PR #186 also passed its full CI tests and container build.
+
+## Motion and finance interface update
+
+Flutter analysis and 27 tests passed, including reduced motion, mid-animation preference changes, finite page entrances, immediate removal of stale statuses and a 320 px layout with 1.8× text. Web build passed. Chrome browser checks passed onboarding → demo dashboard → review → approval at 390 px with normal motion and 320 px with reduced motion; no page errors. Approval removed the action and displayed confirmation. The screenshots reflect the updated interface. Native gesture/performance testing still requires a device.
+
+## Illustrated onboarding update
+
+Analysis, 29 tests and the web build passed. Chrome verified all three local images, next/back navigation and Get started → sign-in at 390 px and 1280 px with standard motion, and 320 px with reduced motion. No page errors were observed. Three onboarding screenshots are included. The generated artwork totals approximately 5.1 MB, is bundled in the application, and is preloaded once for these three steps. Android CI is separate from these executed web and widget checks.
+
+## Google browser flow and logo background fix
+
+Analysis and all 35 Flutter tests passed on Flutter 3.41.9. Six new control tests cover unconfigured availability, initialization retry, cancellation, duplicate events while exchanging a token, backend rejection and late native/browser completion after navigation. Both configured and default web builds passed.
+
+Chrome exercised the configured browser path using an intercepted Google SDK response and intercepted API responses: the Google authentication event sent only `id_token`, a rejected backend response stayed on login with an error, and an accepted response stored a Cherry session and fetched the account overview with its bearer token. These are simulated contract checks, not live OAuth verification.
+
+The default preview passed login → signup → Terms gating → validation → password reset at 390 px. Onboarding passed at 390/1280 px and 320 px with reduced motion. No page errors occurred. Updated screenshots show the original logo blended with the page surface. Google remains disabled in the default build until the backend and OAuth configuration are ready; live Google and native device sign-in remain unverified.
+
+
+## Supplied OAuth client configuration
+
+The supplied public Web OAuth client ID is configured as the app default, with `GOOGLE_SERVER_CLIENT_ID` retained as an override. Analysis and all 11 authentication tests passed after the change. The enable flag remains false pending backend deployment and origin registration.
+
+A real Google SDK check from `http://localhost:8765` returned HTTP 200 for the client/style resources and HTTP 403 for the button, with `The given origin is not allowed for the given client ID.` No Google account credentials were entered, no identity token was obtained and no backend login was attempted. The downloaded client secret was not copied into either repository or the app.
+
+
+## Production preview connection
+
+The user explicitly selected Production. The web build with `CHERRY_ENV=production` and Google enabled passed. The signed-token verifier was subsequently deployed and verified separately. The mobile finance API was deployed as Production revision `ca-cm-prod-uks--0000013`; health and readiness returned 200, and unauthenticated options/receipt probes returned 401 JSON. No customer account was used and no finance record was created by these probes. `config/preview-production.json` preserves the selected browser build settings without secrets.
+
+## RevenueCat Test Store
+
+RevenueCat project `2a6f083f` exposes the current `default` offering through its public Test Store SDK key. A read-only SDK API probe returned HTTP 200 with `$rc_monthly`, `$rc_annual` and `$rc_lifetime`, backed by product identifiers `monthly`, `yearly` and `lifetime`. The entitlement is `cherrymoney_pro`, and sandbox access is set to anybody. Flutter analysis, all 48 tests and an Android debug APK build passed with this mapping.
+
+The APK was installed on an Android 16 emulator. The native SDK loaded the three packages, displayed the RevenueCat Test Store purchase sheet for the yearly product and completed a simulated valid purchase. The app then showed `Current plan: PRO` and 100 actions remaining. Invoking Restore purchases retained the active Pro entitlement. Test Store transactions generate no revenue and are development evidence only. Apple/Google sandbox purchases still require their store configurations and tester interaction. The current machine cannot build iOS because full Xcode and CocoaPods are not installed.

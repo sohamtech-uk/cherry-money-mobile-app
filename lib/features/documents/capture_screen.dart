@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../core/models/finance.dart';
 import '../../core/widgets/common.dart';
+import '../../core/widgets/motion.dart';
 import '../../data/repositories/workspace.dart';
 import '../../data/services/document_extraction_service.dart';
 
@@ -169,8 +170,10 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen> {
               const SizedBox(height: 12),
               FilledButton(
                 onPressed: busy ? null : process,
-                child: Text(
-                  busy ? 'Processing example…' : 'Show demo extraction',
+                child: ActionLabel(
+                  busy: busy,
+                  label: 'Show demo extraction',
+                  busyLabel: 'Processing example…',
                 ),
               ),
             ],
