@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/repositories/workspace.dart';
@@ -99,20 +100,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               busyLabel: 'Signing in…',
             ),
           ),
-          const SizedBox(height: 16),
-          const Center(child: Text('Or continue with')),
-          const SizedBox(height: 16),
-          GoogleSignInControl(
-            disabled: state.busy,
-            onBusyChanged: (busy) {
-              if (mounted) setState(() => googleBusy = busy);
-            },
-            onToken: (token) async {
-              await state.api.googleLogin(token);
-              await state.acceptVerifiedSession();
-              if (context.mounted && state.signedIn) context.go('/home');
-            },
-          ),
+          if (defaultTargetPlatform != TargetPlatform.iOS) ...[
+            const SizedBox(height: 16),
+            const Center(child: Text('Or continue with')),
+            const SizedBox(height: 16),
+            GoogleSignInControl(
+              disabled: state.busy,
+              onBusyChanged: (busy) {
+                if (mounted) setState(() => googleBusy = busy);
+              },
+              onToken: (token) async {
+                await state.api.googleLogin(token);
+                await state.acceptVerifiedSession();
+                if (context.mounted && state.signedIn) context.go('/home');
+              },
+            ),
+          ],
           TextButton(
             onPressed: state.busy || googleBusy
                 ? null
