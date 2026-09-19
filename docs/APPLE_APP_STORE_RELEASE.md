@@ -29,3 +29,5 @@ Configure the workflow to:
 4. Distribute the successful archive to TestFlight/App Store Connect.
 
 Before App Review, replace the inherited Cherry Invoice store screenshots with current Cherry Money screens, verify email sign-in, account creation, receipt capture and in-app bank connection on TestFlight, and configure production subscription products/pricing in App Store Connect and RevenueCat. Then test purchase, cancellation, pending state, restore, expiry and entitlement revocation with an Apple sandbox account.
+
+The `Cherry Money plans` subscription group and monthly Flow, Thrive and Practice product records exist in App Store Connect. Price schedules, territory availability, RevenueCat entitlement/offering assignments and sandbox verification remain pending.
