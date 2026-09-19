@@ -73,9 +73,21 @@ class GoogleAuthService {
 
   static String errorMessage(Object error) {
     if (error is ApiException) return error.message;
-    if (error is GoogleSignInException &&
-        error.code == GoogleSignInExceptionCode.canceled) {
-      return 'Google sign-in was cancelled. You can try again or use email.';
+    if (error is GoogleSignInException) {
+      if (kDebugMode) debugPrint('Google sign-in failed: $error');
+      switch (error.code) {
+        case GoogleSignInExceptionCode.canceled:
+          return 'Google sign-in was cancelled. You can try again or use email.';
+        case GoogleSignInExceptionCode.clientConfigurationError:
+        case GoogleSignInExceptionCode.providerConfigurationError:
+          return 'Google sign-in is not configured for this app version. Please use email while the app setup is updated.';
+        case GoogleSignInExceptionCode.uiUnavailable:
+          return 'Google sign-in is unavailable on this device. Check Google Play services or use email.';
+        case GoogleSignInExceptionCode.interrupted:
+          return 'Google sign-in was interrupted. Please try again or use email.';
+        default:
+          break;
+      }
     }
     return 'Google sign-in could not be completed. Please try again or use email.';
   }

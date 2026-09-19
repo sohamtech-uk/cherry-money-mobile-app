@@ -20,7 +20,7 @@ class Workspace extends ChangeNotifier {
     : subscriptions = subscriptions ?? RevenueCatService(const AppConfig()),
       api = api ?? ApiClient(const AppConfig(), const SecureStorageService());
   bool demo = false, signedIn = false, busy = false;
-  Plan plan = Plan.free;
+  Plan plan = Plan.launch;
   int used = 0;
   String error = '';
   Map<String, dynamic>? liveDashboard;
@@ -169,7 +169,7 @@ class Workspace extends ChangeNotifier {
     try {
       plan = await subscriptions.refresh();
     } catch (_) {
-      plan = Plan.free;
+      plan = Plan.launch;
     }
     notifyListeners();
   }

@@ -11,14 +11,14 @@ class FakeSubscriptions implements SubscriptionRepository {
   @override
   Future<void> initialize() async {}
   @override
-  Future<Plan> refresh() async => Plan.free;
+  Future<Plan> refresh() async => Plan.launch;
   @override
   Future<List<Package>> offerings() async => [];
   @override
   Future<Plan> purchase(Package package) async =>
       throw StateError('No fake purchases');
   @override
-  Future<Plan> restore() async => Plan.free;
+  Future<Plan> restore() async => Plan.launch;
 }
 
 Future<Workspace> launch(WidgetTester tester) async {
@@ -79,15 +79,16 @@ void main() {
     await tester.tap(find.text('Ask Cherry'));
     await tester.pumpAndSettle();
     final prompt = find.text(
-      'What changed in my cash position this week? · Pro',
+      'What changed in my cash position this week? · Flow',
     );
     await tester.ensureVisible(prompt);
     await tester.tap(prompt);
     await tester.pumpAndSettle();
     expect(find.text('Your Cherry plan'), findsOneWidget);
-    expect(find.text('Free'), findsOneWidget);
-    expect(find.text('Pro'), findsOneWidget);
-    expect(find.text('Business'), findsOneWidget);
+    expect(find.text('Launch'), findsOneWidget);
+    expect(find.text('Flow'), findsOneWidget);
+    expect(find.text('Thrive'), findsOneWidget);
+    expect(find.text('Practice'), findsOneWidget);
     expect(
       find.text('No plans are currently available to purchase.'),
       findsOneWidget,

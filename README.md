@@ -2,7 +2,7 @@
 
 A Flutter finance workspace for small businesses: capture → understand → match → review exceptions → approve. A Flutter rebuild of the existing Cherry mobile product, with RevenueCat integration for a Shipaton prototype. This repository contains Flutter code only.
 
-**Status: implementation in review, not store released.** The RevenueCat Test Store catalog and public development key are configured; Apple/Google store connections and signed sandbox purchases still require external setup. Prior mobile release eligibility has not been confirmed. Renaming/rebuilding an existing released app does not establish Shipaton eligibility.
+**Status: uploaded to App Store Connect, not submitted for review or released.** Apple accepted iOS version 5.1.0 build 502 on 19 September 2026 and it is selected on the release record. Build 502 includes the Launch, Flow, Thrive and Practice entitlement model. The RevenueCat Test Store catalog remains available for development, and the production Apple app connection is configured. Production subscription products, pricing, offerings, and signed sandbox purchase/restore testing are still required before subscriptions can be sold. Prior mobile release eligibility has not been confirmed. Renaming/rebuilding an existing released app does not establish Shipaton eligibility.
 
 ## Run
 
@@ -45,23 +45,23 @@ The native finance expansion uses the Production mobile API deployed in revision
 | Cherry sign-in, overview, logout | Production email/Google authentication and live overview |
 | Google sign-in | Browser sign-in enabled; Production token-verification hotfix deployed |
 | Token storage | OS secure storage through flutter_secure_storage |
-| Banking and reconciliation | Company-scoped bank accounts/activity, match suggestions, staged proposals and explicit approval via existing finance bridge |
+| Banking and reconciliation | Native bank connection entry, in-app provider approval, company-scoped accounts/activity, match suggestions, staged proposals and explicit approval |
 | Ask Cherry | Live questions with bounded conversation history; guided invoice, quote, expense, supplier-bill, VAT-preview and payment-draft actions |
 | Invoices, quotes, expenses | Live paginated lists, details and creation; invoice PDF links |
 | Clients, products, payments, recurring invoices | Live lists; advanced management opens the existing website |
-| More features | Bank connections, VAT/HMRC, reports, budgets, ledger, credit notes, Cherry Pay and administration open the website with its own login |
+| More features | VAT/HMRC, reports, budgets, ledger, credit notes, Cherry Pay and administration open the website with its own login |
 | Camera and file selection | Live scans upload only on explicit selection; demo files remain local; hardware verification pending |
 | Receipt OCR | JPEG/PNG upload → server extraction → editable review → confirmed expense save with receipt attachment through the deployed mobile API |
-| RevenueCat | Existing `default` Test Store offering, real SDK purchase, restore and `cherrymoney_pro` entitlement refresh |
-| Limits | Free 3 / Pro 100 capture or approval actions per calendar month on this device |
-| Pro capability | Detailed demo cashflow insight and expanded demo action allowance |
-| Business | Planned tier; no RevenueCat product is sold by this build |
+| RevenueCat | Existing `default` Test Store offering plus a production Apple app connection; purchase, restore and `cherrymoney_pro` entitlement refresh use the real SDK |
+| Limits | Launch 3 / Flow 100 / Thrive 250 / Practice 500 capture or approval actions per calendar month on this device |
+| Paid capability | Flow and above unlock detailed demo cashflow insight and expanded demo action allowances |
+| Future access | Partner will remain a separate free accountant route and is not sold by this build |
 
 Subscriptions use RevenueCat's anonymous installation identity and store account. They do not modify an existing Cherry company web plan. Usage counters are prototype limits, not secure cross-device billing enforcement. Demo decisions reset on a new demo session; monthly usage persists.
 
 ## RevenueCat setup
 
-RevenueCat project `2a6f083f` contains Test Store app `app1eeb63a621`, the `cherrymoney_pro` entitlement, and monthly, yearly and lifetime packages in the current `default` offering. Use the checked-in public Test Store build profile for development. For release, create Apple and Google app configurations matching `uk.co.cherrymoney.mobile`, connect the store credentials/products, and supply each platform's public SDK key via dart defines. Exercise purchase/cancel/pending/restore/expiry on signed native sandbox builds. The app never pretends a purchase succeeded.
+RevenueCat project `2a6f083f` contains Test Store app `app1eeb63a621`; its legacy `cherrymoney_pro` entitlement maps to Flow for development compatibility. The production catalog uses `cherrymoney_flow`, `cherrymoney_thrive`, and `cherrymoney_practice` entitlements. Apple product IDs are `uk.co.cherrymoney.flow.monthly`, `uk.co.cherrymoney.thrive.monthly`, and `uk.co.cherrymoney.practice.monthly`. The commercial monthly targets are £15, £35, and £99 respectively; Apple and Google provide the localized price shown at checkout. Launch remains free, and Partner will be added separately later. The production Apple app uses bundle ID `com.cherryInvoiceNewApp.app`; Android uses `uk.co.cherrymoney.mobile`. Connect each store product to its matching entitlement and the current `default` offering, then supply the appropriate public SDK key through Dart defines. Exercise purchase/cancel/pending/restore/expiry and tier changes on signed native sandbox builds. The app never pretends a purchase succeeded.
 
 Before sale, review the limited demo-only value, publish privacy/subscription terms, implement production usage enforcement and account identity handling, and configure the commercial offering appropriately. See [security limitations](docs/SECURITY.md).
 
@@ -79,11 +79,13 @@ flutter test integration_test/demo_flow_test.dart -d DEVICE_ID
 
 [Validation results](docs/VALIDATION.md) distinguish executed checks from unverified native/external integrations. CI runs formatting, analysis, tests and Android build without keys.
 
+For signed Android bundles, upload-key handling, Play Console setup, Play App Signing Google OAuth and the RevenueCat production handoff, follow the [Google Play release guide](docs/GOOGLE_PLAY_RELEASE.md).
+
 ## Store download size
 
-The production Android App Bundle is optimized for Play delivery. The original 1536 × 1024 onboarding artwork remains in the repository as source material, while the app bundles 960 × 640 WebP variants (81 KB combined instead of 5.34 MB). A local Bundletool 1.18.1 estimate on 17 September 2026 measured an **approximately 10.9 MB compressed download for arm64 phones** (10.5 MB for armeabi-v7a and 11.1 MB for x86_64). The 47.8 MB `.aab` upload contains every supported architecture and is not the size downloaded by one device.
+The production Android App Bundle is optimized for Play delivery. The original 1536 × 1024 onboarding artwork remains in the repository as source material, while the app bundles 960 × 640 WebP variants (81 KB combined instead of 5.34 MB). A local Bundletool 1.18.3 estimate on 17 September 2026 measured a **10.5–11.2 MB compressed Play download**, depending on the device. The 47.8 MB `.aab` upload contains every supported architecture and is not the size downloaded by one device.
 
-App Store download size must be confirmed from the thinned, compressed size report after uploading a signed iOS archive to App Store Connect. Keep the same optimized assets in the iOS build and review that report before release against the 20 MB target.
+The signed iOS 5.1.0 (501) IPA uploaded to App Store Connect is 33.4 MB. That is an upload artifact rather than the device download size; Apple’s thinned, compressed size report is still required before claiming the App Store download is below 20 MB.
 
 ## Screenshots
 

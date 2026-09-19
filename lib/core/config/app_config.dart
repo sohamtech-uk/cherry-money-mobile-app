@@ -20,9 +20,12 @@ class AppConfig {
                  ? 'https://cherrymoney.co.uk/api/'
                  : 'https://dev.cherrymoney.co.uk/api/')
            : apiBaseUrl;
-  static const proEntitlement = 'cherrymoney_pro';
+  static const flowEntitlement = 'cherrymoney_flow';
+  static const thriveEntitlement = 'cherrymoney_thrive';
+  static const practiceEntitlement = 'cherrymoney_practice';
+  static const legacyCherryProEntitlement = 'cherrymoney_pro';
   static const legacyProEntitlement = 'pro';
-  static const businessEntitlement = 'business';
+  static const legacyBusinessEntitlement = 'business';
   bool get valid =>
       ['development', 'production'].contains(environment) &&
       Uri.tryParse(apiBaseUrl)?.scheme == 'https' &&

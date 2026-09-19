@@ -40,7 +40,15 @@ The client ID is passed directly to SDK initialization. No second client ID in `
 
 ## Native apps
 
-Android needs an OAuth Android client for `uk.co.cherrymoney.mobile` and its actual signing certificate. iOS needs its OAuth client and reversed-client-ID URL scheme in `ios/Runner/Info.plist`. Use the enable flag above, plus `GOOGLE_IOS_CLIENT_ID` for iOS. Override `GOOGLE_SERVER_CLIENT_ID` only when targeting a different configured Google project. Follow the [platform setup instructions](https://pub.dev/packages/google_sign_in).
+The `cherry-invoice` Google Cloud project has an Android OAuth client named **Cherry Money Android**:
+
+- Client ID: `996173642915-jlirptqj1j9pesop2svjtsurn0vi3qhu.apps.googleusercontent.com`
+- Package: `uk.co.cherrymoney.mobile`
+- SHA-1: `CD:4B:5F:82:E1:3A:11:A3:E3:9F:64:E5:A0:E8:10:38:67:6F:11:FD`
+
+The SHA-1 matches the local Android debug signing keystore used by the current test APK. Google can take from five minutes to several hours to propagate a new client. A Play Store build must also register the separate SHA-1 shown for its Play App Signing certificate; changing the signing certificate without registering it will make Google login fail again.
+
+iOS needs its OAuth client and reversed-client-ID URL scheme in `ios/Runner/Info.plist`. Use the enable flag above, plus `GOOGLE_IOS_CLIENT_ID` for iOS. Override `GOOGLE_SERVER_CLIENT_ID` only when targeting a different configured Google project. Follow the [platform setup instructions](https://pub.dev/packages/google_sign_in).
 
 ## Default preview
 

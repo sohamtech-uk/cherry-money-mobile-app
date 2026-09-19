@@ -10,7 +10,7 @@ The first public mobile release must occur within the contest submission period;
 
 ## RevenueCat
 
-The configured Test Store entitlement is `cherrymoney_pro`. The legacy `pro` identifier remains accepted for compatibility; `business` is reserved for a future tier. Free=3 and Pro=100 capture/approval actions per calendar month on device. Detailed demo cashflow insight is Pro only. The `default` RevenueCat offering supplies monthly, yearly and lifetime Test Store packages. Purchase and restore results update SDK entitlement state; no simulated success. Missing keys leave Free/demo usable. Apple/Google products, signed sandbox purchases and refund/revocation cases still require store setup.
+The production entitlement model is `cherrymoney_flow`, `cherrymoney_thrive`, and `cherrymoney_practice`; the Test Store identifiers `cherrymoney_pro` and `pro` continue to map to Flow, while legacy `business` maps to Practice. Launch=3, Flow=100, Thrive=250 and Practice=500 capture/approval actions per calendar month on device. Detailed demo cashflow insight is available from Flow upward. The commercial monthly targets are £15, £35 and £99, with localized checkout prices supplied by Apple or Google. Purchase and restore results update SDK entitlement state; there is no simulated success. Missing keys leave Launch/demo usable. Production store products, signed sandbox purchases and refund/revocation cases still require completion.
 
 ## Existing versus new
 
@@ -41,6 +41,6 @@ During this work: Flutter root project, new application identifier, focused demo
 4. Audit timeline: show the human decision and reconciled state.
 5. Exceptions: demonstrate amount mismatch/duplicate not silently approved.
 6. Ask Cherry: ask what needs attention; identify the structured response.
-7. Premium insight: Free routes to upgrade; on configured native build demonstrate store purchase and restore.
+7. Premium insight: Launch routes to upgrade; on a configured native build demonstrate purchase, tier entitlement and restore.
 
 Take screenshots of these real screens. Do not claim real AI extraction, live bank connectivity, accounting integration or purchase verification from demo screenshots.

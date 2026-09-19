@@ -1,24 +1,100 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/network/api_client.dart';
 import '../../core/widgets/common.dart';
 import '../../data/repositories/workspace.dart';
 import 'live_common.dart';
 
+typedef BankAuthorizationLauncher = Future<bool> Function(Uri uri);
+
+Future<bool> launchBankAuthorization(Uri uri) =>
+    launchUrl(uri, mode: LaunchMode.inAppBrowserView);
+
 class BankingScreen extends ConsumerStatefulWidget {
   final bool reconcile;
-  const BankingScreen({super.key, this.reconcile = false});
+  final BankAuthorizationLauncher authorizationLauncher;
+  const BankingScreen({
+    super.key,
+    this.reconcile = false,
+    this.authorizationLauncher = launchBankAuthorization,
+  });
   @override
   ConsumerState<BankingScreen> createState() => _BankingScreenState();
 }
 
-class _BankingScreenState extends ConsumerState<BankingScreen> {
+class _BankingScreenState extends ConsumerState<BankingScreen>
+    with WidgetsBindingObserver {
   String query = '', error = '';
-  bool actionBusy = false;
+  bool actionBusy = false, awaitingBankReturn = false;
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     Future.microtask(() => ref.read(workspaceProvider).loadFinance());
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && awaitingBankReturn) {
+      awaitingBankReturn = false;
+      Future.microtask(() => ref.read(workspaceProvider).loadFinance());
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  Future<void> connectBank() async {
+    if (actionBusy) return;
+    final accepted = await confirmAction(
+      context,
+      'Connect a bank securely?',
+      'Cherry Money will open the regulated bank approval service inside the app. You choose the bank and approve read-only account access there. Cherry Money never receives or stores your online banking password.',
+      action: 'Continue securely',
+    );
+    if (!accepted || !mounted) return;
+    setState(() {
+      actionBusy = true;
+      error = '';
+    });
+    try {
+      final result = await ref
+          .read(workspaceProvider)
+          .api
+          .financeRequest(
+            'mobile/banking/connect',
+            method: 'POST',
+            data: {'consent': true},
+          );
+      final uri = Uri.tryParse(text(result['authorization_url']));
+      if (uri == null || uri.scheme != 'https' || uri.host.isEmpty) {
+        throw const ApiException(
+          'The banking provider did not return a secure approval link.',
+        );
+      }
+      awaitingBankReturn = true;
+      if (!await widget.authorizationLauncher(uri)) {
+        awaitingBankReturn = false;
+        throw const ApiException(
+          'The secure bank approval screen could not be opened.',
+        );
+      }
+    } on ApiException catch (e) {
+      if (mounted) setState(() => error = e.message);
+    } catch (_) {
+      if (mounted) {
+        setState(
+          () => error = 'The secure bank connection could not be started.',
+        );
+      }
+    } finally {
+      if (mounted) setState(() => actionBusy = false);
+    }
   }
 
   Future<void> stage(Map<String, dynamic> transaction) async {
@@ -165,9 +241,14 @@ class _BankingScreenState extends ConsumerState<BankingScreen> {
               ),
             ),
           TextButton.icon(
-            onPressed: () => openCherry(context, 'linkBank'),
+            onPressed: actionBusy ? null : connectBank,
             icon: const Icon(Icons.add),
             label: const Text('Connect or manage banks'),
+          ),
+          const Text(
+            'Bank approval opens securely inside the app and returns here automatically.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 12),
           ),
         ],
         if (widget.reconcile && approvals.isNotEmpty) ...[
@@ -253,7 +334,7 @@ class _BankingScreenState extends ConsumerState<BankingScreen> {
                       )
                     else if (transaction['direction'] == 'debit')
                       TextButton(
-                        onPressed: () => openCherry(context, 'transactions'),
+                        onPressed: () => context.push('/records/expense'),
                         child: const Text('Review expense or supplier bill'),
                       ),
                   ],
@@ -264,15 +345,8 @@ class _BankingScreenState extends ConsumerState<BankingScreen> {
         if (data != null)
           const Padding(
             padding: EdgeInsets.only(top: 12),
-            child: Text(
-              'Showing up to 100 latest transactions. Full bank history is available on Cherry Money.',
-            ),
+            child: Text('Showing up to 100 latest transactions in the app.'),
           ),
-        TextButton.icon(
-          onPressed: () => openCherry(context, 'transactions'),
-          icon: const Icon(Icons.open_in_new),
-          label: const Text('Full bank history'),
-        ),
       ],
     );
   }

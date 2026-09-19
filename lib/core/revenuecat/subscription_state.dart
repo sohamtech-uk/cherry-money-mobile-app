@@ -1,17 +1,22 @@
 import '../config/app_config.dart';
 
-enum Plan { free, pro, business }
+enum Plan { launch, flow, thrive, practice }
 
 Plan planForEntitlements(Iterable<String> active) =>
-    active.contains(AppConfig.businessEntitlement)
-    ? Plan.business
-    : active.contains(AppConfig.proEntitlement) ||
+    active.contains(AppConfig.practiceEntitlement) ||
+        active.contains(AppConfig.legacyBusinessEntitlement)
+    ? Plan.practice
+    : active.contains(AppConfig.thriveEntitlement)
+    ? Plan.thrive
+    : active.contains(AppConfig.flowEntitlement) ||
+          active.contains(AppConfig.legacyCherryProEntitlement) ||
           active.contains(AppConfig.legacyProEntitlement)
-    ? Plan.pro
-    : Plan.free;
+    ? Plan.flow
+    : Plan.launch;
 int allowanceFor(Plan plan) => switch (plan) {
-  Plan.free => 3,
-  Plan.pro => 100,
-  Plan.business => 500,
+  Plan.launch => 3,
+  Plan.flow => 100,
+  Plan.thrive => 250,
+  Plan.practice => 500,
 };
 bool canProcess(Plan plan, int used) => used < allowanceFor(plan);

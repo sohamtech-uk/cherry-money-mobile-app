@@ -16,6 +16,8 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>mobile</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -26,6 +28,17 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>cherrymoney</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -43,16 +56,10 @@
 					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
 					<key>UISceneStoryboardFile</key>
 					<string>Main</string>
-				<key>NSCameraUsageDescription</key><string>Capture a receipt or invoice for your review.</string>
-<key>NSPhotoLibraryUsageDescription</key><string>Select a receipt or invoice to preview on your device.</string>
-</dict>
+				</dict>
 			</array>
-		<key>NSCameraUsageDescription</key><string>Capture a receipt or invoice for your review.</string>
-<key>NSPhotoLibraryUsageDescription</key><string>Select a receipt or invoice to preview on your device.</string>
-</dict>
-	<key>NSCameraUsageDescription</key><string>Capture a receipt or invoice for your review.</string>
-<key>NSPhotoLibraryUsageDescription</key><string>Select a receipt or invoice to preview on your device.</string>
-</dict>
+		</dict>
+	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -72,7 +79,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-<key>NSCameraUsageDescription</key><string>Capture a receipt or invoice for your review.</string>
-<key>NSPhotoLibraryUsageDescription</key><string>Select a receipt or invoice to preview on your device.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Capture a receipt or invoice for your review.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Select a receipt or invoice to preview on your device.</string>
 </dict>
 </plist>

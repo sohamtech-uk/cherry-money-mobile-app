@@ -68,7 +68,6 @@ const nativeFeatures = <(String, String, IconData, String)>[
   ),
 ];
 const webFeatures = <(String, String, String)>[
-  ('Connect a bank', 'Authorise a bank connection', 'linkBank'),
   ('Purchase invoices', 'Supplier bills and approvals', 'purchase-invoice'),
   ('Sales credit notes', 'Customer credits', 'sales-credit-note'),
   ('Purchase credit notes', 'Supplier credits', 'purchase-credit-note'),

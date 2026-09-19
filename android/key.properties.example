@@ -1,0 +1,6 @@
+# Copy this file to key.properties and replace every placeholder.
+# key.properties is ignored by Git. Keep the keystore and passwords outside the repository.
+storePassword=YOUR_UPLOAD_KEYSTORE_PASSWORD
+keyPassword=YOUR_UPLOAD_KEY_PASSWORD
+keyAlias=cherrymoney-upload
+storeFile=/absolute/path/to/cherrymoney-upload.jks
