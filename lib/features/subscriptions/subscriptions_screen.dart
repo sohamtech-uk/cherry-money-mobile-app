@@ -123,21 +123,25 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
           ),
           _plan(
             'Launch',
+            '£0',
             '3 actions per calendar month',
             'A free starting point for invoices, document review and starter reconciliation.',
           ),
           _plan(
             'Flow',
+            '£15 / month',
             '100 actions per calendar month',
             'For businesses ready to keep invoicing, expenses, reconciliation and Ask Cherry moving together.',
           ),
           _plan(
             'Thrive',
+            '£35 / month',
             '250 actions per calendar month',
             'More headroom for VAT, reporting, cash-flow insights and higher document volume.',
           ),
           _plan(
             'Practice',
+            '£99 / month',
             '500 actions per calendar month',
             'The highest mobile allowance for larger finance workflows and growing teams.',
           ),
@@ -190,15 +194,39 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
     );
   }
 
-  Widget _plan(String title, String allowance, String description) => Card(
+  Widget _plan(
+    String title,
+    String price,
+    String allowance,
+    String description,
+  ) => Card(
     child: Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w700),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 23,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              Text(
+                price,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFFAD1929),
+                ),
+              ),
+            ],
           ),
           Text(allowance, style: const TextStyle(color: Color(0xFFAD1929))),
           const SizedBox(height: 8),
