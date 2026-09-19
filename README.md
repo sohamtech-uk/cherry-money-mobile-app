@@ -2,7 +2,7 @@
 
 A Flutter finance workspace for small businesses: capture → understand → match → review exceptions → approve. A Flutter rebuild of the existing Cherry mobile product, with RevenueCat integration for a Shipaton prototype. This repository contains Flutter code only.
 
-**Status: implementation in review, not store released.** The RevenueCat Test Store catalog and public development key are configured; Apple/Google store connections and signed sandbox purchases still require external setup. Prior mobile release eligibility has not been confirmed. Renaming/rebuilding an existing released app does not establish Shipaton eligibility.
+**Status: uploaded to App Store Connect, not submitted for review or released.** Apple accepted iOS version 5.1.0 (build 501) for processing on 19 September 2026. The RevenueCat Test Store catalog remains available for development, and the production Apple app connection is configured. Production subscription products, pricing, offerings, and signed sandbox purchase/restore testing are still required before subscriptions can be sold. Prior mobile release eligibility has not been confirmed. Renaming/rebuilding an existing released app does not establish Shipaton eligibility.
 
 ## Run
 
@@ -52,7 +52,7 @@ The native finance expansion uses the Production mobile API deployed in revision
 | More features | VAT/HMRC, reports, budgets, ledger, credit notes, Cherry Pay and administration open the website with its own login |
 | Camera and file selection | Live scans upload only on explicit selection; demo files remain local; hardware verification pending |
 | Receipt OCR | JPEG/PNG upload → server extraction → editable review → confirmed expense save with receipt attachment through the deployed mobile API |
-| RevenueCat | Existing `default` Test Store offering, real SDK purchase, restore and `cherrymoney_pro` entitlement refresh |
+| RevenueCat | Existing `default` Test Store offering plus a production Apple app connection; purchase, restore and `cherrymoney_pro` entitlement refresh use the real SDK |
 | Limits | Free 3 / Pro 100 capture or approval actions per calendar month on this device |
 | Pro capability | Detailed demo cashflow insight and expanded demo action allowance |
 | Business | Planned tier; no RevenueCat product is sold by this build |
@@ -61,7 +61,7 @@ Subscriptions use RevenueCat's anonymous installation identity and store account
 
 ## RevenueCat setup
 
-RevenueCat project `2a6f083f` contains Test Store app `app1eeb63a621`, the `cherrymoney_pro` entitlement, and monthly, yearly and lifetime packages in the current `default` offering. Use the checked-in public Test Store build profile for development. For release, create Apple and Google app configurations matching `uk.co.cherrymoney.mobile`, connect the store credentials/products, and supply each platform's public SDK key via dart defines. Exercise purchase/cancel/pending/restore/expiry on signed native sandbox builds. The app never pretends a purchase succeeded.
+RevenueCat project `2a6f083f` contains Test Store app `app1eeb63a621`, the `cherrymoney_pro` entitlement, and monthly, yearly and lifetime packages in the current `default` offering. Use the checked-in public Test Store build profile for development. The production Apple app uses bundle ID `com.cherryInvoiceNewApp.app`; Android uses `uk.co.cherrymoney.mobile`. Connect each store's products to the entitlement and `default` offering, then supply the appropriate public SDK key through Dart defines. Exercise purchase/cancel/pending/restore/expiry on signed native sandbox builds. The app never pretends a purchase succeeded.
 
 Before sale, review the limited demo-only value, publish privacy/subscription terms, implement production usage enforcement and account identity handling, and configure the commercial offering appropriately. See [security limitations](docs/SECURITY.md).
 
@@ -85,7 +85,7 @@ For signed Android bundles, upload-key handling, Play Console setup, Play App Si
 
 The production Android App Bundle is optimized for Play delivery. The original 1536 × 1024 onboarding artwork remains in the repository as source material, while the app bundles 960 × 640 WebP variants (81 KB combined instead of 5.34 MB). A local Bundletool 1.18.3 estimate on 17 September 2026 measured a **10.5–11.2 MB compressed Play download**, depending on the device. The 47.8 MB `.aab` upload contains every supported architecture and is not the size downloaded by one device.
 
-App Store download size must be confirmed from the thinned, compressed size report after uploading a signed iOS archive to App Store Connect. Keep the same optimized assets in the iOS build and review that report before release against the 20 MB target.
+The signed iOS 5.1.0 (501) IPA uploaded to App Store Connect is 33.4 MB. That is an upload artifact rather than the device download size; Apple’s thinned, compressed size report is still required before claiming the App Store download is below 20 MB.
 
 ## Screenshots
 

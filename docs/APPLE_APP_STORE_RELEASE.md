@@ -7,9 +7,13 @@ Cherry Money is prepared as the next version of the existing **Cherry invoice** 
 - App Store Connect app ID: `6736350941`
 - Apple team: `Soham Yoga Ltd` (`DK4T8B9KX7`)
 - Bundle ID: `com.cherryInvoiceNewApp.app`
-- Version: `5.0.0`
-- Build: `500`
+- Version: `5.1.0`
+- Build: `501`
 - Display name: `Cherry Money`
+
+Apple accepted the signed upload on 19 September 2026. App Store Connect reports the build as valid and associates it with the 5.1.0 release record. Apple emitted one future compatibility warning: starting in spring 2027, new uploads must target iOS 15 or later; this build's current iOS 13 deployment target remains valid for this release.
+
+The App Store Connect API upload key is stored outside the repository. Do not commit signing certificates, provisioning profiles, private keys, or RevenueCat secret credentials.
 
 The iOS sign-in screen exposes email/password and account creation. Google sign-in remains available on Android and web but is intentionally hidden on iOS until the backend supports Sign in with Apple. This avoids presenting a third-party social login without Apple's equivalent option.
 
@@ -24,4 +28,4 @@ Configure the workflow to:
 3. Archive for iOS using automatic signing for team `DK4T8B9KX7`.
 4. Distribute the successful archive to TestFlight/App Store Connect.
 
-Before App Review, verify email sign-in, account creation, receipt capture, in-app bank connection, RevenueCat sandbox purchase and restore on a signed TestFlight build.
+Before App Review, replace the inherited Cherry Invoice store screenshots with current Cherry Money screens, verify email sign-in, account creation, receipt capture and in-app bank connection on TestFlight, and configure production subscription products/pricing in App Store Connect and RevenueCat. Then test purchase, cancellation, pending state, restore, expiry and entitlement revocation with an Apple sandbox account.
