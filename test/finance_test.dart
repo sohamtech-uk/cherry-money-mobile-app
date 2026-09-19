@@ -17,15 +17,22 @@ void main() {
     expect(const AppConfig(apiBaseUrl: 'http://unsafe/api/').valid, false);
     expect(const AppConfig(environment: 'unknown').valid, false);
   });
-  test('Business takes precedence and unknown entitlements stay Free', () {
-    expect(planForEntitlements(['pro', 'business']), Plan.business);
-    expect(planForEntitlements(['pro']), Plan.pro);
-    expect(planForEntitlements(['cherrymoney_pro']), Plan.pro);
-    expect(planForEntitlements(['admin']), Plan.free);
-    expect(canProcess(Plan.free, 2), true);
-    expect(canProcess(Plan.free, 3), false);
-    expect(canProcess(Plan.pro, 100), false);
-    expect(canProcess(Plan.business, 499), true);
+  test('higher tiers take precedence and legacy entitlements migrate', () {
+    expect(
+      planForEntitlements(['cherrymoney_flow', 'cherrymoney_practice']),
+      Plan.practice,
+    );
+    expect(planForEntitlements(['cherrymoney_thrive']), Plan.thrive);
+    expect(planForEntitlements(['cherrymoney_flow']), Plan.flow);
+    expect(planForEntitlements(['pro']), Plan.flow);
+    expect(planForEntitlements(['cherrymoney_pro']), Plan.flow);
+    expect(planForEntitlements(['business']), Plan.practice);
+    expect(planForEntitlements(['admin']), Plan.launch);
+    expect(canProcess(Plan.launch, 2), true);
+    expect(canProcess(Plan.launch, 3), false);
+    expect(canProcess(Plan.flow, 100), false);
+    expect(canProcess(Plan.thrive, 249), true);
+    expect(canProcess(Plan.practice, 499), true);
   });
   test(
     'matching explains high-confidence candidates without finalizing them',
@@ -93,7 +100,7 @@ void main() {
     await state.startDemo();
     expect(state.used, 3);
     expect(await state.approve('t1'), false);
-    state.setPlan(Plan.pro);
+    state.setPlan(Plan.flow);
     expect(await state.approve('t1'), true);
   });
   test(

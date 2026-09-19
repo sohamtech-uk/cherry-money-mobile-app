@@ -8,10 +8,10 @@ Cherry Money is prepared as the next version of the existing **Cherry invoice** 
 - Apple team: `Soham Yoga Ltd` (`DK4T8B9KX7`)
 - Bundle ID: `com.cherryInvoiceNewApp.app`
 - Version: `5.1.0`
-- Build: `501`
+- Build: `502`
 - Display name: `Cherry Money`
 
-Apple accepted the signed upload on 19 September 2026. App Store Connect reports the build as valid and associates it with the 5.1.0 release record. Apple emitted one future compatibility warning: starting in spring 2027, new uploads must target iOS 15 or later; this build's current iOS 13 deployment target remains valid for this release.
+Apple accepted signed build 502 on 19 September 2026 and it is selected on the 5.1.0 release record. It adds the Launch, Flow, Thrive and Practice entitlement model. Apple emitted one future compatibility warning: starting in spring 2027, new uploads must target iOS 15 or later; this build's current iOS 13 deployment target remains valid for this release.
 
 The App Store Connect API upload key is stored outside the repository. Do not commit signing certificates, provisioning profiles, private keys, or RevenueCat secret credentials.
 

@@ -30,7 +30,7 @@ class _CopilotScreenState extends ConsumerState<CopilotScreen> {
         return;
       }
       setState(() => busy = false);
-      if (state.plan == Plan.free && mounted) {
+      if (state.plan == Plan.launch && mounted) {
         context.push('/subscriptions');
         return;
       }
@@ -81,7 +81,7 @@ class _CopilotScreenState extends ConsumerState<CopilotScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Text(
-                      '${entry.value}${entry.key == 3 ? ' · Pro' : ''}',
+                      '${entry.value}${entry.key == 3 ? ' · Flow' : ''}',
                     ),
                   ),
                 ),

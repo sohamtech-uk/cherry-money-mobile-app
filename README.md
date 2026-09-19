@@ -2,7 +2,7 @@
 
 A Flutter finance workspace for small businesses: capture → understand → match → review exceptions → approve. A Flutter rebuild of the existing Cherry mobile product, with RevenueCat integration for a Shipaton prototype. This repository contains Flutter code only.
 
-**Status: uploaded to App Store Connect, not submitted for review or released.** Apple accepted iOS version 5.1.0 (build 501) for processing on 19 September 2026. The RevenueCat Test Store catalog remains available for development, and the production Apple app connection is configured. Production subscription products, pricing, offerings, and signed sandbox purchase/restore testing are still required before subscriptions can be sold. Prior mobile release eligibility has not been confirmed. Renaming/rebuilding an existing released app does not establish Shipaton eligibility.
+**Status: uploaded to App Store Connect, not submitted for review or released.** Apple accepted iOS version 5.1.0 build 502 on 19 September 2026 and it is selected on the release record. Build 502 includes the Launch, Flow, Thrive and Practice entitlement model. The RevenueCat Test Store catalog remains available for development, and the production Apple app connection is configured. Production subscription products, pricing, offerings, and signed sandbox purchase/restore testing are still required before subscriptions can be sold. Prior mobile release eligibility has not been confirmed. Renaming/rebuilding an existing released app does not establish Shipaton eligibility.
 
 ## Run
 
@@ -53,15 +53,15 @@ The native finance expansion uses the Production mobile API deployed in revision
 | Camera and file selection | Live scans upload only on explicit selection; demo files remain local; hardware verification pending |
 | Receipt OCR | JPEG/PNG upload → server extraction → editable review → confirmed expense save with receipt attachment through the deployed mobile API |
 | RevenueCat | Existing `default` Test Store offering plus a production Apple app connection; purchase, restore and `cherrymoney_pro` entitlement refresh use the real SDK |
-| Limits | Free 3 / Pro 100 capture or approval actions per calendar month on this device |
-| Pro capability | Detailed demo cashflow insight and expanded demo action allowance |
-| Business | Planned tier; no RevenueCat product is sold by this build |
+| Limits | Launch 3 / Flow 100 / Thrive 250 / Practice 500 capture or approval actions per calendar month on this device |
+| Paid capability | Flow and above unlock detailed demo cashflow insight and expanded demo action allowances |
+| Future access | Partner will remain a separate free accountant route and is not sold by this build |
 
 Subscriptions use RevenueCat's anonymous installation identity and store account. They do not modify an existing Cherry company web plan. Usage counters are prototype limits, not secure cross-device billing enforcement. Demo decisions reset on a new demo session; monthly usage persists.
 
 ## RevenueCat setup
 
-RevenueCat project `2a6f083f` contains Test Store app `app1eeb63a621`, the `cherrymoney_pro` entitlement, and monthly, yearly and lifetime packages in the current `default` offering. Use the checked-in public Test Store build profile for development. The production Apple app uses bundle ID `com.cherryInvoiceNewApp.app`; Android uses `uk.co.cherrymoney.mobile`. Connect each store's products to the entitlement and `default` offering, then supply the appropriate public SDK key through Dart defines. Exercise purchase/cancel/pending/restore/expiry on signed native sandbox builds. The app never pretends a purchase succeeded.
+RevenueCat project `2a6f083f` contains Test Store app `app1eeb63a621`; its legacy `cherrymoney_pro` entitlement maps to Flow for development compatibility. The production catalog uses `cherrymoney_flow`, `cherrymoney_thrive`, and `cherrymoney_practice` entitlements. The commercial monthly targets are £15, £35, and £99 respectively; Apple and Google provide the localized price shown at checkout. Launch remains free, and Partner will be added separately later. The production Apple app uses bundle ID `com.cherryInvoiceNewApp.app`; Android uses `uk.co.cherrymoney.mobile`. Connect each store product to its matching entitlement and the current `default` offering, then supply the appropriate public SDK key through Dart defines. Exercise purchase/cancel/pending/restore/expiry and tier changes on signed native sandbox builds. The app never pretends a purchase succeeded.
 
 Before sale, review the limited demo-only value, publish privacy/subscription terms, implement production usage enforcement and account identity handling, and configure the commercial offering appropriately. See [security limitations](docs/SECURITY.md).
 

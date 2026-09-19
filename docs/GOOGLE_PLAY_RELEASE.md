@@ -58,11 +58,11 @@ Google Play signs installed builds with the Play App Signing key, which is diffe
 
 The upload-certificate SHA-1 in this document is not the fingerprint to use for Play-installed Google login.
 
-## RevenueCat and Play Billing before selling Pro
+## RevenueCat and Play Billing before selling paid plans
 
 1. Create the Google Play app in the existing RevenueCat project using package `uk.co.cherrymoney.mobile`.
 2. Configure Google Play service credentials in RevenueCat and complete the Play Billing integration.
-3. Create the Play subscription products and base plans, attach them to the `cherrymoney_pro` entitlement and the `default` offering, and keep identifiers aligned with the app's offering design.
+3. Create Flow, Thrive and Practice subscription products and base plans, attach them to `cherrymoney_flow`, `cherrymoney_thrive` and `cherrymoney_practice`, and add them to the `default` offering. Launch remains free; Partner will be configured separately later.
 4. Copy RevenueCat's public Android SDK key and pass it as `REVENUECAT_ANDROID_API_KEY` for the signed build. Never put a RevenueCat secret key or Google service-account JSON in the app.
 5. Increment the version code, rebuild, upload to Internal testing, and test purchase, cancel, pending payment, restore, expiry, refund/revocation and account switching with Play license testers.
 

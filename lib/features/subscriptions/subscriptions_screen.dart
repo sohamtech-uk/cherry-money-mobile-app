@@ -48,7 +48,7 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
         setState(() {
           packages = [];
           message =
-              'Purchases are unavailable here. Demo mode and the Free allowance still work. Try again in the configured iOS or Android app.';
+              'Purchases are unavailable here. Demo mode and the Launch allowance still work. Try again in the configured iOS or Android app.';
         });
       }
     } finally {
@@ -74,8 +74,8 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
       state.setPlan(plan);
       if (mounted) {
         setState(
-          () => message = plan == Plan.free
-              ? 'No active Cherry Money Pro entitlement was found. Refresh after any pending store approval.'
+          () => message = plan == Plan.launch
+              ? 'No active paid Cherry Money entitlement was found. Refresh after any pending store approval.'
               : '${plan.name.toUpperCase()} is active.',
         );
       }
@@ -122,19 +122,24 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
             'Demo capture and approval each use one action. This prototype allowance is enforced on this device; live account actions continue to use Cherry Money permissions and confirmations.',
           ),
           _plan(
-            'Free',
+            'Launch',
             '3 actions per calendar month',
-            'Basic dashboard, document review and starter reconciliation.',
+            'A free starting point for invoices, document review and starter reconciliation.',
           ),
           _plan(
-            'Pro',
+            'Flow',
             '100 actions per calendar month',
-            'More capture and reconciliation actions, plus the detailed demo cashflow insight.',
+            'For businesses ready to keep invoicing, expenses, reconciliation and Ask Cherry moving together.',
           ),
           _plan(
-            'Business',
-            'Planned tier',
-            'Team access and advanced agent workflows do not yet have a RevenueCat product and are not sold by this build.',
+            'Thrive',
+            '250 actions per calendar month',
+            'More headroom for VAT, reporting, cash-flow insights and higher document volume.',
+          ),
+          _plan(
+            'Practice',
+            '500 actions per calendar month',
+            'The highest mobile allowance for larger finance workflows and growing teams.',
           ),
           if (busy) const Center(child: CircularProgressIndicator()),
           if (message.isNotEmpty) Notice(message),
@@ -177,7 +182,7 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
           ),
           const SizedBox(height: 12),
           const Text(
-            'Store release requires published privacy and subscription terms. No store publication has been performed.',
+            'Store prices and billing periods are shown by Apple or Google before purchase. Partner access will be introduced separately.',
             style: TextStyle(fontSize: 13),
           ),
         ],
