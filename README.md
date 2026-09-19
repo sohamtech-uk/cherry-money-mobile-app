@@ -2,7 +2,7 @@
 
 A Flutter finance workspace for small businesses: capture → understand → match → review exceptions → approve. A Flutter rebuild of the existing Cherry mobile product, with RevenueCat integration for a Shipaton prototype. This repository contains Flutter code only.
 
-**Status: uploaded to App Store Connect, not submitted for review or released.** Apple accepted iOS version 5.1.0 build 502 on 19 September 2026 and it is selected on the release record. Build 502 includes the Launch, Flow, Thrive and Practice entitlement model. The RevenueCat Test Store catalog remains available for development, and the production Apple app connection is configured. Production subscription products, pricing, offerings, and signed sandbox purchase/restore testing are still required before subscriptions can be sold. Prior mobile release eligibility has not been confirmed. Renaming/rebuilding an existing released app does not establish Shipaton eligibility.
+**Status: uploaded to App Store Connect, not submitted for review or released.** Apple accepted iOS version 5.1.0 build 503 on 19 September 2026 and it is selected on the staged review submission. Build 503 includes the Launch, Flow, Thrive and Practice entitlement model and displays the £0 / £15 / £35 / £99 pricing in the app. RevenueCat's production Apple app, products, entitlements and current offering are configured, and the matching App Store subscription products and territory prices are staged with the app version. Signed sandbox purchase, restore, cancellation, expiry and tier-change testing is still required before launch. Prior mobile release eligibility has not been confirmed. Renaming/rebuilding an existing released app does not establish Shipaton eligibility.
 
 ## Run
 
@@ -85,7 +85,7 @@ For signed Android bundles, upload-key handling, Play Console setup, Play App Si
 
 The production Android App Bundle is optimized for Play delivery. The original 1536 × 1024 onboarding artwork remains in the repository as source material, while the app bundles 960 × 640 WebP variants (81 KB combined instead of 5.34 MB). A local Bundletool 1.18.3 estimate on 17 September 2026 measured a **10.5–11.2 MB compressed Play download**, depending on the device. The 47.8 MB `.aab` upload contains every supported architecture and is not the size downloaded by one device.
 
-The signed iOS 5.1.0 (501) IPA uploaded to App Store Connect is 33.4 MB. That is an upload artifact rather than the device download size; Apple’s thinned, compressed size report is still required before claiming the App Store download is below 20 MB.
+The signed iOS 5.1.0 (503) IPA uploaded to App Store Connect is 33.4 MB. That is an upload artifact rather than the device download size; Apple’s thinned, compressed size report is still required before claiming the App Store download is below 20 MB.
 
 ## Screenshots
 
