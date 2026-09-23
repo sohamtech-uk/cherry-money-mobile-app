@@ -88,6 +88,7 @@ void main() {
     expect(find.text('Launch'), findsOneWidget);
     expect(find.text('Sole Trader'), findsOneWidget);
     expect(find.text('Flow'), findsOneWidget);
+    expect(find.text('Sole Trader Start'), findsOneWidget);
     expect(find.text('Thrive'), findsOneWidget);
     expect(find.text('Practice'), findsOneWidget);
     expect(

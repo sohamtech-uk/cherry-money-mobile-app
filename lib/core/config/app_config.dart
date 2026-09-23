@@ -22,6 +22,7 @@ class AppConfig {
            : apiBaseUrl;
   static const flowEntitlement = 'cherrymoney_flow';
   static const soleTraderEntitlement = 'cherrymoney_sole_trader';
+  static const soleTraderStartEntitlement = 'cherrymoney_sole_trader_start';
   static const thriveEntitlement = 'cherrymoney_thrive';
   static const practiceEntitlement = 'cherrymoney_practice';
   static const legacyCherryProEntitlement = 'cherrymoney_pro';

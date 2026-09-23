@@ -192,6 +192,12 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
             'For businesses ready to keep invoicing, expenses, reconciliation and Ask Cherry moving together.',
           ),
           _plan(
+            'Sole Trader Start',
+            '£18 / month',
+            '125 actions per calendar month',
+            'More automation, VAT submission and MTD-ready workflows for a growing self-employed business.',
+          ),
+          _plan(
             'Thrive',
             '£35 / month',
             '250 actions per calendar month',

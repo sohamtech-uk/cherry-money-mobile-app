@@ -24,6 +24,10 @@ void main() {
     );
     expect(planForEntitlements(['cherrymoney_thrive']), Plan.thrive);
     expect(planForEntitlements(['cherrymoney_flow']), Plan.flow);
+    expect(
+      planForEntitlements(['cherrymoney_sole_trader_start']),
+      Plan.soleTraderStart,
+    );
     expect(planForEntitlements(['cherrymoney_sole_trader']), Plan.soleTrader);
     expect(planForEntitlements(['pro']), Plan.flow);
     expect(planForEntitlements(['cherrymoney_pro']), Plan.flow);
@@ -34,6 +38,8 @@ void main() {
     expect(canProcess(Plan.soleTrader, 49), true);
     expect(canProcess(Plan.soleTrader, 50), false);
     expect(canProcess(Plan.flow, 100), false);
+    expect(canProcess(Plan.soleTraderStart, 124), true);
+    expect(canProcess(Plan.soleTraderStart, 125), false);
     expect(canProcess(Plan.thrive, 249), true);
     expect(canProcess(Plan.practice, 499), true);
   });
