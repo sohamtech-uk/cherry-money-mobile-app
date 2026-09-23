@@ -76,7 +76,7 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
         setState(
           () => message = plan == Plan.launch
               ? 'No active paid Cherry Money entitlement was found. Refresh after any pending store approval.'
-              : '${plan.name.toUpperCase()} is active.',
+              : '${planDisplayName(plan).toUpperCase()} is active.',
         );
       }
     } on PlatformException catch (error) {
@@ -116,16 +116,74 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Current plan: ${state.plan.name.toUpperCase()} · ${state.remaining} demo actions left this month',
+            'Current plan: ${planDisplayName(state.plan).toUpperCase()} · ${state.remaining} demo actions left this month',
           ),
           const Notice(
             'Demo capture and approval each use one action. This prototype allowance is enforced on this device; live account actions continue to use Cherry Money permissions and confirmations.',
+          ),
+          if (packages.isNotEmpty)
+            Text(
+              'Available in your app store',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ...packages.map(
+            (package) => Card(
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      package.storeProduct.title,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(package.storeProduct.description),
+                    const SizedBox(height: 8),
+                    Text(
+                      '${package.storeProduct.priceString} · ${package.packageType.name}',
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: 12),
+                    FilledButton(
+                      onPressed: busy ? null : () => purchase(package),
+                      child: const Text('Continue to store purchase'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          if (busy) const Center(child: CircularProgressIndicator()),
+          if (message.isNotEmpty) Notice(message),
+          OutlinedButton(
+            onPressed: busy ? null : () => purchase(null),
+            child: const Text('Restore purchases'),
+          ),
+          TextButton(
+            onPressed: busy ? null : refresh,
+            child: const Text('Refresh plans and entitlement'),
+          ),
+          const Text(
+            'Subscriptions use your Apple or Google store account and renew automatically unless cancelled in store settings. Confirm the billing period and price in the store sheet. Existing Cherry web subscriptions are separate.',
+            style: TextStyle(fontSize: 13),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'Compare Cherry plans',
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           _plan(
             'Launch',
             '£0',
             '3 actions per calendar month',
             'A free starting point for invoices, document review and starter reconciliation.',
+          ),
+          _plan(
+            'Sole Trader',
+            '£7 / month',
+            '50 actions per calendar month',
+            'Connected bookkeeping, invoicing and cash-flow tools for sole traders.',
           ),
           _plan(
             'Flow',
@@ -144,45 +202,6 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
             '£99 / month',
             '500 actions per calendar month',
             'The highest mobile allowance for larger finance workflows and growing teams.',
-          ),
-          if (busy) const Center(child: CircularProgressIndicator()),
-          if (message.isNotEmpty) Notice(message),
-          ...packages.map(
-            (package) => Card(
-              child: Padding(
-                padding: const EdgeInsets.all(18),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      package.storeProduct.title,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    Text(package.storeProduct.description),
-                    Text(
-                      '${package.storeProduct.priceString} · ${package.packageType.name}',
-                    ),
-                    const SizedBox(height: 12),
-                    FilledButton(
-                      onPressed: busy ? null : () => purchase(package),
-                      child: const Text('Continue to store purchase'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          OutlinedButton(
-            onPressed: busy ? null : () => purchase(null),
-            child: const Text('Restore purchases'),
-          ),
-          TextButton(
-            onPressed: busy ? null : refresh,
-            child: const Text('Refresh plans and entitlement'),
-          ),
-          const Text(
-            'Subscriptions use your Apple or Google store account and renew automatically unless cancelled in store settings. Confirm the billing period and price in the store sheet. Existing Cherry web subscriptions are separate.',
-            style: TextStyle(fontSize: 13),
           ),
           const SizedBox(height: 12),
           const Text(

@@ -24,12 +24,15 @@ void main() {
     );
     expect(planForEntitlements(['cherrymoney_thrive']), Plan.thrive);
     expect(planForEntitlements(['cherrymoney_flow']), Plan.flow);
+    expect(planForEntitlements(['cherrymoney_sole_trader']), Plan.soleTrader);
     expect(planForEntitlements(['pro']), Plan.flow);
     expect(planForEntitlements(['cherrymoney_pro']), Plan.flow);
     expect(planForEntitlements(['business']), Plan.practice);
     expect(planForEntitlements(['admin']), Plan.launch);
     expect(canProcess(Plan.launch, 2), true);
     expect(canProcess(Plan.launch, 3), false);
+    expect(canProcess(Plan.soleTrader, 49), true);
+    expect(canProcess(Plan.soleTrader, 50), false);
     expect(canProcess(Plan.flow, 100), false);
     expect(canProcess(Plan.thrive, 249), true);
     expect(canProcess(Plan.practice, 499), true);

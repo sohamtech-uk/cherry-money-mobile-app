@@ -86,6 +86,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Your Cherry plan'), findsOneWidget);
     expect(find.text('Launch'), findsOneWidget);
+    expect(find.text('Sole Trader'), findsOneWidget);
     expect(find.text('Flow'), findsOneWidget);
     expect(find.text('Thrive'), findsOneWidget);
     expect(find.text('Practice'), findsOneWidget);
