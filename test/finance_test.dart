@@ -9,7 +9,7 @@ import 'package:cherry_money_mobile/data/repositories/workspace.dart';
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
   test('environment defaults use HTTPS and production is explicit', () {
-    expect(const AppConfig().apiBaseUrl, 'https://dev.cherrymoney.co.uk/api/');
+    expect(const AppConfig().apiBaseUrl, 'https://test.cherrymoney.co.uk/api/');
     expect(
       const AppConfig(environment: 'production').apiBaseUrl,
       'https://cherrymoney.co.uk/api/',
