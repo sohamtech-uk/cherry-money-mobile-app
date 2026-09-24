@@ -18,7 +18,7 @@ class AppConfig {
   }) : apiBaseUrl = apiBaseUrl == ''
            ? (environment == 'production'
                  ? 'https://cherrymoney.co.uk/api/'
-                 : 'https://dev.cherrymoney.co.uk/api/')
+                 : 'https://test.cherrymoney.co.uk/api/')
            : apiBaseUrl;
   static const flowEntitlement = 'cherrymoney_flow';
   static const soleTraderEntitlement = 'cherrymoney_sole_trader';
