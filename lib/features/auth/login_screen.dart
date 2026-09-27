@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/repositories/workspace.dart';
 import '../../core/widgets/common.dart';
 import '../../core/widgets/motion.dart';
 import '../../core/widgets/cherry_logo.dart';
+import 'apple_sign_in_control.dart';
 import 'google_sign_in_control.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -18,6 +18,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final email = TextEditingController(), password = TextEditingController();
   final form = GlobalKey<FormState>();
   bool googleBusy = false;
+  bool appleBusy = false;
   @override
   void dispose() {
     email.dispose();
@@ -73,7 +74,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
-              onPressed: state.busy || googleBusy
+              onPressed: state.busy || googleBusy || appleBusy
                   ? null
                   : () => context.go('/forgot'),
               child: const Text('Forgot password? Reset here'),
@@ -82,7 +83,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           if (state.error.isNotEmpty) Notice(state.error),
           const SizedBox(height: 24),
           FilledButton(
-            onPressed: (state.busy || googleBusy)
+            onPressed: (state.busy || googleBusy || appleBusy)
                 ? null
                 : () async {
                     if (!form.currentState!.validate()) {
@@ -100,30 +101,39 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               busyLabel: 'Signing in…',
             ),
           ),
-          if (defaultTargetPlatform != TargetPlatform.iOS) ...[
-            const SizedBox(height: 16),
-            const Center(child: Text('Or continue with')),
-            const SizedBox(height: 16),
-            GoogleSignInControl(
-              disabled: state.busy,
-              onBusyChanged: (busy) {
-                if (mounted) setState(() => googleBusy = busy);
-              },
-              onToken: (token) async {
-                await state.api.googleLogin(token);
-                await state.acceptVerifiedSession();
-                if (context.mounted && state.signedIn) context.go('/home');
-              },
-            ),
-          ],
+          const SizedBox(height: 16),
+          const Center(child: Text('Or continue with')),
+          const SizedBox(height: 16),
+          GoogleSignInControl(
+            disabled: state.busy,
+            onBusyChanged: (busy) {
+              if (mounted) setState(() => googleBusy = busy);
+            },
+            onToken: (token) async {
+              await state.api.googleLogin(token);
+              await state.acceptVerifiedSession();
+              if (context.mounted && state.signedIn) context.go('/home');
+            },
+          ),
+          AppleSignInControl(
+            disabled: state.busy,
+            onBusyChanged: (busy) {
+              if (mounted) setState(() => appleBusy = busy);
+            },
+            onToken: (token) async {
+              await state.api.appleLogin(token);
+              await state.acceptVerifiedSession();
+              if (context.mounted && state.signedIn) context.go('/home');
+            },
+          ),
           TextButton(
-            onPressed: state.busy || googleBusy
+            onPressed: state.busy || googleBusy || appleBusy
                 ? null
                 : () => context.go('/signup'),
             child: const Text('Create new account'),
           ),
           TextButton(
-            onPressed: (state.busy || googleBusy)
+            onPressed: (state.busy || googleBusy || appleBusy)
                 ? null
                 : () async {
                     await state.startDemo();

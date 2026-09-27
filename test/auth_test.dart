@@ -1,6 +1,7 @@
 import 'package:cherry_money_mobile/core/config/app_config.dart';
 import 'package:cherry_money_mobile/core/network/api_client.dart';
 import 'package:cherry_money_mobile/features/auth/account_screen.dart';
+import 'package:cherry_money_mobile/features/auth/apple_auth_service.dart';
 import 'package:cherry_money_mobile/features/auth/google_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -104,6 +105,29 @@ void main() {
       );
       expect(requests, 0);
       await api.googleLogin('signed-token');
+      expect(requests, 1);
+    },
+  );
+  test(
+    'Apple sends signed token only; unconfigured sign-in sends nothing',
+    () async {
+      final api = ApiClient(const AppConfig(), MemoryStorage());
+      int requests = 0;
+      api.dio.httpClientAdapter = ContractAdapter((request) {
+        requests++;
+        expect(request.data, {'id_token': 'signed-token'});
+        return jsonResponse({
+          'msg': 'done',
+          'token': 'session',
+          'user': {'name': 'Test'},
+        });
+      });
+      await expectLater(
+        AppleAuthService().authenticate(),
+        throwsA(isA<ApiException>()),
+      );
+      expect(requests, 0);
+      await api.appleLogin('signed-token');
       expect(requests, 1);
     },
   );
