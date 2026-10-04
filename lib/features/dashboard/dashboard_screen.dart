@@ -98,7 +98,6 @@ class DashboardScreen extends ConsumerWidget {
   }
 }
 
-
 class _LiveBusinessPulse extends StatelessWidget {
   final Workspace state;
 
@@ -123,9 +122,11 @@ class _LiveBusinessPulse extends StatelessWidget {
     );
 
     final accountValues = accounts
-        .map((account) =>
-            _optionalNumber(account['available']) ??
-            _optionalNumber(account['balance']))
+        .map(
+          (account) =>
+              _optionalNumber(account['available']) ??
+              _optionalNumber(account['balance']),
+        )
         .whereType<double>()
         .toList();
     final connectedCash = accountValues.isEmpty
@@ -139,8 +140,7 @@ class _LiveBusinessPulse extends StatelessWidget {
         .where((row) => text(row['direction']) == 'debit')
         .fold<double>(0, (sum, row) => sum + number(row['amount']));
     final reviewCount = transactions
-        .where((row) =>
-            !{'matched', 'ignored'}.contains(text(row['status'])))
+        .where((row) => !{'matched', 'ignored'}.contains(text(row['status'])))
         .length;
     final openInvoiceAmount = invoices
         .where((row) => text(row['status']) != 'paid')
@@ -153,9 +153,9 @@ class _LiveBusinessPulse extends StatelessWidget {
     final repeats = _repeatDebitPatterns(transactions);
 
     Map<String, dynamic> horizon(int days) => horizons.firstWhere(
-          (row) => number(row['days']).round() == days,
-          orElse: () => <String, dynamic>{},
-        );
+      (row) => number(row['days']).round() == days,
+      orElse: () => <String, dynamic>{},
+    );
     final horizon30 = horizon(30);
     final forecastAvailable = cashFlow['available'] == true;
     final openingCash = _optionalNumber(cashFlow['openingCash']);
@@ -234,7 +234,10 @@ class _LiveBusinessPulse extends StatelessWidget {
           Notice(state.financeError),
         ],
         const SizedBox(height: 22),
-        Text('What needs attention', style: Theme.of(context).textTheme.titleLarge),
+        Text(
+          'What needs attention',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         const SizedBox(height: 10),
         _PulseSignals(
           currency: currency,
@@ -480,25 +483,25 @@ class _PulseMetric extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-        width: 126,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: const TextStyle(color: Color(0xFFC7BCC4), fontSize: 12),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              value,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ],
+    width: 126,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(color: Color(0xFFC7BCC4), fontSize: 12),
         ),
-      );
+        const SizedBox(height: 2),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 class _PulseSignals extends StatelessWidget {
@@ -532,48 +535,48 @@ class _PulseSignals extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-        children: [
-          _SignalTile(
-            icon: Icons.fact_check_outlined,
-            title: reviewCount == 0
-                ? 'Bank activity is reviewed'
-                : '$reviewCount bank items need review',
-            subtitle: reviewCount == 0
-                ? 'No loaded bank rows are waiting for reconciliation.'
-                : 'Match, ignore or approve transactions before month-end.',
-            onTap: onTransactions,
-          ),
-          _SignalTile(
-            icon: Icons.schedule_outlined,
-            title: overdueCount == 0
-                ? 'No overdue invoices in the loaded set'
-                : '$overdueCount overdue invoice${overdueCount == 1 ? '' : 's'}',
-            subtitle:
-                '${currencyMoney(openInvoiceAmount, currency)} total unpaid invoice balance.',
-            onTap: onInvoices,
-          ),
-          _SignalTile(
-            icon: Icons.timeline_outlined,
-            title: forecastAvailable
-                ? 'Cash-flow outlook: ${pulseStatus == 'healthy' ? 'healthy' : pulseStatus}'
-                : 'Build your cash-flow outlook',
-            subtitle: forecastAvailable
-                ? 'Known 30-day outflows: ${currencyMoney(knownOutflows30 ?? 0, currency)}'
-                    '${lowestBalance == null ? '' : ' · lowest projected balance ${currencyMoney(lowestBalance, currency)}'}'
-                : 'Cherry will use invoices, approved bills, payroll, VAT and planned items when available.',
-            onTap: onForecast,
-          ),
-          _SignalTile(
-            icon: Icons.repeat_rounded,
-            title: repeatCount == 0
-                ? 'No repeat debit pattern confirmed'
-                : '$repeatCount repeat debit pattern${repeatCount == 1 ? '' : 's'} detected',
-            subtitle:
-                'Use these as a review cue for subscriptions and recurring business costs — not as an automatic cancellation list.',
-            onTap: onTransactions,
-          ),
-        ],
-      );
+    children: [
+      _SignalTile(
+        icon: Icons.fact_check_outlined,
+        title: reviewCount == 0
+            ? 'Bank activity is reviewed'
+            : '$reviewCount bank items need review',
+        subtitle: reviewCount == 0
+            ? 'No loaded bank rows are waiting for reconciliation.'
+            : 'Match, ignore or approve transactions before month-end.',
+        onTap: onTransactions,
+      ),
+      _SignalTile(
+        icon: Icons.schedule_outlined,
+        title: overdueCount == 0
+            ? 'No overdue invoices in the loaded set'
+            : '$overdueCount overdue invoice${overdueCount == 1 ? '' : 's'}',
+        subtitle:
+            '${currencyMoney(openInvoiceAmount, currency)} total unpaid invoice balance.',
+        onTap: onInvoices,
+      ),
+      _SignalTile(
+        icon: Icons.timeline_outlined,
+        title: forecastAvailable
+            ? 'Cash-flow outlook: ${pulseStatus == 'healthy' ? 'healthy' : pulseStatus}'
+            : 'Build your cash-flow outlook',
+        subtitle: forecastAvailable
+            ? 'Known 30-day outflows: ${currencyMoney(knownOutflows30 ?? 0, currency)}'
+                  '${lowestBalance == null ? '' : ' · lowest projected balance ${currencyMoney(lowestBalance, currency)}'}'
+            : 'Cherry will use invoices, approved bills, payroll, VAT and planned items when available.',
+        onTap: onForecast,
+      ),
+      _SignalTile(
+        icon: Icons.repeat_rounded,
+        title: repeatCount == 0
+            ? 'No repeat debit pattern confirmed'
+            : '$repeatCount repeat debit pattern${repeatCount == 1 ? '' : 's'} detected',
+        subtitle:
+            'Use these as a review cue for subscriptions and recurring business costs — not as an automatic cancellation list.',
+        onTap: onTransactions,
+      ),
+    ],
+  );
 }
 
 class _SignalTile extends StatelessWidget {
@@ -591,14 +594,14 @@ class _SignalTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        child: ListTile(
-          leading: Icon(icon),
-          title: Text(title),
-          subtitle: Text(subtitle),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: onTap,
-        ),
-      );
+    child: ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      subtitle: Text(subtitle),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: onTap,
+    ),
+  );
 }
 
 class _ForecastCard extends StatelessWidget {
@@ -625,8 +628,10 @@ class _ForecastCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Cash flow & commitments',
-                style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              'Cash flow & commitments',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: 5),
             const Text(
               'A planning estimate from posted cash and known business obligations. It is not a promise of future cash.',
@@ -637,9 +642,13 @@ class _ForecastCard extends StatelessWidget {
                 'The governed forecast is not available yet. You can still review banking activity and build the forecast in Cherry Money.',
               )
             else if (commitments.isEmpty)
-              const Text('No upcoming outflow commitments are currently loaded.')
+              const Text(
+                'No upcoming outflow commitments are currently loaded.',
+              )
             else
-              ...commitments.take(4).map(
+              ...commitments
+                  .take(4)
+                  .map(
                     (item) => ListTile(
                       contentPadding: EdgeInsets.zero,
                       dense: true,
@@ -691,45 +700,49 @@ class _RecurringSpendCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Recurring costs & subscriptions',
-                  style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 5),
-              const Text(
-                'Cherry flags repeat debit patterns for review. A repeat pattern is not proof of an active subscription.',
-              ),
-              const SizedBox(height: 12),
-              if (patterns.isEmpty)
-                const Text(
-                  'No merchant appears at least twice in the loaded debit history.',
-                )
-              else
-                ...patterns.take(4).map(
-                      (pattern) => ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        leading: const Icon(Icons.repeat_one_rounded),
-                        title: Text(pattern.merchant),
-                        subtitle: Text('${pattern.count} loaded debits'),
-                        trailing: Text(
-                          'avg ${currencyMoney(pattern.average, currency)}',
-                          style: const TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
-              TextButton.icon(
-                onPressed: onOpenTransactions,
-                icon: const Icon(Icons.swap_horiz_rounded),
-                label: const Text('Review transactions'),
-              ),
-            ],
+    child: Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Recurring costs & subscriptions',
+            style: Theme.of(context).textTheme.titleLarge,
           ),
-        ),
-      );
+          const SizedBox(height: 5),
+          const Text(
+            'Cherry flags repeat debit patterns for review. A repeat pattern is not proof of an active subscription.',
+          ),
+          const SizedBox(height: 12),
+          if (patterns.isEmpty)
+            const Text(
+              'No merchant appears at least twice in the loaded debit history.',
+            )
+          else
+            ...patterns
+                .take(4)
+                .map(
+                  (pattern) => ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                    leading: const Icon(Icons.repeat_one_rounded),
+                    title: Text(pattern.merchant),
+                    subtitle: Text('${pattern.count} loaded debits'),
+                    trailing: Text(
+                      'avg ${currencyMoney(pattern.average, currency)}',
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+          TextButton.icon(
+            onPressed: onOpenTransactions,
+            icon: const Icon(Icons.swap_horiz_rounded),
+            label: const Text('Review transactions'),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class _RepeatSpend {
@@ -758,8 +771,10 @@ List<_RepeatSpend> _repeatDebitPatterns(
   final patterns = <_RepeatSpend>[];
   for (final rows in grouped.values) {
     if (rows.length < 2) continue;
-    final total =
-        rows.fold<double>(0, (sum, row) => sum + number(row['amount']));
+    final total = rows.fold<double>(
+      0,
+      (sum, row) => sum + number(row['amount']),
+    );
     patterns.add(
       _RepeatSpend(
         merchant: text(rows.first['merchant'], text(rows.first['description'])),
