@@ -26,7 +26,7 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: dart format lib test integration_test && git diff --exit-code || (git diff && exit 1)
+      - run: dart format --set-exit-if-changed lib test integration_test
       - run: flutter analyze
       - run: flutter test
       - run: flutter build apk --debug
