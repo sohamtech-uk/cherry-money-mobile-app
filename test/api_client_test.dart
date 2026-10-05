@@ -51,8 +51,7 @@ class ContractAdapter implements HttpClientAdapter {
     RequestOptions options,
     Stream<Uint8List>? requestStream,
     Future<void>? cancelFuture,
-  ) async =>
-      respond(options);
+  ) async => respond(options);
   @override
   void close({bool force = false}) {}
 }
@@ -151,19 +150,21 @@ void main() {
     await api.financeRequest('tax/hmrc/businesses');
     expect(telemetry.calls, 1);
   });
-  test('ordinary Cherry requests do not collect HMRC device telemetry',
-      () async {
-    final telemetry = FixtureHmrcHeaders();
-    final api = ApiClient(
-      const AppConfig(),
-      MemoryStorage()..token = 'synthetic-token',
-      hmrcFraudPrevention: telemetry,
-    );
-    api.dio.httpClientAdapter = ContractAdapter(
-      (_) => jsonResponse({'msg': 'done', 'data': <String, dynamic>{}}),
-    );
+  test(
+    'ordinary Cherry requests do not collect HMRC device telemetry',
+    () async {
+      final telemetry = FixtureHmrcHeaders();
+      final api = ApiClient(
+        const AppConfig(),
+        MemoryStorage()..token = 'synthetic-token',
+        hmrcFraudPrevention: telemetry,
+      );
+      api.dio.httpClientAdapter = ContractAdapter(
+        (_) => jsonResponse({'msg': 'done', 'data': <String, dynamic>{}}),
+      );
 
-    await api.financeRequest('mobile/options');
-    expect(telemetry.calls, 0);
-  });
+      await api.financeRequest('mobile/options');
+      expect(telemetry.calls, 0);
+    },
+  );
 }

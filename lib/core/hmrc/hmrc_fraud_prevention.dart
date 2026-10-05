@@ -49,7 +49,7 @@ class PlatformHmrcDeviceContextProvider implements HmrcDeviceContextProvider {
   final DeviceInfoPlugin deviceInfo;
 
   PlatformHmrcDeviceContextProvider({DeviceInfoPlugin? deviceInfo})
-      : deviceInfo = deviceInfo ?? DeviceInfoPlugin();
+    : deviceInfo = deviceInfo ?? DeviceInfoPlugin();
 
   @override
   Future<HmrcDeviceContext> collect() async {
@@ -132,9 +132,8 @@ class HmrcFraudPreventionService implements HmrcFraudPreventionHeaders {
     this.storage, {
     HmrcDeviceContextProvider? contextProvider,
     Uuid? uuid,
-  })  : contextProvider =
-            contextProvider ?? PlatformHmrcDeviceContextProvider(),
-        uuid = uuid ?? const Uuid();
+  }) : contextProvider = contextProvider ?? PlatformHmrcDeviceContextProvider(),
+       uuid = uuid ?? const Uuid();
 
   @override
   Future<Map<String, String>> headers() async {
@@ -143,10 +142,7 @@ class HmrcFraudPreventionService implements HmrcFraudPreventionHeaders {
     return headersFor(deviceId, context);
   }
 
-  Map<String, String> headersFor(
-    String deviceId,
-    HmrcDeviceContext context,
-  ) {
+  Map<String, String> headersFor(String deviceId, HmrcDeviceContext context) {
     if (context.localIps.isEmpty ||
         context.screenWidth <= 0 ||
         context.screenHeight <= 0 ||
@@ -163,16 +159,21 @@ class HmrcFraudPreventionService implements HmrcFraudPreventionHeaders {
     final scale = context.scalingFactor.toStringAsFixed(
       context.scalingFactor % 1 == 0 ? 0 : 2,
     );
-    final localIps =
-        context.localIps.toSet().map(Uri.encodeComponent).join(',');
-    final userAgent = {
-      'os-family': context.osFamily,
-      'os-version': context.osVersion,
-      'device-manufacturer': context.manufacturer,
-      'device-model': context.model,
-    }.entries.map((entry) {
-      return '${Uri.encodeComponent(entry.key)}=${Uri.encodeComponent(entry.value)}';
-    }).join('&');
+    final localIps = context.localIps
+        .toSet()
+        .map(Uri.encodeComponent)
+        .join(',');
+    final userAgent =
+        {
+              'os-family': context.osFamily,
+              'os-version': context.osVersion,
+              'device-manufacturer': context.manufacturer,
+              'device-model': context.model,
+            }.entries
+            .map((entry) {
+              return '${Uri.encodeComponent(entry.key)}=${Uri.encodeComponent(entry.value)}';
+            })
+            .join('&');
 
     return {
       'X-Cherry-HMRC-CONNECTION-METHOD': 'MOBILE_APP_VIA_SERVER',
@@ -181,7 +182,7 @@ class HmrcFraudPreventionService implements HmrcFraudPreventionHeaders {
       'X-Cherry-HMRC-LOCAL-IPS-TIMESTAMP': _timestamp(context.collectedAt),
       'X-Cherry-HMRC-SCREENS':
           'width=${context.screenWidth}&height=${context.screenHeight}'
-              '&scaling-factor=$scale&colour-depth=${context.colourDepth}',
+          '&scaling-factor=$scale&colour-depth=${context.colourDepth}',
       'X-Cherry-HMRC-TIMEZONE': context.timezone,
       'X-Cherry-HMRC-USER-AGENT': userAgent,
       'X-Cherry-HMRC-WINDOW-SIZE':

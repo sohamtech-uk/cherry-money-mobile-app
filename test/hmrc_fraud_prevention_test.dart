@@ -27,31 +27,33 @@ void main() {
     clientVersion: '5.1.0+503',
   );
 
-  test('builds the mobile-via-server telemetry required by the backend',
-      () async {
-    final storage = MemoryStorage()
-      ..hmrcDeviceId = '3d8a8d57-1af9-4ccb-b87c-5bb7d05d9be7';
-    final service = HmrcFraudPreventionService(
-      storage,
-      contextProvider: FixtureDeviceContext(context),
-    );
+  test(
+    'builds the mobile-via-server telemetry required by the backend',
+    () async {
+      final storage = MemoryStorage()
+        ..hmrcDeviceId = '3d8a8d57-1af9-4ccb-b87c-5bb7d05d9be7';
+      final service = HmrcFraudPreventionService(
+        storage,
+        contextProvider: FixtureDeviceContext(context),
+      );
 
-    final headers = await service.headers();
+      final headers = await service.headers();
 
-    expect(headers, {
-      'X-Cherry-HMRC-CONNECTION-METHOD': 'MOBILE_APP_VIA_SERVER',
-      'X-Cherry-HMRC-DEVICE-ID': '3d8a8d57-1af9-4ccb-b87c-5bb7d05d9be7',
-      'X-Cherry-HMRC-LOCAL-IPS': 'fc00%3A%3A1,10.1.2.3',
-      'X-Cherry-HMRC-LOCAL-IPS-TIMESTAMP': '2026-10-05T00:30:05.123Z',
-      'X-Cherry-HMRC-SCREENS':
-          'width=390&height=844&scaling-factor=3&colour-depth=32',
-      'X-Cherry-HMRC-TIMEZONE': 'UTC+01:00',
-      'X-Cherry-HMRC-USER-AGENT':
-          'os-family=iOS&os-version=18.0&device-manufacturer=Apple&device-model=iPhone16%2C2',
-      'X-Cherry-HMRC-WINDOW-SIZE': 'width=390&height=844',
-      'X-Cherry-HMRC-CLIENT-VERSION': '5.1.0+503',
-    });
-  });
+      expect(headers, {
+        'X-Cherry-HMRC-CONNECTION-METHOD': 'MOBILE_APP_VIA_SERVER',
+        'X-Cherry-HMRC-DEVICE-ID': '3d8a8d57-1af9-4ccb-b87c-5bb7d05d9be7',
+        'X-Cherry-HMRC-LOCAL-IPS': 'fc00%3A%3A1,10.1.2.3',
+        'X-Cherry-HMRC-LOCAL-IPS-TIMESTAMP': '2026-10-05T00:30:05.123Z',
+        'X-Cherry-HMRC-SCREENS':
+            'width=390&height=844&scaling-factor=3&colour-depth=32',
+        'X-Cherry-HMRC-TIMEZONE': 'UTC+01:00',
+        'X-Cherry-HMRC-USER-AGENT':
+            'os-family=iOS&os-version=18.0&device-manufacturer=Apple&device-model=iPhone16%2C2',
+        'X-Cherry-HMRC-WINDOW-SIZE': 'width=390&height=844',
+        'X-Cherry-HMRC-CLIENT-VERSION': '5.1.0+503',
+      });
+    },
+  );
 
   test('fails closed when a required device value cannot be collected', () {
     final service = HmrcFraudPreventionService(

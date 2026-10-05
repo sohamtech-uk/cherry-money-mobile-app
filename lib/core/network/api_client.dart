@@ -16,16 +16,16 @@ class ApiClient {
     AppConfig config,
     this.storage, {
     HmrcFraudPreventionHeaders? hmrcFraudPrevention,
-  })  : hmrcFraudPrevention =
-            hmrcFraudPrevention ?? HmrcFraudPreventionService(storage),
-        dio = Dio(
-          BaseOptions(
-            baseUrl: config.apiBaseUrl,
-            connectTimeout: const Duration(seconds: 15),
-            receiveTimeout: const Duration(seconds: 25),
-            headers: {'Accept': 'application/json'},
-          ),
-        ) {
+  }) : hmrcFraudPrevention =
+           hmrcFraudPrevention ?? HmrcFraudPreventionService(storage),
+       dio = Dio(
+         BaseOptions(
+           baseUrl: config.apiBaseUrl,
+           connectTimeout: const Duration(seconds: 15),
+           receiveTimeout: const Duration(seconds: 25),
+           headers: {'Accept': 'application/json'},
+         ),
+       ) {
     if (!config.valid) {
       throw const ApiException('Use a valid HTTPS Cherry API configuration.');
     }
@@ -295,26 +295,25 @@ class ApiClient {
   Future<Map<String, dynamic>> askCherry(
     String message,
     List<Map<String, String>> history,
-  ) =>
-      financeRequest(
-        'webmcp/ask',
-        method: 'POST',
-        data: {
-          'message': message,
-          'history': history
-              .skip(history.length > 10 ? history.length - 10 : 0)
-              .map(
-                (item) => {
-                  'role': item['role'],
-                  'content': (item['content'] ?? '').substring(
-                    0,
-                    (item['content'] ?? '').length.clamp(0, 2000),
-                  ),
-                },
-              )
-              .toList(),
-        },
-      );
+  ) => financeRequest(
+    'webmcp/ask',
+    method: 'POST',
+    data: {
+      'message': message,
+      'history': history
+          .skip(history.length > 10 ? history.length - 10 : 0)
+          .map(
+            (item) => {
+              'role': item['role'],
+              'content': (item['content'] ?? '').substring(
+                0,
+                (item['content'] ?? '').length.clamp(0, 2000),
+              ),
+            },
+          )
+          .toList(),
+    },
+  );
 
   Future<void> logout() async {
     try {
