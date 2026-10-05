@@ -59,9 +59,35 @@ void main() {
       },
     );
   }
-  for (final google in [false, true]) {
+  test(
+    'Apple HTTP 422 reports the returned problem without saving a session',
+    () async {
+      final storage = MemoryStorage();
+      final api = ApiClient(const AppConfig(), storage);
+      api.dio.httpClientAdapter = ContractAdapter(
+        (_) => jsonResponse({
+          'message': 'The given data was invalid.',
+          'errors': {
+            'id_token': ['Apple could not verify this account.'],
+          },
+        }, 422),
+      );
+      await expectLater(
+        api.appleLogin('test-token'),
+        throwsA(
+          isA<ApiException>().having(
+            (e) => e.message,
+            'message',
+            'Apple could not verify this account.',
+          ),
+        ),
+      );
+      expect(storage.token, isNull);
+    },
+  );
+  for (final provider in ['Google', 'Email', 'Apple']) {
     test(
-      '${google ? 'Google' : 'Email'} transport failure is distinct from backend rejection',
+      '$provider transport failure is distinct from backend rejection',
       () async {
         final api = ApiClient(const AppConfig(), MemoryStorage());
         api.dio.httpClientAdapter = ContractAdapter(
@@ -70,9 +96,11 @@ void main() {
             type: DioExceptionType.connectionError,
           ),
         );
-        final call = google
-            ? api.googleLogin('test-token')
-            : api.login('example@example.test', 'test-password');
+        final call = switch (provider) {
+          'Google' => api.googleLogin('test-token'),
+          'Apple' => api.appleLogin('test-token'),
+          _ => api.login('example@example.test', 'test-password'),
+        };
         await expectLater(
           call,
           throwsA(

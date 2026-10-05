@@ -35,6 +35,7 @@ class ApiClient {
                   'verifyOtp',
                   'resendCode',
                   'loginGoogle',
+                  'loginApple',
                 }.contains(options.path)) {
               options.headers['Authorization'] = 'Bearer $token';
             }
@@ -179,6 +180,11 @@ class ApiClient {
     await acceptSession(
       await authRequest('loginGoogle', {'id_token': idToken}),
     );
+  }
+
+  Future<void> appleLogin(String idToken) async {
+    // Send only a signed token. Never trust a client-supplied email/profile.
+    await acceptSession(await authRequest('loginApple', {'id_token': idToken}));
   }
 
   Future<void> acceptSession(Map<String, dynamic> data) async {
