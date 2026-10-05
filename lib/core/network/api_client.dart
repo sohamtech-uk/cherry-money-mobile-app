@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../config/app_config.dart';
+import '../hmrc/hmrc_fraud_prevention.dart';
 import '../storage/secure_storage_service.dart';
 
 class ApiException implements Exception {
@@ -10,15 +11,21 @@ class ApiException implements Exception {
 class ApiClient {
   final Dio dio;
   final SecureStorageService storage;
-  ApiClient(AppConfig config, this.storage)
-    : dio = Dio(
-        BaseOptions(
-          baseUrl: config.apiBaseUrl,
-          connectTimeout: const Duration(seconds: 15),
-          receiveTimeout: const Duration(seconds: 25),
-          headers: {'Accept': 'application/json'},
-        ),
-      ) {
+  final HmrcFraudPreventionHeaders hmrcFraudPrevention;
+  ApiClient(
+    AppConfig config,
+    this.storage, {
+    HmrcFraudPreventionHeaders? hmrcFraudPrevention,
+  }) : hmrcFraudPrevention =
+           hmrcFraudPrevention ?? HmrcFraudPreventionService(storage),
+       dio = Dio(
+         BaseOptions(
+           baseUrl: config.apiBaseUrl,
+           connectTimeout: const Duration(seconds: 15),
+           receiveTimeout: const Duration(seconds: 25),
+           headers: {'Accept': 'application/json'},
+         ),
+       ) {
     if (!config.valid) {
       throw const ApiException('Use a valid HTTPS Cherry API configuration.');
     }
@@ -26,6 +33,9 @@ class ApiClient {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           try {
+            if (_usesHmrcFraudPrevention(options.path)) {
+              options.headers.addAll(await this.hmrcFraudPrevention.headers());
+            }
             final token = await storage.readToken();
             if (token != null &&
                 !const {
@@ -44,7 +54,9 @@ class ApiClient {
             handler.reject(
               DioException(
                 requestOptions: options,
-                error: 'Secure storage unavailable',
+                error: _usesHmrcFraudPrevention(options.path)
+                    ? 'Required HMRC fraud-prevention data is unavailable'
+                    : 'Secure storage unavailable',
               ),
             );
           }
@@ -52,6 +64,12 @@ class ApiClient {
       ),
     );
   }
+
+  bool _usesHmrcFraudPrevention(String path) {
+    final normalised = path.startsWith('/') ? path.substring(1) : path;
+    return normalised.startsWith('tax/hmrc/');
+  }
+
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final response = await dio.post(
