@@ -23,6 +23,7 @@ class Workspace extends ChangeNotifier {
   Plan plan = Plan.launch;
   int used = 0;
   String error = '';
+  MobileMfaRequired? mfaChallenge;
   Map<String, dynamic>? liveDashboard;
   List<FinanceTransaction> transactions = [];
   Map<String, dynamic>? liveFinance;
@@ -71,6 +72,7 @@ class Workspace extends ChangeNotifier {
       .where((t) => t.status != ReconciliationStatus.reconciled)
       .length;
   Future<void> startDemo() async {
+    mfaChallenge = null;
     _resetFinance();
     demo = true;
     signedIn = false;
@@ -81,18 +83,57 @@ class Workspace extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(String email, String password) =>
+      _authenticate(() => api.login(email, password));
+
+  Future<void> loginWithGoogle(String idToken) =>
+      _authenticate(() => api.googleLogin(idToken));
+
+  Future<void> loginWithApple(String idToken) =>
+      _authenticate(() => api.appleLogin(idToken));
+
+  Future<void> verifyMfa(String code) async {
+    final pending = mfaChallenge;
+    if (pending == null || busy) return;
+    if (DateTime.now().isAfter(pending.expiresAt)) {
+      cancelMfa();
+      error = 'The authenticator request expired. Please sign in again.';
+      notifyListeners();
+      return;
+    }
+    await _authenticate(
+      () => api.verifyMfa(pending.challengeToken, code),
+      verifying: true,
+    );
+  }
+
+  void cancelMfa() {
+    if (busy) return;
+    mfaChallenge = null;
+    error = '';
+    notifyListeners();
+  }
+
+  Future<void> _authenticate(
+    Future<dynamic> Function() authenticate, {
+    bool verifying = false,
+  }) async {
+    if (busy) return;
+    if (!verifying) mfaChallenge = null;
     busy = true;
     error = '';
     notifyListeners();
     try {
-      await api.login(email, password);
+      await authenticate();
+      mfaChallenge = null;
+      await acceptVerifiedSession();
+    } on MobileMfaRequired catch (challenge) {
       _resetFinance();
-      demo = false;
-      signedIn = true;
       transactions = [];
       liveDashboard = null;
-      await loadLive();
+      mfaChallenge = challenge;
+      signedIn = false;
+      demo = false;
     } on ApiException catch (e) {
       error = e.message;
     } finally {
@@ -125,6 +166,7 @@ class Workspace extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
+    mfaChallenge = null;
     _resetFinance();
     if (signedIn) {
       try {

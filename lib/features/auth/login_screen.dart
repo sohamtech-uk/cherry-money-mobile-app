@@ -7,6 +7,7 @@ import '../../core/widgets/motion.dart';
 import '../../core/widgets/cherry_logo.dart';
 import 'apple_sign_in_control.dart';
 import 'google_sign_in_control.dart';
+import 'mobile_mfa_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -29,6 +30,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(workspaceProvider);
+    if (state.mfaChallenge != null) {
+      return MobileMfaScreen(
+        busy: state.busy,
+        error: state.error,
+        onCancel: state.cancelMfa,
+        onVerify: (code) async {
+          await state.verifyMfa(code);
+          if (context.mounted && state.signedIn) {
+            context.go('/home');
+          }
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('Cherry Money')),
       body: PageBody(
@@ -105,24 +120,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           const Center(child: Text('Or continue with')),
           const SizedBox(height: 16),
           GoogleSignInControl(
-            disabled: state.busy,
+            disabled: state.busy || googleBusy || appleBusy,
             onBusyChanged: (busy) {
               if (mounted) setState(() => googleBusy = busy);
             },
             onToken: (token) async {
-              await state.api.googleLogin(token);
-              await state.acceptVerifiedSession();
+              await state.loginWithGoogle(token);
               if (context.mounted && state.signedIn) context.go('/home');
             },
           ),
           AppleSignInControl(
-            disabled: state.busy,
+            disabled: state.busy || googleBusy || appleBusy,
             onBusyChanged: (busy) {
               if (mounted) setState(() => appleBusy = busy);
             },
             onToken: (token) async {
-              await state.api.appleLogin(token);
-              await state.acceptVerifiedSession();
+              await state.loginWithApple(token);
               if (context.mounted && state.signedIn) context.go('/home');
             },
           ),

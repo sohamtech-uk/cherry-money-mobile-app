@@ -8,6 +8,33 @@ class ApiException implements Exception {
   const ApiException(this.message);
 }
 
+/// A pending first-factor sign-in. Kept in memory; never stored as an access token.
+class MobileMfaRequired extends ApiException {
+  final String challengeToken;
+  final DateTime expiresAt;
+
+  MobileMfaRequired(this.challengeToken, this.expiresAt)
+    : super('Enter the code from your authenticator app.');
+
+  factory MobileMfaRequired.fromResponse(Map<String, dynamic> data) {
+    final token = data['challenge_token'];
+    final seconds = data['expires_in'];
+    if (token is! String ||
+        !RegExp(r'^[a-f0-9]{64}$').hasMatch(token) ||
+        seconds is! int ||
+        seconds < 1 ||
+        seconds > 300) {
+      throw const ApiException(
+        'Sign-in returned an invalid authenticator request. Please retry.',
+      );
+    }
+    return MobileMfaRequired(
+      token,
+      DateTime.now().add(Duration(seconds: seconds)),
+    );
+  }
+}
+
 class ApiClient {
   final Dio dio;
   final SecureStorageService storage;
@@ -46,6 +73,7 @@ class ApiClient {
                   'resendCode',
                   'loginGoogle',
                   'loginApple',
+                  'two-factor/challenge',
                 }.contains(options.path)) {
               options.headers['Authorization'] = 'Bearer $token';
             }
@@ -71,31 +99,21 @@ class ApiClient {
   }
 
   Future<Map<String, dynamic>> login(String email, String password) async {
-    try {
-      final response = await dio.post(
-        'login',
-        data: {'email': email, 'password': password},
-      );
-      final data = Map<String, dynamic>.from(response.data as Map);
-      if (data['msg'] != 'done' ||
-          data['token'] is! String ||
-          (data['token'] as String).isEmpty ||
-          data['user'] is! Map) {
-        throw const ApiException(
-          'Sign-in failed. Check your email and password.',
-        );
-      }
-      await storage.saveToken(data['token'] as String);
-      return Map<String, dynamic>.from(data['user'] as Map);
-    } on ApiException {
-      rethrow;
-    } on DioException catch (e) {
-      throw ApiException(_authFailure(e));
-    } catch (_) {
-      throw const ApiException(
-        'Unable to sign in. Check your connection and try again.',
-      );
-    }
+    final data = await authRequest('login', {
+      'email': email,
+      'password': password,
+    });
+    await acceptSession(data);
+    return Map<String, dynamic>.from(data['user'] as Map);
+  }
+
+  Future<void> verifyMfa(String challengeToken, String code) async {
+    await acceptSession(
+      await authRequest('two-factor/challenge', {
+        'challenge_token': challengeToken,
+        'code': code.trim(),
+      }),
+    );
   }
 
   Future<Map<String, dynamic>> authRequest(
@@ -105,6 +123,11 @@ class ApiClient {
     try {
       final response = await dio.post(path, data: payload);
       final data = Map<String, dynamic>.from(response.data as Map);
+      if (data['msg'] == 'two_factor_required') {
+        final challenge = MobileMfaRequired.fromResponse(data);
+        await storage.clear();
+        throw challenge;
+      }
       if (data['msg'] != 'done') {
         throw ApiException(
           data['error'] is String
