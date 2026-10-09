@@ -119,7 +119,7 @@ void main() {
       find.byType(GoogleSignInControl),
     );
     social.onBusyChanged(true);
-    await social.onToken('provider-token');
+    await tester.runAsync(() => social.onToken('provider-token'));
     await tester.pump();
     expect(find.byType(MobileMfaScreen), findsOneWidget);
     await tester.tap(find.text('Cancel sign-in'));
