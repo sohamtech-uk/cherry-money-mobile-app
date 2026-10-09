@@ -126,6 +126,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             },
             onToken: (token) async {
               await state.loginWithGoogle(token);
+              if (mounted) setState(() => googleBusy = false);
               if (context.mounted && state.signedIn) context.go('/home');
             },
           ),
@@ -136,6 +137,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             },
             onToken: (token) async {
               await state.loginWithApple(token);
+              if (mounted) setState(() => appleBusy = false);
               if (context.mounted && state.signedIn) context.go('/home');
             },
           ),

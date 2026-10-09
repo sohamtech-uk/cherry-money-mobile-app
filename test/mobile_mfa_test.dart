@@ -2,7 +2,10 @@ import 'package:cherry_money_mobile/core/config/app_config.dart';
 import 'package:cherry_money_mobile/core/network/api_client.dart';
 import 'package:cherry_money_mobile/data/repositories/workspace.dart';
 import 'package:cherry_money_mobile/features/auth/mobile_mfa_screen.dart';
+import 'package:cherry_money_mobile/features/auth/login_screen.dart';
+import 'package:cherry_money_mobile/features/auth/google_sign_in_control.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'api_client_test.dart' show ContractAdapter, MemoryStorage, jsonResponse;
@@ -96,6 +99,37 @@ void main() {
       }),
       throwsA(isA<ApiException>()),
     );
+  });
+
+  testWidgets('cancelling social MFA unlocks the sign-in controls', (
+    tester,
+  ) async {
+    final api = ApiClient(const AppConfig(), MemoryStorage());
+    api.dio.httpClientAdapter = ContractAdapter(
+      (_) => jsonResponse(pending, 202),
+    );
+    final workspace = Workspace(api: api);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [workspaceProvider.overrideWith((ref) => workspace)],
+        child: const MaterialApp(home: LoginScreen()),
+      ),
+    );
+    final social = tester.widget<GoogleSignInControl>(
+      find.byType(GoogleSignInControl),
+    );
+    social.onBusyChanged(true);
+    await social.onToken('provider-token');
+    await tester.pump();
+    expect(find.byType(MobileMfaScreen), findsOneWidget);
+    await tester.tap(find.text('Cancel sign-in'));
+    await tester.pump();
+    expect(find.byType(MobileMfaScreen), findsNothing);
+    expect(
+      tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+      isNotNull,
+    );
+    expect(workspace.signedIn, false);
   });
 
   testWidgets('MFA screen validates six digits and supports cancellation', (
